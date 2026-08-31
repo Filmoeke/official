@@ -21,6 +21,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
 
+        /* Header with Matching Animated Gradient Background */
         header { 
             text-align: center; 
             padding: 45px 20px 35px; 
@@ -28,6 +29,7 @@
             border-bottom: 1px solid var(--border-color); 
         }
         
+        /* Animated Gradient Brand Name */
         header h1 {
             font-size: 2.4rem; font-weight: 800; letter-spacing: -1px; display: inline-block;
             background: linear-gradient(270deg, #0284c7, #8b5cf6, #ec4899, #0284c7);
@@ -43,6 +45,7 @@
 
         header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 6px; }
 
+        /* Navigation Bar */
         nav { 
             background: var(--bg-surface); backdrop-filter: blur(16px);
             padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
@@ -60,16 +63,29 @@
 
         .nav-right { display: flex; gap: 8px; align-items: center; position: relative; }
 
+        /* Floating Action Button (FAB) */
         .fab-btn {
-            position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px;
-            border-radius: 50%; background: var(--primary-cyan); color: #ffffff;
-            border: none; cursor: pointer; display: flex; align-items: center;
-            justify-content: center; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
-            z-index: 999; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary-cyan);
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+            z-index: 999;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             animation: fabPulse 2s infinite;
         }
         .fab-btn:hover {
-            background: var(--primary-cyan-hover); transform: scale(1.1) rotate(90deg);
+            background: var(--primary-cyan-hover);
+            transform: scale(1.1) rotate(90deg);
             box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6);
         }
         @keyframes fabPulse {
@@ -78,6 +94,7 @@
             100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
         }
 
+        /* Buttons */
         .btn-base { 
             padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; 
             border: none; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
@@ -85,6 +102,7 @@
         .btn-action { background: var(--primary-cyan); color: #ffffff; }
         .btn-action:hover { background: var(--primary-cyan-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); }
 
+        /* Profile Button Trigger */
         .profile-btn-trigger {
             background: #f1f5f9; border: 1px solid var(--border-color);
             border-radius: 30px; padding: 4px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px;
@@ -93,6 +111,7 @@
         .profile-btn-trigger:hover { background: #e2e8f0; border-color: #cbd5e1; }
         .profile-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-cyan); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; }
 
+        /* Profile Dropdown */
         .profile-dropdown {
             position: absolute; top: 46px; right: 0; width: 260px;
             background: #ffffff; border: 1px solid var(--border-color); border-radius: 12px;
@@ -103,6 +122,7 @@
         .profile-info-header strong { font-size: 0.85rem; color: var(--text-main); display: block; }
         .profile-info-header span { font-size: 0.72rem; color: var(--text-muted); word-break: break-all; }
         
+        /* My Posts Status List inside Profile Dropdown */
         .my-posts-status-container { max-height: 140px; overflow-y: auto; margin: 4px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 6px 0; }
         .status-item { font-size: 0.75rem; display: flex; justify-content: space-between; align-items: center; padding: 3px 0; }
         .status-badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
@@ -112,11 +132,13 @@
         .dropdown-item { width: 100%; text-align: left; background: none; border: none; padding: 8px 10px; font-size: 0.82rem; font-weight: 600; color: var(--text-main); cursor: pointer; border-radius: 6px; display: flex; align-items: center; gap: 8px; }
         .dropdown-item:hover { background: #f1f5f9; color: var(--primary-cyan); }
 
+        /* Main Grid */
         .container { max-width: 1240px; margin: 35px auto; padding: 0 20px; }
         .section-title { color: var(--text-main); font-size: 1.4rem; font-weight: 700; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
         .section-title::before { content: ''; width: 4px; height: 20px; background: var(--primary-cyan); border-radius: 2px; }
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 
+        /* Instagram-Style Post Cards */
         .media-card { 
             background: var(--surface-card); border-radius: 14px; overflow: hidden; 
             border: 1px solid var(--border-color); transition: all 0.3s ease; display: flex; flex-direction: column; position: relative;
@@ -128,17 +150,14 @@
         .post-username { font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 4px; }
         .post-username span { font-size: 0.72rem; color: var(--text-muted); font-weight: 400; }
         
-        /* Prevent downloading/saving via UI context menus */
-        .media-card img, .media-card video { 
-            width: 100%; height: 280px; object-fit: cover; display: block; 
-            pointer-events: auto; -webkit-touch-callout: none; 
-        }
+        .media-card img, .media-card video { width: 100%; height: 280px; object-fit: cover; display: block; }
         
         .media-info { padding: 10px 14px; }
         .media-info h4 { color: var(--text-main); font-size: 0.9rem; font-weight: 600; }
 
         .btn-delete-card { background: none; border: none; color: var(--accent-pink); cursor: pointer; font-size: 0.8rem; font-weight: 600; }
 
+        /* Instagram Style Action Bar */
         .ig-actions { display: flex; align-items: center; gap: 16px; padding: 8px 14px; font-size: 1.2rem; }
         .ig-action-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
         .ig-action-btn:hover { color: var(--primary-cyan); }
@@ -154,6 +173,7 @@
         .comment-form input { flex: 1; padding: 6px 10px; font-size: 0.78rem; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); outline: none; }
         .comment-form button { background: none; color: var(--primary-cyan); font-weight: 700; border: none; cursor: pointer; font-size: 0.78rem; }
 
+        /* Modals & Upload Progress Bar */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000; padding: 20px; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         .modal-card { background: #ffffff; width: 100%; max-width: 420px; border-radius: 16px; padding: 25px; border: 1px solid var(--border-color); position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
@@ -164,6 +184,7 @@
         .form-group input, .form-group select { width: 100%; padding: 10px 12px; border-radius: 8px; background: #f8fafc; border: 1px solid var(--border-color); color: var(--text-main); outline: none; }
         .form-group input:focus, .form-group select:focus { border-color: var(--primary-cyan); background: #ffffff; }
 
+        /* Progress Bar Styles */
         .upload-progress-container { display: none; margin-top: 12px; }
         .progress-bar-wrapper { width: 100%; background: #e2e8f0; border-radius: 6px; height: 10px; overflow: hidden; margin-top: 6px; }
         .progress-bar-fill { width: 0%; height: 100%; background: var(--primary-cyan); transition: width 0.2s ease; }
@@ -218,6 +239,7 @@
         </div>
     </nav>
 
+    <!-- Floating Action Button (FAB) Plus Icon -->
     <button class="fab-btn" onclick="openUploadModal()" title="Submit Post">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -232,10 +254,11 @@
         </div>
     </div>
 
+    <!-- Modals -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 12px;">Submit Media Post (Lossless)</h3>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 12px;">Submit Media Post</h3>
             <form id="uploadForm">
                 <div class="form-group">
                     <label>Title / Caption *</label>
@@ -245,7 +268,7 @@
                     <label>Media Format *</label>
                     <select id="mediaType">
                         <option value="image">Photo</option>
-                        <option value="video">Video (Lossless Chunked Stream)</option>
+                        <option value="video">Video</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -255,7 +278,7 @@
 
                 <div class="upload-progress-container" id="uploadProgressContainer">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-main);" id="uploadStatusText">Uploading file chunks...</span>
+                        <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-main);">Uploading file...</span>
                         <span class="progress-text" id="progressPercentText">0%</span>
                     </div>
                     <div class="progress-bar-wrapper">
@@ -345,11 +368,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('filmoeke_user');
             if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                } catch (e) {
-                    currentUser = null;
-                }
+                currentUser = JSON.parse(savedUser);
             }
             updateUIState();
         });
@@ -427,7 +446,6 @@
             openModal('uploadModal');
         };
 
-        // LOSSLESS CHUNKED UPLOAD ENGINE
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return alert("Please log in first.");
@@ -436,93 +454,129 @@
             const progressContainer = document.getElementById('uploadProgressContainer');
             const progressBarFill = document.getElementById('progressBarFill');
             const progressPercentText = document.getElementById('progressPercentText');
-            const uploadStatusText = document.getElementById('uploadStatusText');
 
             const title = document.getElementById('mediaTitle').value.trim();
             const type = document.getElementById('mediaType').value;
             const fileInput = document.getElementById('mediaFile');
-            const file = fileInput.files[0]; 
+            let file = fileInput.files[0];
+
+            // Maximum video size set to 50MB per your request
+            const maxSize = type === 'video' ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert(`File is too large. Max size allowed is ${type === 'video' ? '50MB' : '10MB'}.`);
+                return;
+            }
 
             btn.disabled = true;
             progressContainer.style.display = 'block';
-            uploadStatusText.innerText = "Initializing chunked connection...";
+
+            // Aggressively compress images over 500KB prior to upload to ensure fast performance
+            if (type === 'image' && file.size > 500 * 1024) {
+                file = await compressImage(file);
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
             const resourceType = type === 'video' ? 'video' : 'image';
-            const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
+            const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
 
-            const CHUNK_SIZE = 2 * 1024 * 1024; 
-            const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-            const uniqueUploadId = 'upload_' + Math.random().toString(36).substr(2, 9) + Date.now();
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', endpoint, true);
 
-            let currentByte = 0;
-            let finalResponseData = null;
-
-            try {
-                for (let i = 0; i < totalChunks; i++) {
-                    const chunkStart = currentByte;
-                    const chunkEnd = Math.min(currentByte + CHUNK_SIZE, file.size);
-                    const chunkBlob = file.slice(chunkStart, chunkEnd);
-
-                    const formData = new FormData();
-                    formData.append('file', chunkBlob);
-                    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-                    const percentComplete = Math.round(((i + 1) / totalChunks) * 100);
-                    uploadStatusText.innerText = `Uploading part ${i + 1} of ${totalChunks} (${percentComplete}%)...`;
+            xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    const percentComplete = Math.round((event.loaded / event.total) * 100);
                     progressBarFill.style.width = percentComplete + '%';
                     progressPercentText.innerText = percentComplete + '%';
-
-                    await new Promise((resolve, reject) => {
-                        const xhr = new XMLHttpRequest();
-                        xhr.open('POST', url, true);
-                        xhr.setRequestHeader('X-Unique-Upload-Id', uniqueUploadId);
-                        xhr.setRequestHeader('Content-Range', `bytes ${chunkStart}-${chunkEnd - 1}/${file.size}`);
-
-                        xhr.onload = () => {
-                            if (xhr.status === 200) {
-                                try {
-                                    finalResponseData = JSON.parse(xhr.responseText);
-                                    resolve();
-                                } catch (err) {
-                                    reject(new Error("Failed parsing chunk server response."));
-                                }
-                            } else {
-                                reject(new Error(`Chunk upload failed with status ${xhr.status}`));
-                            }
-                        };
-
-                        xhr.onerror = () => reject(new Error("Network connection dropped during stream."));
-                        xhr.send(formData);
-                    });
-
-                    currentByte = chunkEnd;
                 }
+            };
 
-                uploadStatusText.innerText = "Finalizing secure registration...";
-                await addDoc(collection(db, "posts"), {
-                    uploaderName: currentUser.name,
-                    uploaderInsta: currentUser.insta,
-                    title: title,
-                    type: type,
-                    url: finalResponseData.secure_url,
-                    approved: false,
-                    likes: 0,
-                    comments: [],
-                    createdAt: new Date()
-                });
-
-                alert("Lossless media successfully submitted for admin approval!");
-                document.getElementById('uploadForm').reset();
-                closeModal('uploadModal');
-                loadUserPostStatuses();
-
-            } catch (err) {
-                alert(`Upload failed: ${err.message}`);
-            } finally {
+            xhr.onload = async () => {
+                if (xhr.status === 200) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        await addDoc(collection(db, "posts"), {
+                            uploaderName: currentUser.name,
+                            uploaderInsta: currentUser.insta,
+                            title: title,
+                            type: type,
+                            url: response.secure_url,
+                            approved: false,
+                            likes: 0,
+                            comments: [],
+                            createdAt: new Date()
+                        });
+                        alert("Post successfully submitted for admin approval!");
+                        document.getElementById('uploadForm').reset();
+                        closeModal('uploadModal');
+                        loadUserPostStatuses();
+                    } catch (parseErr) {
+                        alert("Upload succeeded, but database save failed.");
+                    }
+                } else {
+                    try {
+                        const errRes = JSON.parse(xhr.responseText);
+                        alert(`Upload failed: ${errRes.error?.message || 'Unknown server error'}`);
+                    } catch (err) {
+                        alert(`Media option failed. Status: ${xhr.status}`);
+                    }
+                }
                 btn.disabled = false;
                 progressContainer.style.display = 'none';
-            }
+            };
+
+            xhr.onerror = () => {
+                alert("Network error during upload. Please check your internet connection.");
+                btn.disabled = false;
+                progressContainer.style.display = 'none';
+            };
+
+            xhr.send(formData);
         });
+
+        function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 1024;
+                        const MAX_HEIGHT = 1024;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob((blob) => {
+                            resolve(new File([blob], file.name, {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            }));
+                        }, 'image/jpeg', 0.75);
+                    };
+                };
+            });
+        }
 
         async function loadUserPostStatuses() {
             if (!currentUser) return;
@@ -607,8 +661,8 @@
                                 ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">Delete</button>` : ''}
                             </div>
                             ${data.type === 'image' 
-                                ? `<img src="${data.url}" alt="${data.title}" loading="lazy" oncontextmenu="return false;">` 
-                                : `<video src="${data.url}" controls controlsList="nodownload" preload="auto" oncontextmenu="return false;"></video>`}
+                                ? `<img src="${data.url}" alt="${data.title}" loading="lazy">` 
+                                : `<video src="${data.url}" controls></video>`}
                             <div class="media-info">
                                 <h4>${data.title}</h4>
                             </div>
@@ -706,6 +760,8 @@
             window.loadPendingQueue();
             if (currentUser) loadUserPostStatuses();
         };
+
+        loadGallery();
     </script>
 
     <script>
@@ -746,7 +802,7 @@
 
                 openModal('adminModal');
                 if (window.loadPendingQueue) window.loadPendingQueue();
-                if (typeof loadGallery === 'function') loadGallery();
+                loadGallery();
             } else {
                 document.getElementById('adminLoginError').style.display = 'block';
             }
