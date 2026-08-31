@@ -55,7 +55,6 @@
         .btn-admin { background: transparent; color: #66fcf1; border: 1px solid #45a29e; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
         .btn-admin:hover { background: rgba(69, 162, 158, 0.2); color: #66fcf1; }
 
-        /* Media Screen Breakpoint Adjustments */
         @media (max-width: 600px) {
             header h1 { font-size: 1.8rem; }
             nav { justify-content: center; text-align: center; }
@@ -192,12 +191,53 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Helper: Convert selected file to Base64 String
-        const fileToBase64 = (file) => new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
+        // Helper: Convert file to Base64 and compress image if needed
+        const processFile = (file) => new Promise((resolve, reject) => {
+            if (file.type.startsWith('image/')) {
+                const img = new Image();
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    img.src = e.target.result;
+                };
+
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Resize image dimensions if too large (max width/height: 1280px)
+                    const maxDim = 1280;
+                    if (width > maxDim || height > maxDim) {
+                        if (width > height) {
+                            height = Math.round((height * maxDim) / width);
+                            width = maxDim;
+                        } else {
+                            width = Math.round((width * maxDim) / height);
+                            height = maxDim;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Compress to JPEG with 0.7 quality to stay under 1 MB
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    resolve(compressedBase64);
+                };
+
+                img.onerror = (error) => reject(error);
+                reader.onerror = (error) => reject(error);
+                reader.readAsDataURL(file);
+            } else {
+                // For non-image files
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (error) => reject(error);
+                reader.readAsDataURL(file);
+            }
         });
 
         // Upload Form Submission Handler
@@ -205,7 +245,7 @@
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
-            btn.textContent = "Processing File...";
+            btn.textContent = "Compressing & Uploading...";
 
             const uploader = document.getElementById('uploaderName').value.trim();
             const title = document.getElementById('mediaTitle').value.trim();
@@ -220,13 +260,20 @@
             }
 
             try {
-                const base64Data = await fileToBase64(fileInput.files[0]);
+                const processedBase64 = await processFile(fileInput.files[0]);
+
+                if (processedBase64.length > 1000000) {
+                    alert("File is still too large after compression. Please choose a smaller file.");
+                    btn.disabled = false;
+                    btn.textContent = "Send for Approval";
+                    return;
+                }
 
                 await addDoc(collection(db, "posts"), {
                     uploader: uploader,
                     title: title,
                     type: type,
-                    url: base64Data,
+                    url: processedBase64,
                     approved: false,
                     createdAt: new Date()
                 });
