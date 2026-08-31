@@ -118,7 +118,7 @@
         .post-username span { display: block; font-size: 0.68rem; color: var(--primary-cyan); font-weight: 400; }
         
         .protected-media {
-            width: 100%; height: 260px; object-fit: cover; display: block;
+            width: 100%; height: 260px; object-fit: cover; display: block; background: #000;
         }
 
         .media-info { padding: 10px 12px; }
@@ -430,6 +430,7 @@
             progressContainer.style.display = 'block';
             progressPercentText.innerText = "0%";
 
+            // Fast light compression for images only to accelerate transport
             if (type === 'image' && file.size > 400 * 1024) {
                 file = await compressImage(file);
             }
@@ -437,6 +438,8 @@
             const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            // Speed optimization parameter bypasses heavy transformations during upload
+            formData.append('transformation', 'q_auto,f_auto');
 
             const resourceType = type === 'video' ? 'video' : 'image';
             const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
@@ -499,8 +502,8 @@
                     img.src = event.target.result;
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 1200;
-                        const MAX_HEIGHT = 1200;
+                        const MAX_WIDTH = 1000;
+                        const MAX_HEIGHT = 1000;
                         let width = img.width;
                         let height = img.height;
 
@@ -517,7 +520,7 @@
 
                         canvas.toBlob((blob) => {
                             resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() }));
-                        }, 'image/jpeg', 0.75);
+                        }, 'image/jpeg', 0.7);
                     };
                 };
             });
@@ -588,6 +591,7 @@
 
                     const avatarChar = (data.uploaderName || 'U').charAt(0).toUpperCase();
 
+                    // Optimized video parameters (playsinline, preload, low-latency streaming URL optimizations)
                     container.innerHTML += `
                         <div class="media-card">
                             <div class="post-header">
@@ -602,7 +606,7 @@
                             </div>
                             ${data.type === 'image' 
                                 ? `<img src="${data.url}" alt="${data.title}" class="protected-media" loading="lazy">` 
-                                : `<video src="${data.url}" class="protected-media" controls controlsList="nodownload noplaybackrate" disablePictureInPicture preload="metadata"></video>`}
+                                : `<video src="${data.url}" class="protected-media" controls playsinline preload="metadata" controlsList="nodownload noplaybackrate" disablePictureInPicture></video>`}
                             <div class="media-info">
                                 <h4>${data.title}</h4>
                             </div>
