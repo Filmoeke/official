@@ -67,12 +67,18 @@
         .section-title { color: #ffffff; font-size: 1.4rem; margin-bottom: 20px; border-left: 4px solid #ff6600; padding-left: 10px; }
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
 
-        .media-card { background: #1f2833; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .media-card { background: #1f2833; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; }
         .media-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(102, 252, 241, 0.15); }
         .media-card img, .media-card video { width: 100%; height: 220px; object-fit: cover; display: block; }
-        .media-info { padding: 12px 15px; }
+        .media-info { padding: 12px 15px; flex-grow: 1; }
         .media-info h4 { color: #ffffff; font-size: 1rem; margin-bottom: 2px; }
         .media-info p { font-size: 0.8rem; color: #66fcf1; }
+
+        /* Like & Dislike Controls */
+        .vote-actions { display: flex; gap: 8px; padding: 10px 15px 14px; border-top: 1px solid rgba(255, 255, 255, 0.05); background: rgba(11, 12, 16, 0.4); }
+        .btn-vote { flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(102, 252, 241, 0.2); color: #c5c6c7; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .btn-vote:hover { background: rgba(102, 252, 241, 0.15); color: #66fcf1; border-color: #66fcf1; }
+        .btn-vote.dislike:hover { background: rgba(220, 53, 69, 0.15); color: #dc3545; border-color: #dc3545; }
 
         /* Modal Overlays */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000; padding: 15px; }
@@ -205,7 +211,7 @@
     <!-- FIREBASE & CLOUDINARY INTEGRATION -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Cloudinary Credentials
         const CLOUDINARY_CLOUD_NAME = "pbyypohy";
@@ -273,6 +279,8 @@
                             type: type,
                             url: mediaUrl,
                             approved: false,
+                            likes: 0,
+                            dislikes: 0,
                             createdAt: new Date()
                         });
 
@@ -298,7 +306,7 @@
             xhr.send(formData);
         });
 
-        // Load Approved Gallery Items to Public
+        // Load Approved Gallery Items to Public (Sorted by Most Likes)
         async function loadGallery() {
             const container = document.getElementById('publicGallery');
             try {
@@ -311,8 +319,25 @@
                     return;
                 }
 
+                // Collect posts into array to sort client-side by likes
+                const postsList = [];
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
+                    postsList.push({
+                        id: docSnap.id,
+                        uploader: data.uploader,
+                        title: data.title,
+                        type: data.type,
+                        url: data.url,
+                        likes: data.likes || 0,
+                        dislikes: data.dislikes || 0
+                    });
+                });
+
+                // Sort posts in descending order based on likes count
+                postsList.sort((a, b) => b.likes - a.likes);
+
+                postsList.forEach((data) => {
                     container.innerHTML += `
                         <div class="media-card">
                             ${data.type === 'image' 
@@ -322,11 +347,32 @@
                                 <h4>${data.title}</h4>
                                 <p>By ${data.uploader}</p>
                             </div>
+                            <div class="vote-actions">
+                                <button class="btn-vote" onclick="votePost('${data.id}', 'likes')">
+                                    👍 <span>${data.likes}</span>
+                                </button>
+                                <button class="btn-vote dislike" onclick="votePost('${data.id}', 'dislikes')">
+                                    👎 <span>${data.dislikes}</span>
+                                </button>
+                            </div>
                         </div>
                     `;
                 });
             } catch (err) {
                 container.innerHTML = `<p style="color: #dc3545;">Error loading gallery: ${err.message}</p>`;
+            }
+        }
+
+        // Vote (Like/Dislike) Function
+        window.votePost = async function(id, type) {
+            try {
+                const postRef = doc(db, "posts", id);
+                await updateDoc(postRef, {
+                    [type]: increment(1)
+                });
+                loadGallery();
+            } catch (err) {
+                alert("Error updating vote: " + err.message);
             }
         }
 
