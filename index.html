@@ -81,14 +81,22 @@
 
         /* Profile Dropdown */
         .profile-dropdown {
-            position: absolute; top: 46px; right: 0; width: 220px;
+            position: absolute; top: 46px; right: 0; width: 260px;
             background: #ffffff; border: 1px solid var(--border-color); border-radius: 12px;
             padding: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: none; flex-direction: column; gap: 8px; z-index: 101;
         }
         .profile-dropdown.active { display: flex; }
-        .profile-info-header { border-bottom: 1px solid var(--border-color); padding-bottom: 6px; margin-bottom: 2px; }
+        .profile-info-header { border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom: 4px; }
         .profile-info-header strong { font-size: 0.85rem; color: var(--text-main); display: block; }
         .profile-info-header span { font-size: 0.72rem; color: var(--text-muted); word-break: break-all; }
+        
+        /* My Posts Status List inside Profile Dropdown */
+        .my-posts-status-container { max-height: 140px; overflow-y: auto; margin: 4px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 6px 0; }
+        .status-item { font-size: 0.75rem; display: flex; justify-content: space-between; align-items: center; padding: 3px 0; }
+        .status-badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+        .status-badge.pending { background: #fef3c7; color: #d97706; }
+        .status-badge.approved { background: #d1fae5; color: #059669; }
+
         .dropdown-item { width: 100%; text-align: left; background: none; border: none; padding: 8px 10px; font-size: 0.82rem; font-weight: 600; color: var(--text-main); cursor: pointer; border-radius: 6px; display: flex; align-items: center; gap: 8px; }
         .dropdown-item:hover { background: #f1f5f9; color: var(--primary-cyan); }
 
@@ -133,7 +141,7 @@
         .comment-form input { flex: 1; padding: 6px 10px; font-size: 0.78rem; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); outline: none; }
         .comment-form button { background: none; color: var(--primary-cyan); font-weight: 700; border: none; cursor: pointer; font-size: 0.78rem; }
 
-        /* Modals */
+        /* Modals & Upload Progress Bar */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000; padding: 20px; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         .modal-card { background: #ffffff; width: 100%; max-width: 420px; border-radius: 16px; padding: 25px; border: 1px solid var(--border-color); position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
@@ -143,6 +151,12 @@
         .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
         .form-group input, .form-group select { width: 100%; padding: 10px 12px; border-radius: 8px; background: #f8fafc; border: 1px solid var(--border-color); color: var(--text-main); outline: none; }
         .form-group input:focus, .form-group select:focus { border-color: var(--primary-cyan); background: #ffffff; }
+
+        /* Progress Bar Styles */
+        .upload-progress-container { display: none; margin-top: 12px; }
+        .progress-bar-wrapper { width: 100%; background: #e2e8f0; border-radius: 6px; height: 10px; overflow: hidden; margin-top: 6px; }
+        .progress-bar-fill { width: 0%; height: 100%; background: var(--primary-cyan); transition: width 0.2s ease; }
+        .progress-text { font-size: 0.75rem; color: var(--text-muted); text-align: right; margin-top: 4px; font-weight: 600; }
 
         .admin-item { display: flex; gap: 12px; align-items: center; background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border-color); }
         .admin-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
@@ -175,14 +189,19 @@
 
             <div class="profile-dropdown" id="profileDropdown">
                 <div id="profileLoggedOut">
-                    <button class="dropdown-item" onclick="openModal('loginModal')"> User Login</button>
+                    <button class="dropdown-item" onclick="openModal('loginModal')">👤 User Login</button>
                     <div style="border-top: 1px solid var(--border-color); margin: 4px 0;"></div>
-                    <button class="dropdown-item" onclick="openModal('adminLoginModal')"> Admin </button>
+                    <button class="dropdown-item" onclick="openModal('adminLoginModal')">🛡️ Owner</button>
                 </div>
                 <div id="profileLoggedIn" style="display: none;">
                     <div class="profile-info-header">
                         <strong id="userDisplayName">User Name</strong>
                         <span id="userInstaId">@instagram_id</span>
+                    </div>
+                    <!-- Status section for user's specific posts -->
+                    <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-top: 6px;">Your Post Statuses:</div>
+                    <div class="my-posts-status-container" id="myPostsStatusList">
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">No submissions yet</span>
                     </div>
                     <button class="dropdown-item" id="btnAdminDashboard" style="display: none; color: var(--primary-cyan);" onclick="openModal('adminModal'); loadPendingQueue();">📊 Owner Dashboard</button>
                     <button class="dropdown-item" style="color: var(--accent-pink);" id="btnLogout">Sign Out</button>
@@ -218,7 +237,19 @@
                     <label>Choose File *</label>
                     <input type="file" id="mediaFile" accept="image/*,video/*" required>
                 </div>
-                <button type="submit" id="submitBtn" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 11px;">Upload & Submit</button>
+
+                <!-- Upload Progress Percentage Indicator -->
+                <div class="upload-progress-container" id="uploadProgressContainer">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-main);">Uploading file...</span>
+                        <span class="progress-text" id="progressPercentText">0%</span>
+                    </div>
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar-fill" id="progressBarFill"></div>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 11px; margin-top: 10px;">Upload & Submit</button>
             </form>
         </div>
     </div>
@@ -297,7 +328,6 @@
         let currentUser = null;
         window.isOwnerLoggedIn = false;
 
-        // Local Storage Session Check on Load
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('filmoeke_user');
             if (savedUser) {
@@ -326,6 +356,7 @@
                 if (window.isOwnerLoggedIn) {
                     btnAdminDashboard.style.display = 'flex';
                 }
+                loadUserPostStatuses();
             } else {
                 profileLoggedOut.style.display = 'block';
                 profileLoggedIn.style.display = 'none';
@@ -336,7 +367,6 @@
             loadGallery();
         }
 
-        // Handle Custom User Login (Name & Instagram ID)
         document.getElementById('userLoginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('loginName').value.trim();
@@ -364,16 +394,23 @@
                 openModal('loginModal');
                 return;
             }
+            document.getElementById('uploadProgressContainer').style.display = 'none';
+            document.getElementById('progressBarFill').style.width = '0%';
             openModal('uploadModal');
         };
 
-        // Submit Post Handler
+        // Submit Post Handler with Upload Percentage Progress Bar
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return alert("Please log in first.");
 
             const btn = document.getElementById('submitBtn');
+            const progressContainer = document.getElementById('uploadProgressContainer');
+            const progressBarFill = document.getElementById('progressBarFill');
+            const progressPercentText = document.getElementById('progressPercentText');
+
             btn.disabled = true;
+            progressContainer.style.display = 'block';
 
             const title = document.getElementById('mediaTitle').value.trim();
             const type = document.getElementById('mediaType').value;
@@ -389,6 +426,16 @@
 
             const xhr = new XMLHttpRequest();
             xhr.open('POST', endpoint, true);
+
+            // Track upload percentage progress
+            xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    const percentComplete = Math.round((event.loaded / event.total) * 100);
+                    progressBarFill.style.width = percentComplete + '%';
+                    progressPercentText.innerText = percentComplete + '%';
+                }
+            };
+
             xhr.onload = async () => {
                 if (xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
@@ -400,20 +447,59 @@
                         url: response.secure_url,
                         approved: false,
                         likes: 0,
-                        dislikes: 0,
                         comments: [],
                         createdAt: new Date()
                     });
-                    alert("Post submitted for owner approval!");
+                    alert("Post successfully submitted for owner approval!");
                     document.getElementById('uploadForm').reset();
                     closeModal('uploadModal');
+                    loadUserPostStatuses();
                 } else {
                     alert("Media upload failed.");
                 }
                 btn.disabled = false;
+                progressContainer.style.display = 'none';
             };
+
+            xhr.onerror = () => {
+                alert("Network error during file upload.");
+                btn.disabled = false;
+                progressContainer.style.display = 'none';
+            };
+
             xhr.send(formData);
         });
+
+        // Fetch & display user's individual post statuses (Pending vs Approved) in the profile drop-down
+        async function loadUserPostStatuses() {
+            if (!currentUser) return;
+            const statusContainer = document.getElementById('myPostsStatusList');
+            statusContainer.innerHTML = `<span style="font-size: 0.72rem; color: var(--text-muted);">Checking status...</span>`;
+
+            try {
+                const q = query(collection(db, "posts"), where("uploaderName", "==", currentUser.name), where("uploaderInsta", "==", currentUser.insta));
+                const querySnapshot = await getDocs(q);
+                
+                statusContainer.innerHTML = "";
+                if (querySnapshot.empty) {
+                    statusContainer.innerHTML = `<span style="font-size: 0.72rem; color: var(--text-muted);">No submissions found</span>`;
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const isApproved = data.approved;
+                    statusContainer.innerHTML += `
+                        <div class="status-item">
+                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px;" title="${data.title}">${data.title}</span>
+                            <span class="status-badge ${isApproved ? 'approved' : 'pending'}">${isApproved ? 'Approved' : 'Pending'}</span>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                statusContainer.innerHTML = `<span style="font-size: 0.72rem; color: var(--accent-pink);">Failed to load status</span>`;
+            }
+        }
 
         // Load Gallery
         async function loadGallery() {
@@ -496,6 +582,7 @@
             if (confirm("Delete this post permanently?")) {
                 await deleteDoc(doc(db, "posts", id));
                 loadGallery();
+                if (currentUser) loadUserPostStatuses();
             }
         };
 
@@ -559,11 +646,13 @@
             await updateDoc(doc(db, "posts", id), { approved: true });
             window.loadPendingQueue();
             loadGallery();
+            if (currentUser) loadUserPostStatuses();
         };
 
         window.rejectPost = async function(id) {
             await deleteDoc(doc(db, "posts", id));
             window.loadPendingQueue();
+            if (currentUser) loadUserPostStatuses();
         };
 
         loadGallery();
@@ -585,7 +674,6 @@
             }
         });
 
-        // Owner Login Form handler
         document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const uId = document.getElementById('loginUserId').value.trim();
