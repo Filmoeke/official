@@ -1,23 +1,49 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
-const upload = multer({ dest: 'uploads/' }); // Stores raw files directly to disk without processing
+const PORT = 3000;
 
+// Ensure an 'uploads' directory exists
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
+
+// Configure storage to retain original filenames and formats
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
+
+// Serve static files
+app.use(express.static(__dirname));
+
+// Fast Uncompressed Upload Route
 app.post('/api/upload', upload.single('media'), (req, res) => {
     if (!req.file) {
-        return res.status(400).json({ error: 'No file uploaded' });
+        return res.status(400).json({ error: 'No file received' });
     }
-    
-    // req.file contains the unmodified high-definition asset
-    console.log(`Received: ${req.file.originalname} (${(req.file.size / (1024*1024)).toFixed(2)} MB)`);
-    
-    return res.json({ 
-        success: true, 
+
+    console.log(`[Success] Saved: ${req.file.filename} (${(req.file.size / (1024 * 1024)).toFixed(2)} MB)`);
+
+    return res.json({
+        success: true,
         filename: req.file.filename,
-        message: 'File uploaded instantly at original quality.' 
+        size: req.file.size,
+        message: 'File uploaded successfully at full quality.'
     });
 });
 
-app.listen(3000, () => console.log('Server running on port 3000'));
+app.listen(PORT, () => {
+    console.log(`Free local server running live at http://localhost:${PORT}`);
+});
