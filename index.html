@@ -422,9 +422,9 @@
             const fileInput = document.getElementById('mediaFile');
             let file = fileInput.files[0];
 
-            const maxSize = type === 'video' ? 150 * 1024 * 1024 : 20 * 1024 * 1024;
+            const maxSize = type === 'video' ? 150 * 1024 * 1024 : 25 * 1024 * 1024;
             if (file.size > maxSize) {
-                alert(`File is too large. Max allowed size is ${type === 'video' ? '150MB' : '20MB'}.`);
+                alert(`File is too large. Max allowed size is ${type === 'video' ? '150MB' : '25MB'}.`);
                 return;
             }
 
@@ -432,7 +432,8 @@
             progressContainer.style.display = 'block';
             progressPercentText.innerText = "0%";
 
-            if (type === 'image' && file.size > 500 * 1024) {
+            // Fast image compression if photo is large
+            if (type === 'image' && file.size > 800 * 1024) {
                 file = await compressImage(file);
             }
 
@@ -519,7 +520,7 @@
 
                         canvas.toBlob((blob) => {
                             resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() }));
-                        }, 'image/jpeg', 0.8);
+                        }, 'image/jpeg', 0.82);
                     };
                 };
             });
@@ -578,7 +579,6 @@
 
                     let commentsHTML = "";
                     (data.comments || []).forEach((c) => {
-                        // Admins can delete any comment; authors can delete their own comments
                         const canDeleteComment = isAdmin || (currentUser && currentUser.name === c.name);
                         const commentJson = encodeURIComponent(JSON.stringify(c));
                         commentsHTML += `
