@@ -8,7 +8,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: #0b0c10; color: #c5c6c7; line-height: 1.6; overflow-x: hidden; }
 
-        /* Animated Ambient Background Glow */
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: radial-gradient(circle at 50% 20%, rgba(102, 252, 241, 0.08), transparent 50%),
@@ -16,7 +15,6 @@
             z-index: -1; pointer-events: none;
         }
 
-        /* Header Styling */
         header { text-align: center; padding: 35px 15px 20px; background: linear-gradient(180deg, #1f2833 0%, #0b0c10 100%); border-bottom: 1px solid rgba(102, 252, 241, 0.1); }
         header h1 {
             font-size: 2.2rem; letter-spacing: 2px; display: inline-block;
@@ -27,102 +25,68 @@
         @keyframes cinemaShine { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
         header p { color: #c5c6c7; font-size: 0.95rem; margin-top: 6px; font-weight: 300; }
 
-        /* Navigation Bar */
         nav { 
-            background: rgba(31, 40, 51, 0.95); 
-            backdrop-filter: blur(10px); 
-            padding: 12px 15px; 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: space-between; 
-            align-items: center; 
-            gap: 10px;
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+            background: rgba(31, 40, 51, 0.95); backdrop-filter: blur(10px); padding: 12px 15px; 
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;
+            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
         }
         .social-links { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
         .social-links a { color: #66fcf1; text-decoration: none; font-size: 0.8rem; font-weight: 600; padding: 5px 10px; border-radius: 20px; background: rgba(102, 252, 241, 0.05); border: 1px solid rgba(102, 252, 241, 0.2); transition: all 0.3s; }
         .social-links a:hover { background: #66fcf1; color: #0b0c10; box-shadow: 0 0 10px rgba(102, 252, 241, 0.4); }
 
         .nav-buttons { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .btn-action { background: linear-gradient(135deg, #ff6600, #ff8533); color: #fff; font-weight: bold; padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.85rem; transition: transform 0.2s; }
+        .btn-action:hover { transform: translateY(-2px); }
+        .btn-google { background: #ea4335; color: #fff; font-weight: bold; padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.85rem; }
+        .btn-admin { background: transparent; color: #66fcf1; border: 1px solid #45a29e; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
 
-        .btn-action { background: linear-gradient(135deg, #ff6600, #ff8533); color: #fff; font-weight: bold; padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; animation: pulseGlow 2.5s infinite; font-size: 0.85rem; }
-        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0.5); } 70% { box-shadow: 0 0 0 8px rgba(255, 102, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0); } }
-        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 102, 0, 0.4); }
+        .user-profile { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(102,252,241,0.2); }
+        .user-profile img { width: 24px; height: 24px; border-radius: 50%; }
+        .user-profile span { font-size: 0.8rem; color: #fff; }
 
-        .btn-admin { background: transparent; color: #66fcf1; border: 1px solid #45a29e; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
-        .btn-admin:hover { background: rgba(69, 162, 158, 0.2); color: #66fcf1; }
-
-        @media (max-width: 600px) {
-            header h1 { font-size: 1.8rem; }
-            nav { justify-content: center; text-align: center; }
-            .social-links { justify-content: center; width: 100%; margin-bottom: 4px; }
-            .nav-buttons { justify-content: center; width: 100%; }
-        }
-
-        /* Gallery Grid */
         .container { max-width: 1200px; margin: 25px auto; padding: 0 15px; }
         .section-title { color: #ffffff; font-size: 1.4rem; margin-bottom: 20px; border-left: 4px solid #ff6600; padding-left: 10px; }
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
 
-        .media-card { background: #1f2833; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-        .media-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(102, 252, 241, 0.15); }
+        .media-card { background: #1f2833; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+        .media-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); }
         .media-card img, .media-card video { width: 100%; height: 220px; object-fit: cover; display: block; }
         
-        .media-info { padding: 12px 15px; flex-grow: 1; position: relative; }
-        .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
-        .media-info h4 { color: #ffffff; font-size: 1rem; word-break: break-word; }
-        .btn-edit-title { background: none; border: none; color: #45a29e; cursor: pointer; font-size: 0.75rem; transition: color 0.2s; }
-        .btn-edit-title:hover { color: #66fcf1; }
+        .media-info { padding: 12px 15px; flex-grow: 1; }
+        .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .media-info h4 { color: #ffffff; font-size: 1rem; }
+        .btn-edit-title { background: none; border: none; color: #45a29e; cursor: pointer; font-size: 0.75rem; }
         .media-info p { font-size: 0.8rem; color: #66fcf1; }
 
-        .btn-delete-card { position: absolute; top: 12px; right: 12px; background: rgba(220, 53, 69, 0.2); border: 1px solid rgba(220, 53, 69, 0.4); color: #dc3545; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; z-index: 5; }
-        .btn-delete-card:hover { background: #dc3545; color: #fff; }
+        .btn-delete-card { position: absolute; top: 12px; right: 12px; background: rgba(220, 53, 69, 0.8); border: none; color: #fff; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 0.85rem; z-index: 5; }
 
-        /* Like & Dislike Controls */
         .vote-actions { display: flex; gap: 8px; padding: 10px 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); background: rgba(11, 12, 16, 0.4); }
-        .btn-vote { flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(102, 252, 241, 0.2); color: #c5c6c7; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 4px; }
-        .btn-vote:hover { background: rgba(102, 252, 241, 0.15); color: #66fcf1; border-color: #66fcf1; }
-        .btn-vote.dislike:hover { background: rgba(220, 53, 69, 0.15); color: #dc3545; border-color: #dc3545; }
-
-        /* Comments Section */
-        .comments-section { border-top: 1px solid rgba(255, 255, 255, 0.05); background: #161c23; padding: 12px 15px; max-height: 200px; display: flex; flex-direction: column; }
+        .btn-vote { flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(102, 252, 241, 0.2); color: #c5c6c7; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        
+        .comments-section { border-top: 1px solid rgba(255, 255, 255, 0.05); background: #161c23; padding: 12px 15px; }
         .comments-list { overflow-y: auto; max-height: 110px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px; }
-        .comment-item { background: #0b0c10; padding: 6px 10px; border-radius: 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
+        .comment-item { background: #0b0c10; padding: 6px 10px; border-radius: 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; }
         .comment-text strong { color: #66fcf1; margin-right: 4px; }
-        .comment-text span { color: #ddd; word-break: break-word; }
-        .btn-delete-comment { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.75rem; opacity: 0.6; }
-        .btn-delete-comment:hover { opacity: 1; }
+        .btn-delete-comment { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.75rem; }
 
-        .comment-form { display: flex; gap: 4px; flex-wrap: wrap; }
-        .comment-form input { flex: 1; min-width: 60px; padding: 5px 8px; font-size: 0.75rem; background: #0b0c10; border: 1px solid #45a29e; border-radius: 4px; color: #fff; }
-        .comment-form button { background: #45a29e; color: #0b0c10; font-weight: bold; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; transition: background 0.2s; }
-        .comment-form button:hover { background: #66fcf1; }
+        .comment-form { display: flex; gap: 4px; }
+        .comment-form input { flex: 1; padding: 6px 10px; font-size: 0.8rem; background: #0b0c10; border: 1px solid #45a29e; border-radius: 4px; color: #fff; }
+        .comment-form button { background: #45a29e; color: #0b0c10; font-weight: bold; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
 
-        /* Modal Overlays */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000; padding: 15px; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-card { background: #1f2833; width: 100%; max-width: 480px; border-radius: 12px; padding: 25px; border: 1px solid rgba(102, 252, 241, 0.3); position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 0 25px rgba(0,0,0,0.8); }
+        .modal-card { background: #1f2833; width: 100%; max-width: 480px; border-radius: 12px; padding: 25px; border: 1px solid rgba(102, 252, 241, 0.3); position: relative; max-height: 90vh; overflow-y: auto; }
         .close-btn { position: absolute; top: 12px; right: 15px; font-size: 1.5rem; background: none; border: none; color: #c5c6c7; cursor: pointer; }
 
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: #ffffff; }
-        .form-group input, .form-group select { width: 100%; padding: 10px 12px; border-radius: 6px; background: #0b0c10; border: 1px solid #45a29e; color: #ffffff; outline: none; font-size: 0.9rem; }
-        .form-group input:focus { border-color: #66fcf1; box-shadow: 0 0 8px rgba(102, 252, 241, 0.3); }
-        .form-group input[type="file"] { padding: 8px; background: #0b0c10; cursor: pointer; }
+        .form-group input, .form-group select { width: 100%; padding: 10px 12px; border-radius: 6px; background: #0b0c10; border: 1px solid #45a29e; color: #ffffff; outline: none; }
 
-        /* Admin Pending Queue List */
-        .admin-item { display: flex; gap: 12px; align-items: center; background: #0b0c10; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .admin-preview { width: 55px; height: 55px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+        .admin-item { display: flex; gap: 12px; align-items: center; background: #0b0c10; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+        .admin-preview { width: 55px; height: 55px; object-fit: cover; border-radius: 4px; }
         .admin-actions { display: flex; gap: 6px; margin-left: auto; }
-        .btn-approve { background: #28a745; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: background 0.2s; }
-        .btn-approve:hover { background: #218838; }
-        .btn-reject { background: #dc3545; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: background 0.2s; }
-        .btn-reject:hover { background: #c82333; }
-        .btn-logout { background: transparent; border: 1px solid #dc3545; color: #dc3545; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; float: right; }
-        .btn-logout:hover { background: #dc3545; color: #fff; }
+        .btn-approve { background: #28a745; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .btn-reject { background: #dc3545; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
 
         footer { text-align: center; padding: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 40px; font-size: 0.8rem; color: #888; }
     </style>
@@ -143,7 +107,10 @@
             <a href="https://facebook.com/isajid19" target="_blank">🌐 Facebook</a>
         </div>
         <div class="nav-buttons">
-            <button class="btn-action" onclick="openModal('uploadModal')">Submit Post</button>
+            <div id="authContainer">
+                <button class="btn-google" onclick="loginWithGoogle()">Sign in with Google</button>
+            </div>
+            <button class="btn-action" onclick="openUploadModal()">Submit Post</button>
             <button class="btn-admin" onclick="triggerAdminPanel()">Owner Portal</button>
         </div>
     </nav>
@@ -151,28 +118,18 @@
     <div class="container">
         <h2 class="section-title">Approved Showcase Gallery</h2>
         <div class="gallery-grid" id="publicGallery">
-            <p style="color: #aaa;">Loading gallery from database...</p>
+            <p style="color: #aaa;">Loading gallery...</p>
         </div>
     </div>
 
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
-            <h3 style="color: #66fcf1; margin-bottom: 8px;">Submit Your Media</h3>
-            <p style="font-size: 0.8rem; margin-bottom: 15px; color: #aaa;">Submissions are reviewed before appearing publicly.</p>
-            
+            <h3 style="color: #66fcf1; margin-bottom: 8px;">Submit Media</h3>
             <form id="uploadForm">
                 <div class="form-group">
-                    <label>Your Name / Social Handle *</label>
-                    <input type="text" id="uploaderName" placeholder="e.g., @alex_clicks" required>
-                </div>
-                <div class="form-group">
                     <label>Title / Caption *</label>
-                    <input type="text" id="mediaTitle" placeholder="e.g., Sunset over the hills" required>
-                </div>
-                <div class="form-group">
-                    <label>Create a Deletion & Edit PIN * (Used to Edit/Delete your post later)</label>
-                    <input type="password" id="deletePin" maxlength="6" placeholder="e.g., 1234" required>
+                    <input type="text" id="mediaTitle" placeholder="e.g., Mountain Sunrise" required>
                 </div>
                 <div class="form-group">
                     <label>Media Type *</label>
@@ -182,10 +139,10 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Choose File (Supports HD Photos & Videos) *</label>
+                    <label>Choose File *</label>
                     <input type="file" id="mediaFile" accept="image/*,video/*" required>
                 </div>
-                <button type="submit" id="submitBtn" class="btn-action" style="width: 100%; margin-top: 8px;">Upload & Send for Approval</button>
+                <button type="submit" id="submitBtn" class="btn-action" style="width: 100%;">Upload & Send for Approval</button>
             </form>
         </div>
     </div>
@@ -194,19 +151,17 @@
         <div class="modal-card" style="max-width: 380px;">
             <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
             <h3 style="color: #66fcf1; margin-bottom: 6px; text-align: center;">Owner Portal Login</h3>
-            <p style="font-size: 0.8rem; margin-bottom: 18px; color: #aaa; text-align: center;">Enter your credentials to access approval management.</p>
-            
             <form id="loginForm">
                 <div class="form-group">
                     <label>User ID</label>
-                    <input type="text" id="loginUserId" placeholder="Enter User ID" required autocomplete="off">
+                    <input type="text" id="loginUserId" required autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter Password" required>
+                    <input type="password" id="loginPassword" required>
                 </div>
-                <p id="loginError" style="color: #dc3545; font-size: 0.8rem; display: none; margin-bottom: 10px; text-align: center;">Invalid User ID or Password!</p>
-                <button type="submit" class="btn-action" style="width: 100%; margin-top: 5px;">Login</button>
+                <p id="loginError" style="color: #dc3545; font-size: 0.8rem; display: none; margin-bottom: 10px; text-align: center;">Invalid Credentials!</p>
+                <button type="submit" class="btn-action" style="width: 100%;">Login</button>
             </form>
         </div>
     </div>
@@ -214,12 +169,7 @@
     <div class="modal-overlay" id="adminModal">
         <div class="modal-card" style="max-width: 620px;">
             <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
-            <div>
-                <button class="btn-logout" onclick="logoutAdmin()">Logout</button>
-                <h3 style="color: #66fcf1; margin-bottom: 4px;">Owner Control Panel</h3>
-                <p style="font-size: 0.8rem; margin-bottom: 16px; color: #aaa;">Review pending media items for public gallery approval:</p>
-            </div>
-            
+            <h3 style="color: #66fcf1; margin-bottom: 16px;">Owner Control Panel</h3>
             <div id="pendingQueue" style="max-height: 380px; overflow-y: auto;">
                 <p style="color: #aaa;">Loading queue...</p>
             </div>
@@ -232,7 +182,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, getDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const CLOUDINARY_CLOUD_NAME = "pbyypohy";
         const CLOUDINARY_UPLOAD_PRESET = "filmoeke_preset";
@@ -248,87 +199,92 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
 
-        // Upload Form Handler
+        let currentUser = null;
+
+        // Authentication State Listener
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            const authContainer = document.getElementById('authContainer');
+            if (user) {
+                authContainer.innerHTML = `
+                    <div class="user-profile">
+                        <img src="${user.photoURL || 'https://via.placeholder.com/24'}" alt="User">
+                        <span>${user.displayName.split(' ')[0]}</span>
+                        <button onclick="logoutGoogle()" style="background:none;border:none;color:#dc3545;cursor:pointer;font-weight:bold;margin-left:5px;">✕</button>
+                    </div>
+                `;
+            } else {
+                authContainer.innerHTML = `<button class="btn-google" onclick="loginWithGoogle()">Sign in with Google</button>`;
+            }
+            loadGallery();
+        });
+
+        window.loginWithGoogle = async function() {
+            try { await signInWithPopup(auth, provider); } 
+            catch (err) { alert("Login failed: " + err.message); }
+        };
+
+        window.logoutGoogle = function() { signOut(auth); };
+
+        window.openUploadModal = function() {
+            if (!currentUser) return alert("Please sign in with Google to post content!");
+            openModal('uploadModal');
+        };
+
+        // Post Upload Handler
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!currentUser) return alert("Please sign in first.");
+
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
 
-            const uploader = document.getElementById('uploaderName').value.trim();
             const title = document.getElementById('mediaTitle').value.trim();
-            const deletePin = document.getElementById('deletePin').value.trim();
             const type = document.getElementById('mediaType').value;
             const fileInput = document.getElementById('mediaFile');
-
-            if (!fileInput.files || fileInput.files.length === 0) {
-                alert("Please choose a file to upload.");
-                btn.disabled = false;
-                btn.textContent = "Upload & Send for Approval";
-                return;
-            }
-
             const file = fileInput.files[0];
+
             const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
-            const xhr = new XMLHttpRequest();
             const resourceType = type === 'video' ? 'video' : 'image';
             const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
 
+            const xhr = new XMLHttpRequest();
             xhr.open('POST', endpoint, true);
-
-            xhr.upload.onprogress = (event) => {
-                if (event.lengthComputable) {
-                    const percentComplete = Math.round((event.loaded / event.total) * 100);
-                    btn.textContent = `Uploading Media... ${percentComplete}%`;
-                }
-            };
-
             xhr.onload = async () => {
                 if (xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
-                    const mediaUrl = response.secure_url;
-
-                    try {
-                        await addDoc(collection(db, "posts"), {
-                            uploader: uploader,
-                            title: title,
-                            deletePin: deletePin,
-                            type: type,
-                            url: mediaUrl,
-                            approved: false,
-                            likes: 0,
-                            dislikes: 0,
-                            comments: [],
-                            createdAt: new Date()
-                        });
-
-                        alert("Post submitted! Save your PIN to edit or delete your post later.");
-                        document.getElementById('uploadForm').reset();
-                        closeModal('uploadModal');
-                    } catch (err) {
-                        alert("Database error: " + err.message);
-                    }
+                    await addDoc(collection(db, "posts"), {
+                        uploaderUid: currentUser.uid,
+                        uploaderName: currentUser.displayName,
+                        uploaderEmail: currentUser.email,
+                        title: title,
+                        type: type,
+                        url: response.secure_url,
+                        approved: false,
+                        likes: 0,
+                        dislikes: 0,
+                        comments: [],
+                        createdAt: new Date()
+                    });
+                    alert("Post submitted for approval!");
+                    document.getElementById('uploadForm').reset();
+                    closeModal('uploadModal');
                 } else {
-                    alert("Upload failed! Check Cloudinary setup.");
+                    alert("Media upload failed.");
                 }
                 btn.disabled = false;
-                btn.textContent = "Upload & Send for Approval";
             };
-
-            xhr.onerror = () => {
-                alert("Network error during file upload.");
-                btn.disabled = false;
-                btn.textContent = "Upload & Send for Approval";
-            };
-
             xhr.send(formData);
         });
 
-        // Load Approved Public Gallery
+        // Load Gallery
         async function loadGallery() {
             const container = document.getElementById('publicGallery');
             try {
@@ -337,251 +293,145 @@
                 container.innerHTML = "";
 
                 if (querySnapshot.empty) {
-                    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; background: #1f2833; border-radius: 8px;"><h3 style="color:#fff;">No approved posts yet!</h3><p style="font-size: 0.9rem; color:#aaa; margin-top: 5px;">Click 'Submit Post' to add the first photo or video.</p></div>`;
+                    container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #aaa;">No approved posts available.</p>`;
                     return;
                 }
 
                 const postsList = [];
                 querySnapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    postsList.push({
-                        id: docSnap.id,
-                        uploader: data.uploader,
-                        title: data.title,
-                        type: data.type,
-                        url: data.url,
-                        likes: data.likes || 0,
-                        dislikes: data.dislikes || 0,
-                        comments: data.comments || []
-                    });
+                    postsList.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
-                postsList.sort((a, b) => b.likes - a.likes);
+                postsList.sort((a, b) => (b.likes || 0) - (a.likes || 0));
 
                 postsList.forEach((data) => {
+                    const isOwner = window.isOwnerLoggedIn;
+                    const isAuthor = currentUser && currentUser.uid === data.uploaderUid;
+                    const canDeletePost = isOwner || isAuthor;
+
                     let commentsHTML = "";
-                    data.comments.forEach((c) => {
-                        const encodedComment = encodeURIComponent(JSON.stringify(c));
+                    (data.comments || []).forEach((c) => {
+                        const canDeleteComment = isOwner || (currentUser && currentUser.uid === c.uid);
+                        const commentJson = encodeURIComponent(JSON.stringify(c));
                         commentsHTML += `
                             <div class="comment-item">
                                 <div class="comment-text">
-                                    <strong>${c.name}:</strong>
-                                    <span>${c.text}</span>
+                                    <strong>${c.name}:</strong> <span>${c.text}</span>
                                 </div>
-                                <button class="btn-delete-comment" onclick="promptDeleteComment('${data.id}', '${encodedComment}')" title="Delete Comment">✕</button>
+                                ${canDeleteComment ? `<button class="btn-delete-comment" onclick="deleteComment('${data.id}', '${commentJson}')">✕</button>` : ''}
                             </div>
                         `;
                     });
 
                     container.innerHTML += `
                         <div class="media-card">
-                            <button class="btn-delete-card" onclick="promptDeletePost('${data.id}')" title="Delete Post">✕</button>
+                            ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">✕</button>` : ''}
                             ${data.type === 'image' 
                                 ? `<img src="${data.url}" alt="${data.title}" loading="lazy">` 
                                 : `<video src="${data.url}" controls></video>`}
                             <div class="media-info">
                                 <div class="title-row">
                                     <h4>${data.title}</h4>
-                                    <button class="btn-edit-title" onclick="promptEditTitle('${data.id}')" title="Edit Caption">✏️ Edit</button>
+                                    ${isAuthor ? `<button class="btn-edit-title" onclick="editTitle('${data.id}', '${data.title}')">✏️ Edit</button>` : ''}
                                 </div>
-                                <p>By ${data.uploader}</p>
+                                <p>By ${data.uploaderName}</p>
                             </div>
                             <div class="vote-actions">
-                                <button class="btn-vote" onclick="votePost('${data.id}', 'likes')">
-                                    👍 <span>${data.likes}</span>
-                                </button>
-                                <button class="btn-vote dislike" onclick="votePost('${data.id}', 'dislikes')">
-                                    👎 <span>${data.dislikes}</span>
-                                </button>
+                                <button class="btn-vote" onclick="votePost('${data.id}', 'likes')">👍 ${data.likes || 0}</button>
+                                <button class="btn-vote" onclick="votePost('${data.id}', 'dislikes')">👎 ${data.dislikes || 0}</button>
                             </div>
                             <div class="comments-section">
-                                <div class="comments-list">
-                                    ${commentsHTML.length > 0 ? commentsHTML : '<p style="font-size: 0.75rem; color: #666;">No comments yet.</p>'}
-                                </div>
+                                <div class="comments-list">${commentsHTML || '<p style="font-size: 0.75rem; color: #666;">No comments yet.</p>'}</div>
                                 <form class="comment-form" onsubmit="addComment(event, '${data.id}')">
-                                    <input type="text" placeholder="Name" class="c-name" required>
-                                    <input type="text" placeholder="Comment" class="c-text" required>
-                                    <input type="password" placeholder="PIN" class="c-pin" maxlength="6" style="width: 50px;" required title="Set a 4-digit PIN to delete your comment later">
-                                    <button type="submit">Post</button>
+                                    <input type="text" placeholder="${currentUser ? 'Write a comment...' : 'Sign in to comment'}" ${!currentUser ? 'disabled' : ''} required>
+                                    <button type="submit" ${!currentUser ? 'disabled' : ''}>Post</button>
                                 </form>
                             </div>
                         </div>
                     `;
                 });
             } catch (err) {
-                container.innerHTML = `<p style="color: #dc3545;">Error loading gallery: ${err.message}</p>`;
+                container.innerHTML = `<p style="color:#dc3545;">Error: ${err.message}</p>`;
             }
         }
 
-        // Edit Caption (Strictly Original Uploader PIN)
-        window.promptEditTitle = async function(id) {
-            const inputPin = prompt("Enter your Post PIN to edit this caption:");
-            if (!inputPin) return;
-
-            try {
-                const postSnap = await getDoc(doc(db, "posts", id));
-                if (postSnap.exists()) {
-                    const postData = postSnap.data();
-                    if (inputPin === postData.deletePin) {
-                        const newTitle = prompt("Enter new caption/title:", postData.title);
-                        if (newTitle && newTitle.trim() !== "") {
-                            await updateDoc(doc(db, "posts", id), { title: newTitle.trim() });
-                            alert("Caption updated successfully!");
-                            loadGallery();
-                        }
-                    } else {
-                        alert("Incorrect PIN! Only the original creator who posted this can edit the caption.");
-                    }
-                }
-            } catch (err) {
-                alert("Error updating caption: " + err.message);
+        window.deletePost = async function(id) {
+            if (confirm("Delete this post permanently?")) {
+                await deleteDoc(doc(db, "posts", id));
+                loadGallery();
             }
-        }
+        };
 
-        // Delete Post (Owner Override or Uploader PIN)
-        window.promptDeletePost = async function(id) {
-            if (window.isOwnerLoggedIn) {
-                if (confirm("Owner Override: Delete this post permanently?")) {
-                    await deleteDoc(doc(db, "posts", id));
-                    alert("Post deleted!");
-                    loadGallery();
-                }
-                return;
+        window.editTitle = async function(id, oldTitle) {
+            const newTitle = prompt("Enter new caption:", oldTitle);
+            if (newTitle && newTitle.trim()) {
+                await updateDoc(doc(db, "posts", id), { title: newTitle.trim() });
+                loadGallery();
             }
+        };
 
-            const inputKey = prompt("Enter your 4-digit Post PIN or Owner Credentials to delete:");
-            if (!inputKey) return;
-
-            try {
-                const postSnap = await getDoc(doc(db, "posts", id));
-                if (postSnap.exists()) {
-                    const postData = postSnap.data();
-                    if (inputKey === postData.deletePin || inputKey === "0091") {
-                        await deleteDoc(doc(db, "posts", id));
-                        alert("Post deleted!");
-                        loadGallery();
-                    } else {
-                        alert("Incorrect PIN! Only the owner or original uploader can delete this.");
-                    }
-                }
-            } catch (err) {
-                alert("Error deleting post: " + err.message);
-            }
-        }
-
-        // Add Comment
         window.addComment = async function(e, postId) {
             e.preventDefault();
-            const form = e.target;
-            const name = form.querySelector('.c-name').value.trim();
-            const text = form.querySelector('.c-text').value.trim();
-            const pin = form.querySelector('.c-pin').value.trim();
+            if (!currentUser) return alert("Sign in to comment.");
+            const input = e.target.querySelector('input');
+            const commentObj = {
+                uid: currentUser.uid,
+                name: currentUser.displayName,
+                text: input.value.trim(),
+                id: Date.now().toString()
+            };
+            await updateDoc(doc(db, "posts", postId), { comments: arrayUnion(commentObj) });
+            loadGallery();
+        };
 
-            try {
-                const commentObj = { name, text, pin, id: Date.now().toString() };
-                await updateDoc(doc(db, "posts", postId), {
-                    comments: arrayUnion(commentObj)
-                });
-                loadGallery();
-            } catch (err) {
-                alert("Error adding comment: " + err.message);
-            }
-        }
-
-        // Delete Comment (Owner Override or Commentator PIN)
-        window.promptDeleteComment = async function(postId, encodedComment) {
+        window.deleteComment = async function(postId, encodedComment) {
             const commentObj = JSON.parse(decodeURIComponent(encodedComment));
-            
-            if (window.isOwnerLoggedIn) {
-                if (confirm("Owner Override: Delete this comment?")) {
-                    await updateDoc(doc(db, "posts", postId), { comments: arrayRemove(commentObj) });
-                    alert("Comment deleted!");
-                    loadGallery();
-                }
-                return;
+            if (confirm("Delete this comment?")) {
+                await updateDoc(doc(db, "posts", postId), { comments: arrayRemove(commentObj) });
+                loadGallery();
             }
-
-            const inputPin = prompt("Enter your Comment PIN (or Owner Password) to delete this comment:");
-            if (!inputPin) return;
-
-            if (inputPin === commentObj.pin || inputPin === "0091") {
-                try {
-                    await updateDoc(doc(db, "posts", postId), { comments: arrayRemove(commentObj) });
-                    alert("Comment deleted!");
-                    loadGallery();
-                } catch (err) {
-                    alert("Error removing comment: " + err.message);
-                }
-            } else {
-                alert("Incorrect PIN! Only the person who wrote this comment or the site owner can delete it.");
-            }
-        }
+        };
 
         window.votePost = async function(id, type) {
-            try {
-                await updateDoc(doc(db, "posts", id), { [type]: increment(1) });
-                loadGallery();
-            } catch (err) {
-                alert("Error updating vote: " + err.message);
-            }
-        }
+            await updateDoc(doc(db, "posts", id), { [type]: increment(1) });
+            loadGallery();
+        };
 
         window.loadPendingQueue = async function() {
             const container = document.getElementById('pendingQueue');
-            try {
-                const q = query(collection(db, "posts"), where("approved", "==", false));
-                const querySnapshot = await getDocs(q);
-                container.innerHTML = "";
+            const q = query(collection(db, "posts"), where("approved", "==", false));
+            const querySnapshot = await getDocs(q);
+            container.innerHTML = querySnapshot.empty ? "<p style='color:#aaa;'>No pending submissions.</p>" : "";
 
-                if (querySnapshot.empty) {
-                    container.innerHTML = `<p style="text-align: center; color: #aaa; padding: 25px;">No pending submissions waiting for approval.</p>`;
-                    return;
-                }
-
-                querySnapshot.forEach((documentSnap) => {
-                    const data = documentSnap.data();
-                    const id = documentSnap.id;
-                    container.innerHTML += `
-                        <div class="admin-item">
-                            ${data.type === 'image' 
-                                ? `<img src="${data.url}" class="admin-preview">` 
-                                : `<video src="${data.url}" class="admin-preview"></video>`}
-                            <div>
-                                <strong style="color: #fff;">${data.title}</strong>
-                                <p style="font-size: 0.8rem; color: #66fcf1;">Submitted by: ${data.uploader}</p>
-                            </div>
-                            <div class="admin-actions">
-                                <button class="btn-approve" onclick="approvePost('${id}')">Approve</button>
-                                <button class="btn-reject" onclick="rejectPost('${id}')">Reject</button>
-                            </div>
+            querySnapshot.forEach((documentSnap) => {
+                const data = documentSnap.data();
+                const id = documentSnap.id;
+                container.innerHTML += `
+                    <div class="admin-item">
+                        <img src="${data.url}" class="admin-preview">
+                        <div>
+                            <strong style="color:#fff;">${data.title}</strong>
+                            <p style="font-size:0.8rem;color:#66fcf1;">By: ${data.uploaderName}</p>
                         </div>
-                    `;
-                });
-            } catch (err) {
-                container.innerHTML = `<p style="color: #dc3545;">Error loading queue: ${err.message}</p>`;
-            }
-        }
+                        <div class="admin-actions">
+                            <button class="btn-approve" onclick="approvePost('${id}')">Approve</button>
+                            <button class="btn-reject" onclick="rejectPost('${id}')">Reject</button>
+                        </div>
+                    </div>
+                `;
+            });
+        };
 
         window.approvePost = async function(id) {
-            if (!window.isOwnerLoggedIn) return alert("Unauthorized operation!");
-            try {
-                await updateDoc(doc(db, "posts", id), { approved: true });
-                window.loadPendingQueue();
-                loadGallery();
-            } catch (err) {
-                alert("Error approving post: " + err.message);
-            }
-        }
+            await updateDoc(doc(db, "posts", id), { approved: true });
+            window.loadPendingQueue();
+            loadGallery();
+        };
 
         window.rejectPost = async function(id) {
-            if (!window.isOwnerLoggedIn) return alert("Unauthorized operation!");
-            try {
-                await deleteDoc(doc(db, "posts", id));
-                window.loadPendingQueue();
-            } catch (err) {
-                alert("Error rejecting post: " + err.message);
-            }
-        }
+            await deleteDoc(doc(db, "posts", id));
+            window.loadPendingQueue();
+        };
 
         loadGallery();
     </script>
@@ -596,8 +446,6 @@
                 openModal('adminModal');
                 if (window.loadPendingQueue) window.loadPendingQueue();
             } else {
-                document.getElementById('loginError').style.display = 'none';
-                document.getElementById('loginForm').reset();
                 openModal('loginModal');
             }
         }
@@ -616,12 +464,6 @@
                 document.getElementById('loginError').style.display = 'block';
             }
         });
-
-        function logoutAdmin() {
-            window.isOwnerLoggedIn = false;
-            closeModal('adminModal');
-            alert("Logged out successfully.");
-        }
 
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
