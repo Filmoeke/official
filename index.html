@@ -65,23 +65,41 @@
         /* Gallery Grid */
         .container { max-width: 1200px; margin: 25px auto; padding: 0 15px; }
         .section-title { color: #ffffff; font-size: 1.4rem; margin-bottom: 20px; border-left: 4px solid #ff6600; padding-left: 10px; }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
 
         .media-card { background: #1f2833; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
         .media-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(102, 252, 241, 0.15); }
         .media-card img, .media-card video { width: 100%; height: 220px; object-fit: cover; display: block; }
+        
         .media-info { padding: 12px 15px; flex-grow: 1; position: relative; }
-        .media-info h4 { color: #ffffff; font-size: 1rem; margin-bottom: 2px; padding-right: 25px; }
+        .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+        .media-info h4 { color: #ffffff; font-size: 1rem; word-break: break-word; }
+        .btn-edit-title { background: none; border: none; color: #45a29e; cursor: pointer; font-size: 0.75rem; transition: color 0.2s; }
+        .btn-edit-title:hover { color: #66fcf1; }
         .media-info p { font-size: 0.8rem; color: #66fcf1; }
 
-        .btn-delete-card { position: absolute; top: 12px; right: 12px; background: rgba(220, 53, 69, 0.15); border: 1px solid rgba(220, 53, 69, 0.4); color: #dc3545; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .btn-delete-card { position: absolute; top: 12px; right: 12px; background: rgba(220, 53, 69, 0.2); border: 1px solid rgba(220, 53, 69, 0.4); color: #dc3545; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; z-index: 5; }
         .btn-delete-card:hover { background: #dc3545; color: #fff; }
 
         /* Like & Dislike Controls */
-        .vote-actions { display: flex; gap: 8px; padding: 10px 15px 14px; border-top: 1px solid rgba(255, 255, 255, 0.05); background: rgba(11, 12, 16, 0.4); }
+        .vote-actions { display: flex; gap: 8px; padding: 10px 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); background: rgba(11, 12, 16, 0.4); }
         .btn-vote { flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(102, 252, 241, 0.2); color: #c5c6c7; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 4px; }
         .btn-vote:hover { background: rgba(102, 252, 241, 0.15); color: #66fcf1; border-color: #66fcf1; }
         .btn-vote.dislike:hover { background: rgba(220, 53, 69, 0.15); color: #dc3545; border-color: #dc3545; }
+
+        /* Comments Section */
+        .comments-section { border-top: 1px solid rgba(255, 255, 255, 0.05); background: #161c23; padding: 12px 15px; max-height: 200px; display: flex; flex-direction: column; }
+        .comments-list { overflow-y: auto; max-height: 110px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px; }
+        .comment-item { background: #0b0c10; padding: 6px 10px; border-radius: 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
+        .comment-text strong { color: #66fcf1; margin-right: 4px; }
+        .comment-text span { color: #ddd; word-break: break-word; }
+        .btn-delete-comment { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.75rem; opacity: 0.6; }
+        .btn-delete-comment:hover { opacity: 1; }
+
+        .comment-form { display: flex; gap: 4px; flex-wrap: wrap; }
+        .comment-form input { flex: 1; min-width: 60px; padding: 5px 8px; font-size: 0.75rem; background: #0b0c10; border: 1px solid #45a29e; border-radius: 4px; color: #fff; }
+        .comment-form button { background: #45a29e; color: #0b0c10; font-weight: bold; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; transition: background 0.2s; }
+        .comment-form button:hover { background: #66fcf1; }
 
         /* Modal Overlays */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000; padding: 15px; }
@@ -137,7 +155,6 @@
         </div>
     </div>
 
-    <!-- SUBMIT PHOTO/VIDEO MODAL -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
@@ -154,7 +171,7 @@
                     <input type="text" id="mediaTitle" placeholder="e.g., Sunset over the hills" required>
                 </div>
                 <div class="form-group">
-                    <label>Create a Deletion PIN * (4 Digits to delete your post later)</label>
+                    <label>Create a Deletion & Edit PIN * (Used to Edit/Delete your post later)</label>
                     <input type="password" id="deletePin" maxlength="6" placeholder="e.g., 1234" required>
                 </div>
                 <div class="form-group">
@@ -173,7 +190,6 @@
         </div>
     </div>
 
-    <!-- OWNER LOGIN MODAL -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-card" style="max-width: 380px;">
             <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
@@ -195,7 +211,6 @@
         </div>
     </div>
 
-    <!-- OWNER APPROVAL CONTROL PANEL MODAL -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-card" style="max-width: 620px;">
             <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
@@ -215,10 +230,9 @@
         <p>&copy; 2026 Film O Eke | Photography & Videography</p>
     </footer>
 
-    <!-- FIREBASE & CLOUDINARY INTEGRATION -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, getDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const CLOUDINARY_CLOUD_NAME = "pbyypohy";
         const CLOUDINARY_UPLOAD_PRESET = "filmoeke_preset";
@@ -236,7 +250,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Submit Media with Deletion PIN
+        // Upload Form Handler
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -288,17 +302,18 @@
                             approved: false,
                             likes: 0,
                             dislikes: 0,
+                            comments: [],
                             createdAt: new Date()
                         });
 
-                        alert("Post submitted! Remember your Deletion PIN to delete this post later.");
+                        alert("Post submitted! Save your PIN to edit or delete your post later.");
                         document.getElementById('uploadForm').reset();
                         closeModal('uploadModal');
                     } catch (err) {
                         alert("Database error: " + err.message);
                     }
                 } else {
-                    alert("Upload failed! Please check your Cloudinary configuration.");
+                    alert("Upload failed! Check Cloudinary setup.");
                 }
                 btn.disabled = false;
                 btn.textContent = "Upload & Send for Approval";
@@ -313,7 +328,7 @@
             xhr.send(formData);
         });
 
-        // Render Public Gallery
+        // Load Approved Public Gallery
         async function loadGallery() {
             const container = document.getElementById('publicGallery');
             try {
@@ -336,13 +351,28 @@
                         type: data.type,
                         url: data.url,
                         likes: data.likes || 0,
-                        dislikes: data.dislikes || 0
+                        dislikes: data.dislikes || 0,
+                        comments: data.comments || []
                     });
                 });
 
                 postsList.sort((a, b) => b.likes - a.likes);
 
                 postsList.forEach((data) => {
+                    let commentsHTML = "";
+                    data.comments.forEach((c) => {
+                        const encodedComment = encodeURIComponent(JSON.stringify(c));
+                        commentsHTML += `
+                            <div class="comment-item">
+                                <div class="comment-text">
+                                    <strong>${c.name}:</strong>
+                                    <span>${c.text}</span>
+                                </div>
+                                <button class="btn-delete-comment" onclick="promptDeleteComment('${data.id}', '${encodedComment}')" title="Delete Comment">✕</button>
+                            </div>
+                        `;
+                    });
+
                     container.innerHTML += `
                         <div class="media-card">
                             <button class="btn-delete-card" onclick="promptDeletePost('${data.id}')" title="Delete Post">✕</button>
@@ -350,7 +380,10 @@
                                 ? `<img src="${data.url}" alt="${data.title}" loading="lazy">` 
                                 : `<video src="${data.url}" controls></video>`}
                             <div class="media-info">
-                                <h4>${data.title}</h4>
+                                <div class="title-row">
+                                    <h4>${data.title}</h4>
+                                    <button class="btn-edit-title" onclick="promptEditTitle('${data.id}')" title="Edit Caption">✏️ Edit</button>
+                                </div>
                                 <p>By ${data.uploader}</p>
                             </div>
                             <div class="vote-actions">
@@ -361,6 +394,17 @@
                                     👎 <span>${data.dislikes}</span>
                                 </button>
                             </div>
+                            <div class="comments-section">
+                                <div class="comments-list">
+                                    ${commentsHTML.length > 0 ? commentsHTML : '<p style="font-size: 0.75rem; color: #666;">No comments yet.</p>'}
+                                </div>
+                                <form class="comment-form" onsubmit="addComment(event, '${data.id}')">
+                                    <input type="text" placeholder="Name" class="c-name" required>
+                                    <input type="text" placeholder="Comment" class="c-text" required>
+                                    <input type="password" placeholder="PIN" class="c-pin" maxlength="6" style="width: 50px;" required title="Set a 4-digit PIN to delete your comment later">
+                                    <button type="submit">Post</button>
+                                </form>
+                            </div>
                         </div>
                     `;
                 });
@@ -369,18 +413,43 @@
             }
         }
 
-        // Delete Handler (Owner Bypass or PIN Verification)
+        // Edit Caption (Strictly Original Uploader PIN)
+        window.promptEditTitle = async function(id) {
+            const inputPin = prompt("Enter your Post PIN to edit this caption:");
+            if (!inputPin) return;
+
+            try {
+                const postSnap = await getDoc(doc(db, "posts", id));
+                if (postSnap.exists()) {
+                    const postData = postSnap.data();
+                    if (inputPin === postData.deletePin) {
+                        const newTitle = prompt("Enter new caption/title:", postData.title);
+                        if (newTitle && newTitle.trim() !== "") {
+                            await updateDoc(doc(db, "posts", id), { title: newTitle.trim() });
+                            alert("Caption updated successfully!");
+                            loadGallery();
+                        }
+                    } else {
+                        alert("Incorrect PIN! Only the original creator who posted this can edit the caption.");
+                    }
+                }
+            } catch (err) {
+                alert("Error updating caption: " + err.message);
+            }
+        }
+
+        // Delete Post (Owner Override or Uploader PIN)
         window.promptDeletePost = async function(id) {
             if (window.isOwnerLoggedIn) {
-                if (confirm("Owner Override: Are you sure you want to permanently delete this post?")) {
+                if (confirm("Owner Override: Delete this post permanently?")) {
                     await deleteDoc(doc(db, "posts", id));
-                    alert("Post deleted successfully!");
+                    alert("Post deleted!");
                     loadGallery();
                 }
                 return;
             }
 
-            const inputKey = prompt("Enter your 4-digit Deletion PIN or Owner Credentials to delete this post:");
+            const inputKey = prompt("Enter your 4-digit Post PIN or Owner Credentials to delete:");
             if (!inputKey) return;
 
             try {
@@ -389,10 +458,10 @@
                     const postData = postSnap.data();
                     if (inputKey === postData.deletePin || inputKey === "0091") {
                         await deleteDoc(doc(db, "posts", id));
-                        alert("Post deleted successfully!");
+                        alert("Post deleted!");
                         loadGallery();
                     } else {
-                        alert("Incorrect PIN or Password! Only the owner or the original author can delete this post.");
+                        alert("Incorrect PIN! Only the owner or original uploader can delete this.");
                     }
                 }
             } catch (err) {
@@ -400,10 +469,57 @@
             }
         }
 
+        // Add Comment
+        window.addComment = async function(e, postId) {
+            e.preventDefault();
+            const form = e.target;
+            const name = form.querySelector('.c-name').value.trim();
+            const text = form.querySelector('.c-text').value.trim();
+            const pin = form.querySelector('.c-pin').value.trim();
+
+            try {
+                const commentObj = { name, text, pin, id: Date.now().toString() };
+                await updateDoc(doc(db, "posts", postId), {
+                    comments: arrayUnion(commentObj)
+                });
+                loadGallery();
+            } catch (err) {
+                alert("Error adding comment: " + err.message);
+            }
+        }
+
+        // Delete Comment (Owner Override or Commentator PIN)
+        window.promptDeleteComment = async function(postId, encodedComment) {
+            const commentObj = JSON.parse(decodeURIComponent(encodedComment));
+            
+            if (window.isOwnerLoggedIn) {
+                if (confirm("Owner Override: Delete this comment?")) {
+                    await updateDoc(doc(db, "posts", postId), { comments: arrayRemove(commentObj) });
+                    alert("Comment deleted!");
+                    loadGallery();
+                }
+                return;
+            }
+
+            const inputPin = prompt("Enter your Comment PIN (or Owner Password) to delete this comment:");
+            if (!inputPin) return;
+
+            if (inputPin === commentObj.pin || inputPin === "0091") {
+                try {
+                    await updateDoc(doc(db, "posts", postId), { comments: arrayRemove(commentObj) });
+                    alert("Comment deleted!");
+                    loadGallery();
+                } catch (err) {
+                    alert("Error removing comment: " + err.message);
+                }
+            } else {
+                alert("Incorrect PIN! Only the person who wrote this comment or the site owner can delete it.");
+            }
+        }
+
         window.votePost = async function(id, type) {
             try {
-                const postRef = doc(db, "posts", id);
-                await updateDoc(postRef, { [type]: increment(1) });
+                await updateDoc(doc(db, "posts", id), { [type]: increment(1) });
                 loadGallery();
             } catch (err) {
                 alert("Error updating vote: " + err.message);
@@ -470,7 +586,6 @@
         loadGallery();
     </script>
 
-    <!-- OWNER AUTHENTICATION & MODAL MANAGEMENT -->
     <script>
         const AUTH_USER_ID = "0000332211";
         const AUTH_PASS = "0091";
