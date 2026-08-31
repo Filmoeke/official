@@ -3,100 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Film O Eke | Photography & Videography</title>
+    <title>Film O Eke | Cinematic Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: #0b0c10; color: #c5c6c7; line-height: 1.6; overflow-x: hidden; }
+        :root {
+            --bg-base: #030712;
+            --surface-card: rgba(17, 24, 39, 0.7);
+            --surface-hover: rgba(31, 41, 55, 0.8);
+            --border-glow: rgba(56, 189, 248, 0.25);
+            --primary-cyan: #38bdf8;
+            --accent-purple: #818cf8;
+            --accent-pink: #f43f5e;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
 
-        .bg-glow {
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
+        /* Background Glow FX */
+        .bg-glow-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at 50% 20%, rgba(102, 252, 241, 0.08), transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(69, 162, 158, 0.05), transparent 50%);
-            z-index: -1; pointer-events: none;
+            z-index: -1; pointer-events: none; overflow: hidden;
+        }
+        .glow-orb-1 {
+            position: absolute; top: -10%; left: 30%; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 70%);
+            filter: blur(80px);
+        }
+        .glow-orb-2 {
+            position: absolute; bottom: -10%; right: 10%; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(129, 140, 248, 0.1) 0%, transparent 70%);
+            filter: blur(100px);
         }
 
-        header { text-align: center; padding: 35px 15px 20px; background: linear-gradient(180deg, #1f2833 0%, #0b0c10 100%); border-bottom: 1px solid rgba(102, 252, 241, 0.1); }
+        /* Header */
+        header { 
+            text-align: center; padding: 45px 20px 25px; 
+            background: radial-gradient(ellipse at top, rgba(17, 24, 39, 0.8) 0%, var(--bg-base) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+        }
         header h1 {
-            font-size: 2.2rem; letter-spacing: 2px; display: inline-block;
-            background: linear-gradient(90deg, #66fcf1, #45a29e, #ffffff, #66fcf1);
-            background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text;
-            animation: cinemaShine 5s linear infinite; text-transform: uppercase;
+            font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; display: inline-block;
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary-cyan) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            text-transform: uppercase; text-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
         }
-        @keyframes cinemaShine { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
-        header p { color: #c5c6c7; font-size: 0.95rem; margin-top: 6px; font-weight: 300; }
+        header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 8px; font-weight: 400; letter-spacing: 0.5px; }
 
+        /* Navigation */
         nav { 
-            background: rgba(31, 40, 51, 0.95); backdrop-filter: blur(10px); padding: 12px 15px; 
-            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;
-            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+            background: rgba(11, 17, 32, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            padding: 14px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px;
+            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-glow);
         }
-        .social-links { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-        .social-links a { color: #66fcf1; text-decoration: none; font-size: 0.8rem; font-weight: 600; padding: 5px 10px; border-radius: 20px; background: rgba(102, 252, 241, 0.05); border: 1px solid rgba(102, 252, 241, 0.2); transition: all 0.3s; }
-        .social-links a:hover { background: #66fcf1; color: #0b0c10; box-shadow: 0 0 10px rgba(102, 252, 241, 0.4); }
+        .social-links { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .social-links a { 
+            color: var(--text-main); text-decoration: none; font-size: 0.82rem; font-weight: 600; 
+            padding: 6px 14px; border-radius: 30px; background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .social-links a:hover { 
+            background: rgba(56, 189, 248, 0.15); border-color: var(--primary-cyan); color: #fff;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); transform: translateY(-1px);
+        }
 
-        .nav-buttons { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .btn-action { background: linear-gradient(135deg, #ff6600, #ff8533); color: #fff; font-weight: bold; padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.85rem; }
-        .btn-google { background: #ea4335; color: #fff; font-weight: bold; padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.85rem; }
-        .btn-admin { background: transparent; color: #66fcf1; border: 1px solid #45a29e; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
-
-        .user-profile { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(102,252,241,0.2); }
-        .user-profile img { width: 24px; height: 24px; border-radius: 50%; }
-        .user-profile span { font-size: 0.8rem; color: #fff; }
-
-        .container { max-width: 1200px; margin: 25px auto; padding: 0 15px; }
-        .section-title { color: #ffffff; font-size: 1.4rem; margin-bottom: 20px; border-left: 4px solid #ff6600; padding-left: 10px; }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
-
-        .media-card { background: #1f2833; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-        .media-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); }
-        .media-card img, .media-card video { width: 100%; height: 220px; object-fit: cover; display: block; }
+        .nav-buttons { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
         
-        .media-info { padding: 12px 15px; flex-grow: 1; }
-        .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-        .media-info h4 { color: #ffffff; font-size: 1rem; }
-        .btn-edit-title { background: none; border: none; color: #45a29e; cursor: pointer; font-size: 0.75rem; }
-        .media-info p { font-size: 0.8rem; color: #66fcf1; }
+        /* Futuristic Buttons */
+        .btn-base { 
+            padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; 
+            border: none; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-action { 
+            background: linear-gradient(135deg, var(--primary-cyan), #0284c7); color: #030712;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(56, 189, 248, 0.5); }
 
-        .btn-delete-card { position: absolute; top: 12px; right: 12px; background: rgba(220, 53, 69, 0.8); border: none; color: #fff; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 0.85rem; z-index: 5; }
+        .btn-google { 
+            background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .btn-google:hover { background: rgba(239, 68, 68, 0.25); border-color: #ef4444; color: #fff; }
 
-        .vote-actions { display: flex; gap: 8px; padding: 10px 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); background: rgba(11, 12, 16, 0.4); }
-        .btn-vote { flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(102, 252, 241, 0.2); color: #c5c6c7; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .btn-admin { 
+            background: rgba(129, 140, 248, 0.1); color: var(--accent-purple); border: 1px solid rgba(129, 140, 248, 0.3);
+        }
+        .btn-admin:hover { background: rgba(129, 140, 248, 0.2); border-color: var(--accent-purple); color: #fff; }
+
+        .user-profile { 
+            display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.05); 
+            padding: 4px 12px; border-radius: 30px; border: 1px solid var(--border-glow);
+        }
+        .user-profile img { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--primary-cyan); }
+        .user-profile span { font-size: 0.82rem; font-weight: 600; color: #fff; }
+
+        /* Container & Grid */
+        .container { max-width: 1240px; margin: 35px auto; padding: 0 20px; }
+        .section-title { 
+            color: #ffffff; font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; 
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-title::before { content: ''; width: 4px; height: 22px; background: var(--primary-cyan); border-radius: 2px; box-shadow: 0 0 10px var(--primary-cyan); }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+        /* Media Cards */
+        .media-card { 
+            background: var(--surface-card); backdrop-filter: blur(12px); border-radius: 14px; overflow: hidden; 
+            border: 1px solid rgba(255, 255, 255, 0.06); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            display: flex; flex-direction: column; justify-content: space-between; position: relative;
+        }
+        .media-card:hover { transform: translateY(-6px); border-color: var(--border-glow); box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5); }
+        .media-card img, .media-card video { width: 100%; height: 230px; object-fit: cover; display: block; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         
-        .comments-section { border-top: 1px solid rgba(255, 255, 255, 0.05); background: #161c23; padding: 12px 15px; }
-        .comments-list { overflow-y: auto; max-height: 110px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px; }
-        .comment-item { background: #0b0c10; padding: 6px 10px; border-radius: 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; }
-        .comment-text strong { color: #66fcf1; margin-right: 4px; }
-        .btn-delete-comment { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.75rem; }
+        .media-info { padding: 14px 16px; flex-grow: 1; }
+        .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+        .media-info h4 { color: #ffffff; font-size: 1.05rem; font-weight: 700; }
+        .btn-edit-title { background: none; border: none; color: var(--primary-cyan); cursor: pointer; font-size: 0.75rem; font-weight: 600; }
+        .media-info p { font-size: 0.82rem; color: var(--text-muted); }
+        .media-info p strong { color: var(--accent-purple); }
 
-        .comment-form { display: flex; gap: 4px; }
-        .comment-form input { flex: 1; padding: 6px 10px; font-size: 0.8rem; background: #0b0c10; border: 1px solid #45a29e; border-radius: 4px; color: #fff; }
-        .comment-form button { background: #45a29e; color: #0b0c10; font-weight: bold; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .btn-delete-card { 
+            position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.85); 
+            border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; 
+            font-size: 0.85rem; z-index: 5; backdrop-filter: blur(4px); transition: transform 0.2s;
+        }
+        .btn-delete-card:hover { transform: scale(1.1); background: #ef4444; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000; padding: 15px; }
+        .vote-actions { display: flex; gap: 8px; padding: 10px 16px; border-top: 1px solid rgba(255, 255, 255, 0.04); background: rgba(3, 7, 18, 0.4); }
+        .btn-vote { 
+            flex: 1; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); 
+            color: var(--text-main); padding: 7px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; 
+            display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; transition: all 0.2s;
+        }
+        .btn-vote:hover { background: rgba(56, 189, 248, 0.1); border-color: var(--primary-cyan); color: var(--primary-cyan); }
+
+        /* Comments */
+        .comments-section { border-top: 1px solid rgba(255, 255, 255, 0.04); background: rgba(15, 23, 42, 0.5); padding: 12px 16px; }
+        .comments-list { overflow-y: auto; max-height: 110px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px; }
+        .comment-item { background: rgba(3, 7, 18, 0.6); padding: 7px 12px; border-radius: 8px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255, 255, 255, 0.03); }
+        .comment-text strong { color: var(--primary-cyan); margin-right: 4px; }
+        .btn-delete-comment { background: none; border: none; color: var(--accent-pink); cursor: pointer; font-size: 0.75rem; }
+
+        .comment-form { display: flex; gap: 6px; }
+        .comment-form input { 
+            flex: 1; padding: 8px 12px; font-size: 0.8rem; background: rgba(3, 7, 18, 0.8); 
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: #fff; outline: none; transition: border 0.2s;
+        }
+        .comment-form input:focus { border-color: var(--primary-cyan); }
+        .comment-form button { 
+            background: var(--primary-cyan); color: #030712; font-weight: 700; border: none; 
+            padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; 
+        }
+
+        /* Modals */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px); 
+            display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; 
+            transition: opacity 0.3s ease; z-index: 1000; padding: 20px; 
+        }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-card { background: #1f2833; width: 100%; max-width: 480px; border-radius: 12px; padding: 25px; border: 1px solid rgba(102, 252, 241, 0.3); position: relative; max-height: 90vh; overflow-y: auto; }
-        .close-btn { position: absolute; top: 12px; right: 15px; font-size: 1.5rem; background: none; border: none; color: #c5c6c7; cursor: pointer; }
+        .modal-card { 
+            background: #0f172a; width: 100%; max-width: 480px; border-radius: 16px; 
+            padding: 28px; border: 1px solid var(--border-glow); position: relative; max-height: 90vh; 
+            overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+        .close-btn { position: absolute; top: 16px; right: 18px; font-size: 1.4rem; background: none; border: none; color: var(--text-muted); cursor: pointer; }
+        .close-btn:hover { color: #fff; }
 
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: #ffffff; }
-        .form-group input, .form-group select { width: 100%; padding: 10px 12px; border-radius: 6px; background: #0b0c10; border: 1px solid #45a29e; color: #ffffff; outline: none; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 600; color: #ffffff; }
+        .form-group input, .form-group select { 
+            width: 100%; padding: 11px 14px; border-radius: 8px; background: rgba(3, 7, 18, 0.8); 
+            border: 1px solid rgba(255, 255, 255, 0.1); color: #ffffff; outline: none; transition: border 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary-cyan); }
 
-        .admin-item { display: flex; gap: 12px; align-items: center; background: #0b0c10; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
-        .admin-preview { width: 55px; height: 55px; object-fit: cover; border-radius: 4px; }
-        .admin-actions { display: flex; gap: 6px; margin-left: auto; }
-        .btn-approve { background: #28a745; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-        .btn-reject { background: #dc3545; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .admin-item { display: flex; gap: 12px; align-items: center; background: rgba(3, 7, 18, 0.6); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .admin-preview { width: 55px; height: 55px; object-fit: cover; border-radius: 6px; }
+        .admin-actions { display: flex; gap: 8px; margin-left: auto; }
+        .btn-approve { background: #10b981; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .btn-reject { background: #ef4444; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; }
 
-        footer { text-align: center; padding: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 40px; font-size: 0.8rem; color: #888; }
+        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 60px; font-size: 0.82rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <div class="bg-glow-container">
+        <div class="glow-orb-1"></div>
+        <div class="glow-orb-2"></div>
+    </div>
 
     <header>
         <h1>Film O Eke</h1>
-        <p>A Visual Journey in Photography & Videography</p>
+        <p>A Next-Gen Visual Showcase in Photography & Videography</p>
     </header>
 
     <nav>
@@ -107,31 +210,36 @@
         </div>
         <div class="nav-buttons">
             <div id="authContainer">
-                <button class="btn-google" id="btnGoogleLogin">Sign in with Google</button>
+                <button class="btn-base btn-google" id="btnGoogleLogin">Sign in with Google</button>
             </div>
-            <button class="btn-action" onclick="openUploadModal()">Submit Post</button>
-            <button class="btn-admin" onclick="triggerAdminPanel()">Owner Portal</button>
+            <button class="btn-base btn-action" onclick="openUploadModal()">Submit Post</button>
+            <button class="btn-base btn-admin" onclick="triggerAdminPanel()">Owner Portal</button>
         </div>
     </nav>
 
     <div class="container">
         <h2 class="section-title">Approved Showcase Gallery</h2>
         <div class="gallery-grid" id="publicGallery">
-            <p style="color: #aaa;">Loading gallery...</p>
+            <p style="color: var(--text-muted);">Loading gallery items...</p>
         </div>
     </div>
 
+    <!-- SUBMIT MEDIA MODAL -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
-            <h3 style="color: #66fcf1; margin-bottom: 8px;">Submit Media</h3>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 12px; font-weight: 700;">Submit Media Content</h3>
             <form id="uploadForm">
                 <div class="form-group">
-                    <label>Title / Caption *</label>
-                    <input type="text" id="mediaTitle" placeholder="e.g., Sunset over the hills" required>
+                    <label>Full Name / Creator Name *</label>
+                    <input type="text" id="uploaderCustomName" placeholder="Enter your full name" required>
                 </div>
                 <div class="form-group">
-                    <label>Media Type *</label>
+                    <label>Title / Caption *</label>
+                    <input type="text" id="mediaTitle" placeholder="e.g., Cyberpunk Street Photography" required>
+                </div>
+                <div class="form-group">
+                    <label>Media Format *</label>
                     <select id="mediaType">
                         <option value="image">Photo</option>
                         <option value="video">Video</option>
@@ -141,15 +249,16 @@
                     <label>Choose File *</label>
                     <input type="file" id="mediaFile" accept="image/*,video/*" required>
                 </div>
-                <button type="submit" id="submitBtn" class="btn-action" style="width: 100%;">Upload & Send for Approval</button>
+                <button type="submit" id="submitBtn" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;">Upload & Request Approval</button>
             </form>
         </div>
     </div>
 
+    <!-- OWNER LOGIN MODAL -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-card" style="max-width: 380px;">
             <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
-            <h3 style="color: #66fcf1; margin-bottom: 6px; text-align: center;">Owner Portal Login</h3>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 14px; text-align: center; font-weight: 700;">Owner Authentication</h3>
             <form id="loginForm">
                 <div class="form-group">
                     <label>User ID</label>
@@ -159,26 +268,28 @@
                     <label>Password</label>
                     <input type="password" id="loginPassword" required>
                 </div>
-                <p id="loginError" style="color: #dc3545; font-size: 0.8rem; display: none; margin-bottom: 10px; text-align: center;">Invalid Credentials!</p>
-                <button type="submit" class="btn-action" style="width: 100%;">Login</button>
+                <p id="loginError" style="color: var(--accent-pink); font-size: 0.8rem; display: none; margin-bottom: 12px; text-align: center;">Invalid Credentials!</p>
+                <button type="submit" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 11px;">Access Control Panel</button>
             </form>
         </div>
     </div>
 
+    <!-- OWNER CONTROL PANEL MODAL -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-card" style="max-width: 620px;">
             <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
-            <h3 style="color: #66fcf1; margin-bottom: 16px;">Owner Control Panel</h3>
-            <div id="pendingQueue" style="max-height: 380px; overflow-y: auto;">
-                <p style="color: #aaa;">Loading queue...</p>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 18px; font-weight: 700;">Owner Control Dashboard</h3>
+            <div id="pendingQueue" style="max-height: 400px; overflow-y: auto;">
+                <p style="color: var(--text-muted);">Loading approval queue...</p>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 Film O Eke | Photography & Videography</p>
+        <p>&copy; 2026 Film O Eke | Next-Gen Visual Arts Platform</p>
     </footer>
 
+    <!-- FIREBASE & CORE LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -211,14 +322,20 @@
             if (user) {
                 authContainer.innerHTML = `
                     <div class="user-profile">
-                        <img src="${user.photoURL || 'https://via.placeholder.com/24'}" alt="User">
+                        <img src="${user.photoURL || 'https://via.placeholder.com/26'}" alt="User">
                         <span>${user.displayName ? user.displayName.split(' ')[0] : 'User'}</span>
-                        <button id="btnLogoutGoogle" style="background:none;border:none;color:#dc3545;cursor:pointer;font-weight:bold;margin-left:5px;">✕</button>
+                        <button id="btnLogoutGoogle" style="background:none;border:none;color:var(--accent-pink);cursor:pointer;font-weight:700;margin-left:4px;">✕</button>
                     </div>
                 `;
                 document.getElementById('btnLogoutGoogle').addEventListener('click', () => signOut(auth));
+                
+                // Auto fill creator name if available
+                const nameInput = document.getElementById('uploaderCustomName');
+                if (nameInput && !nameInput.value) {
+                    nameInput.value = user.displayName || '';
+                }
             } else {
-                authContainer.innerHTML = `<button class="btn-google" id="btnGoogleLogin">Sign in with Google</button>`;
+                authContainer.innerHTML = `<button class="btn-base btn-google" id="btnGoogleLogin">Sign in with Google</button>`;
                 document.getElementById('btnGoogleLogin').addEventListener('click', handleGoogleLogin);
             }
             loadGallery();
@@ -234,11 +351,11 @@
         }
 
         window.openUploadModal = function() {
-            if (!currentUser) return alert("Please sign in with Google to post!");
+            if (!currentUser) return alert("Please sign in with Google to submit posts!");
             openModal('uploadModal');
         };
 
-        // Post upload handler
+        // Media Upload Form Handler
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return alert("Please sign in first.");
@@ -246,6 +363,7 @@
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
 
+            const customName = document.getElementById('uploaderCustomName').value.trim();
             const title = document.getElementById('mediaTitle').value.trim();
             const type = document.getElementById('mediaType').value;
             const fileInput = document.getElementById('mediaFile');
@@ -265,7 +383,7 @@
                     const response = JSON.parse(xhr.responseText);
                     await addDoc(collection(db, "posts"), {
                         uploaderUid: currentUser.uid,
-                        uploaderName: currentUser.displayName || "Anonymous",
+                        uploaderName: customName || currentUser.displayName || "Anonymous",
                         title: title,
                         type: type,
                         url: response.secure_url,
@@ -275,11 +393,11 @@
                         comments: [],
                         createdAt: new Date()
                     });
-                    alert("Post submitted for approval!");
+                    alert("Post submitted successfully! Awaiting owner approval.");
                     document.getElementById('uploadForm').reset();
                     closeModal('uploadModal');
                 } else {
-                    alert("Media upload failed.");
+                    alert("Media upload failed. Please try again.");
                 }
                 btn.disabled = false;
             };
@@ -295,7 +413,7 @@
                 container.innerHTML = "";
 
                 if (querySnapshot.empty) {
-                    container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #aaa;">No approved posts available.</p>`;
+                    container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No approved posts in gallery.</p>`;
                     return;
                 }
 
@@ -336,24 +454,24 @@
                                     <h4>${data.title}</h4>
                                     ${isAuthor ? `<button class="btn-edit-title" onclick="editTitle('${data.id}', '${data.title}')">✏️ Edit</button>` : ''}
                                 </div>
-                                <p>By ${data.uploaderName}</p>
+                                <p>By <strong>${data.uploaderName}</strong></p>
                             </div>
                             <div class="vote-actions">
                                 <button class="btn-vote" onclick="votePost('${data.id}', 'likes')">👍 ${data.likes || 0}</button>
                                 <button class="btn-vote" onclick="votePost('${data.id}', 'dislikes')">👎 ${data.dislikes || 0}</button>
                             </div>
                             <div class="comments-section">
-                                <div class="comments-list">${commentsHTML || '<p style="font-size: 0.75rem; color: #666;">No comments yet.</p>'}</div>
+                                <div class="comments-list">${commentsHTML || '<p style="font-size: 0.75rem; color: var(--text-muted);">No comments yet.</p>'}</div>
                                 <form class="comment-form" onsubmit="addComment(event, '${data.id}')">
-                                    <input type="text" placeholder="${currentUser ? 'Write a comment...' : 'Sign in to comment'}" ${!currentUser ? 'disabled' : ''} required>
-                                    <button type="submit" ${!currentUser ? 'disabled' : ''}>Post</button>
+                                    <input type="text" placeholder="${currentUser ? 'Add a comment...' : 'Sign in to comment'}" ${!currentUser ? 'disabled' : ''} required>
+                                    <button type="submit" ${!currentUser ? 'disabled' : ''}>Send</button>
                                 </form>
                             </div>
                         </div>
                     `;
                 });
             } catch (err) {
-                container.innerHTML = `<p style="color:#dc3545;">Error loading gallery: ${err.message}</p>`;
+                container.innerHTML = `<p style="color:var(--accent-pink);">Error loading gallery: ${err.message}</p>`;
             }
         }
 
@@ -403,7 +521,7 @@
             const container = document.getElementById('pendingQueue');
             const q = query(collection(db, "posts"), where("approved", "==", false));
             const querySnapshot = await getDocs(q);
-            container.innerHTML = querySnapshot.empty ? "<p style='color:#aaa;'>No pending submissions.</p>" : "";
+            container.innerHTML = querySnapshot.empty ? "<p style='color:var(--text-muted);'>No pending submissions.</p>" : "";
 
             querySnapshot.forEach((documentSnap) => {
                 const data = documentSnap.data();
@@ -413,11 +531,11 @@
                         <img src="${data.url}" class="admin-preview">
                         <div>
                             <strong style="color:#fff;">${data.title}</strong>
-                            <p style="font-size:0.8rem;color:#66fcf1;">By: ${data.uploaderName}</p>
+                            <p style="font-size:0.8rem;color:var(--primary-cyan);">By: ${data.uploaderName}</p>
                         </div>
                         <div class="admin-actions">
-                            <button class="btn-approve" onclick="approvePost('${id}')">Approve</button>
-                            <button class="btn-reject" onclick="rejectPost('${id}')">Reject</button>
+                            <button class="btn-approve" onclick="approvePost('${id}') font-weight: 600;">Approve</button>
+                            <button class="btn-reject" onclick="rejectPost('${id}') font-weight: 600;">Reject</button>
                         </div>
                     </div>
                 `;
@@ -438,6 +556,7 @@
         loadGallery();
     </script>
 
+    <!-- OWNER AUTH CONTROL -->
     <script>
         const AUTH_USER_ID = "0000332211";
         const AUTH_PASS = "0091";
