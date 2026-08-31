@@ -128,7 +128,11 @@
         .post-username { font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 4px; }
         .post-username span { font-size: 0.72rem; color: var(--text-muted); font-weight: 400; }
         
-        .media-card img, .media-card video { width: 100%; height: 280px; object-fit: cover; display: block; }
+        /* Prevent downloading/saving via UI context menus */
+        .media-card img, .media-card video { 
+            width: 100%; height: 280px; object-fit: cover; display: block; 
+            pointer-events: auto; -webkit-touch-callout: none; 
+        }
         
         .media-info { padding: 10px 14px; }
         .media-info h4 { color: var(--text-main); font-size: 0.9rem; font-weight: 600; }
@@ -341,7 +345,11 @@
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('filmoeke_user');
             if (savedUser) {
-                currentUser = JSON.parse(savedUser);
+                try {
+                    currentUser = JSON.parse(savedUser);
+                } catch (e) {
+                    currentUser = null;
+                }
             }
             updateUIState();
         });
@@ -433,7 +441,7 @@
             const title = document.getElementById('mediaTitle').value.trim();
             const type = document.getElementById('mediaType').value;
             const fileInput = document.getElementById('mediaFile');
-            const file = fileInput.files[0]; // Raw asset preserved bit-for-bit (Zero Quality Loss)
+            const file = fileInput.files[0]; 
 
             btn.disabled = true;
             progressContainer.style.display = 'block';
@@ -442,9 +450,9 @@
             const resourceType = type === 'video' ? 'video' : 'image';
             const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
 
-            const CHUNK_SIZE = 2 * 1024 * 1024; // 2MB chunk partitions to bypass slow connection bottlenecks
+            const CHUNK_SIZE = 2 * 1024 * 1024; 
             const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-            const uniqueUploadId = 'upload_' + Math.random().toString(36.substr(2, 9)) + Date.now();
+            const uniqueUploadId = 'upload_' + Math.random().toString(36).substr(2, 9) + Date.now();
 
             let currentByte = 0;
             let finalResponseData = null;
@@ -490,7 +498,6 @@
                     currentByte = chunkEnd;
                 }
 
-                // Save final asset details into Firebase database after a successful chunked stream sequence
                 uploadStatusText.innerText = "Finalizing secure registration...";
                 await addDoc(collection(db, "posts"), {
                     uploaderName: currentUser.name,
@@ -600,8 +607,8 @@
                                 ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">Delete</button>` : ''}
                             </div>
                             ${data.type === 'image' 
-                                ? `<img src="${data.url}" alt="${data.title}" loading="lazy">` 
-                                : `<video src="${data.url}" controls preload="metadata"></video>`}
+                                ? `<img src="${data.url}" alt="${data.title}" loading="lazy" oncontextmenu="return false;">` 
+                                : `<video src="${data.url}" controls controlsList="nodownload" preload="auto" oncontextmenu="return false;"></video>`}
                             <div class="media-info">
                                 <h4>${data.title}</h4>
                             </div>
@@ -699,8 +706,6 @@
             window.loadPendingQueue();
             if (currentUser) loadUserPostStatuses();
         };
-
-        loadGallery();
     </script>
 
     <script>
@@ -741,7 +746,7 @@
 
                 openModal('adminModal');
                 if (window.loadPendingQueue) window.loadPendingQueue();
-                loadGallery();
+                if (typeof loadGallery === 'function') loadGallery();
             } else {
                 document.getElementById('adminLoginError').style.display = 'block';
             }
