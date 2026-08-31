@@ -117,10 +117,8 @@
         .post-username { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
         .post-username span { display: block; font-size: 0.68rem; color: var(--primary-cyan); font-weight: 400; }
         
-        /* Protection against downloads and clean presentation */
         .protected-media {
             width: 100%; height: 260px; object-fit: cover; display: block;
-            pointer-events: auto; /* allows play/pause */
         }
 
         .media-info { padding: 10px 12px; }
@@ -165,7 +163,7 @@
         footer { text-align: center; padding: 25px; border-top: 1px solid var(--border-color); margin-top: 40px; font-size: 0.78rem; color: var(--text-muted); background: var(--bg-surface); }
     </style>
 </head>
-<body oncontextmenu="return false;"> <!-- Global block on right-click saving -->
+<body oncontextmenu="return false;">
 
     <header>
         <h1>Film O Eke</h1>
@@ -194,7 +192,7 @@
                     <div class="my-posts-status-container" id="myPostsStatusList">
                         <span style="font-size: 0.7rem; color: var(--text-muted);">No submissions yet</span>
                     </div>
-                    <button class="dropdown-item" id="btnAdminDashboard" style="display: none; color: var(--primary-cyan);" onclick="openModal('adminModal'); loadPendingQueue();">📊 Owner Dashboard</button>
+                    <button class="dropdown-item" id="btnAdminDashboard" style="display: none; color: var(--primary-cyan);" onclick="openModal('adminModal'); loadPendingQueue();">📊 Admin Dashboard</button>
                     <button class="dropdown-item" style="color: var(--accent-pink);" id="btnLogout">Sign Out</button>
                 </div>
             </div>
@@ -273,7 +271,7 @@
     <div class="modal-overlay" id="adminLoginModal">
         <div class="modal-card" style="max-width: 340px;">
             <button class="close-btn" onclick="closeModal('adminLoginModal')">&times;</button>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 10px; text-align: center; font-size: 1.1rem;">Owner Login</h3>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 10px; text-align: center; font-size: 1.1rem;">Admin Login</h3>
             <form id="adminLoginForm">
                 <div class="form-group">
                     <label>User ID</label>
@@ -284,7 +282,7 @@
                     <input type="password" id="loginPassword" required>
                 </div>
                 <p id="adminLoginError" style="color: var(--accent-pink); font-size: 0.75rem; display: none; margin-bottom: 8px; text-align: center;">Invalid Credentials!</p>
-                <button type="submit" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 9px;">Login as Owner</button>
+                <button type="submit" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 9px;">Login as Admin</button>
             </form>
         </div>
     </div>
@@ -292,7 +290,7 @@
     <div class="modal-overlay" id="adminModal">
         <div class="modal-card" style="max-width: 550px;">
             <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 12px; font-size: 1.1rem;">Owner Control Dashboard</h3>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 12px; font-size: 1.1rem;">Admin Control Dashboard</h3>
             <div id="pendingQueue" style="max-height: 350px; overflow-y: auto;">
                 <p style="color: var(--text-muted);">Loading approval queue...</p>
             </div>
@@ -325,7 +323,7 @@
         const db = getFirestore(app);
 
         let currentUser = null;
-        window.isOwnerLoggedIn = localStorage.getItem('filmoeke_owner') === 'true';
+        window.isAdminLoggedIn = localStorage.getItem('filmoeke_admin') === 'true';
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('filmoeke_user');
@@ -342,7 +340,7 @@
             const navProfileLabel = document.getElementById('navProfileLabel');
             const btnAdminDashboard = document.getElementById('btnAdminDashboard');
 
-            if (currentUser || window.isOwnerLoggedIn) {
+            if (currentUser || window.isAdminLoggedIn) {
                 profileLoggedOut.style.display = 'none';
                 profileLoggedIn.style.display = 'block';
 
@@ -353,14 +351,14 @@
                     navAvatar.innerText = currentUser.name.charAt(0).toUpperCase();
                     loadUserPostStatuses();
                 } else {
-                    document.getElementById('userDisplayName').innerText = "Owner Admin";
+                    document.getElementById('userDisplayName').innerText = "System Admin";
                     document.getElementById('userInstaId').innerText = "@admin_portal";
-                    navProfileLabel.innerText = "Owner";
+                    navProfileLabel.innerText = "Admin";
                     navAvatar.innerText = "A";
                     document.getElementById('myPostsStatusList').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Logged in as Admin</span>`;
                 }
 
-                if (window.isOwnerLoggedIn) {
+                if (window.isAdminLoggedIn) {
                     btnAdminDashboard.style.display = 'flex';
                 } else {
                     btnAdminDashboard.style.display = 'none';
@@ -391,8 +389,8 @@
         document.getElementById('btnLogout').onclick = () => {
             currentUser = null;
             localStorage.removeItem('filmoeke_user');
-            localStorage.removeItem('filmoeke_owner');
-            window.isOwnerLoggedIn = false;
+            localStorage.removeItem('filmoeke_admin');
+            window.isAdminLoggedIn = false;
             updateUIState();
             document.getElementById('profileDropdown').classList.remove('active');
         };
@@ -572,13 +570,13 @@
                 postsList.sort((a, b) => (b.likes || 0) - (a.likes || 0));
 
                 postsList.forEach((data) => {
-                    const isOwner = window.isOwnerLoggedIn;
+                    const isAdmin = window.isAdminLoggedIn;
                     const isAuthor = currentUser && currentUser.name === data.uploaderName && currentUser.insta === data.uploaderInsta;
-                    const canDeletePost = isOwner || isAuthor;
+                    const canDeletePost = isAdmin || isAuthor;
 
                     let commentsHTML = "";
                     (data.comments || []).forEach((c) => {
-                        const canDeleteComment = isOwner || (currentUser && currentUser.name === c.name);
+                        const canDeleteComment = isAdmin || (currentUser && currentUser.name === c.name);
                         const commentJson = encodeURIComponent(JSON.stringify(c));
                         commentsHTML += `
                             <div class="comment-item">
@@ -725,8 +723,8 @@
             const pass = document.getElementById('loginPassword').value.trim();
 
             if (uId === AUTH_USER_ID && pass === AUTH_PASS) {
-                window.isOwnerLoggedIn = true;
-                localStorage.setItem('filmoeke_owner', 'true');
+                window.isAdminLoggedIn = true;
+                localStorage.setItem('filmoeke_admin', 'true');
                 closeModal('adminLoginModal');
                 document.getElementById('adminLoginForm').reset();
                 document.getElementById('adminLoginError').style.display = 'none';
