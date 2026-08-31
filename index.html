@@ -116,11 +116,10 @@
         .post-user-avatar { width: 26px; height: 26px; border-radius: 50%; background: #0284c7; color: #fff; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
         .post-username { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
         .post-username span { display: block; font-size: 0.68rem; color: var(--primary-cyan); font-weight: 400; }
+        .post-time { font-size: 0.65rem; color: var(--text-muted); font-weight: 400; margin-left: 6px; }
         
         .protected-media {
-            width: 100%; height: 260px; object-fit: cover; display: block; background: #000;
-            transform: translateZ(0);
-            will-change: transform;
+            width: 100%; height: 260px; object-fit: cover; display: block;
         }
 
         .media-info { padding: 10px 12px; }
@@ -131,6 +130,7 @@
         .ig-actions { display: flex; align-items: center; padding: 6px 12px; }
         .ig-action-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 0.82rem; font-weight: 600; color: var(--text-main); }
         .ig-action-btn:hover { color: var(--primary-cyan); }
+        .ig-action-btn.liked { color: var(--accent-pink); }
 
         .comments-section { border-top: 1px solid var(--border-color); background: #ffffff; padding: 8px 12px; }
         .comments-list { overflow-y: auto; max-height: 90px; margin-bottom: 6px; display: flex; flex-direction: column; gap: 4px; }
@@ -306,7 +306,7 @@
     <!-- Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, arrayUnion, arrayRemove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const CLOUDINARY_CLOUD_NAME = "pbyypohy";
         const CLOUDINARY_UPLOAD_PRESET = "filmoeke_preset";
@@ -422,9 +422,9 @@
             const fileInput = document.getElementById('mediaFile');
             let file = fileInput.files[0];
 
-            const maxSize = type === 'video' ? 150 * 1024 * 1024 : 25 * 1024 * 1024;
+            const maxSize = type === 'video' ? 100 * 1024 * 1024 : 10 * 1024 * 1024;
             if (file.size > maxSize) {
-                alert(`File is too large. Max allowed size is ${type === 'video' ? '150MB' : '25MB'}.`);
+                alert(`File is too large. Max size allowed is ${type === 'video' ? '100MB' : '10MB'}.`);
                 return;
             }
 
@@ -432,8 +432,7 @@
             progressContainer.style.display = 'block';
             progressPercentText.innerText = "0%";
 
-            // Fast image compression if photo is large
-            if (type === 'image' && file.size > 800 * 1024) {
+            if (type === 'image' && file.size > 400 * 1024) {
                 file = await compressImage(file);
             }
 
@@ -466,9 +465,9 @@
                             type: type,
                             url: response.secure_url,
                             approved: false,
-                            likes: 0,
+                            likedUsers: [],
                             comments: [],
-                            createdAt: new Date()
+                            createdAt: serverTimestamp()
                         });
                         alert("Post successfully submitted for admin approval!");
                         document.getElementById('uploadForm').reset();
@@ -478,14 +477,14 @@
                         alert("Upload succeeded, but database save failed.");
                     }
                 } else {
-                    alert("Upload failed. Please check network connection.");
+                    alert("Upload failed. Please try again.");
                 }
                 btn.disabled = false;
                 progressContainer.style.display = 'none';
             };
 
             xhr.onerror = () => {
-                alert("Network error during upload transmission.");
+                alert("Network error during upload.");
                 btn.disabled = false;
                 progressContainer.style.display = 'none';
             };
@@ -520,7 +519,7 @@
 
                         canvas.toBlob((blob) => {
                             resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() }));
-                        }, 'image/jpeg', 0.82);
+                        }, 'image/jpeg', 0.75);
                     };
                 };
             });
@@ -553,6 +552,25 @@
             }
         }
 
+        function formatTimeAgo(timestamp) {
+            if (!timestamp) return "Just now";
+            const now = new Date();
+            const postDate = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            const seconds = Math.floor((now - postDate) / 1000);
+
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + "y ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + "mo ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + "d ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + "h ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + "m ago";
+            return "Just now";
+        }
+
         async function loadGallery() {
             const container = document.getElementById('publicGallery');
             try {
@@ -570,7 +588,7 @@
                     postsList.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
-                postsList.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+                postsList.sort((a, b) => (b.likedUsers?.length || 0) - (a.likedUsers?.length || 0));
 
                 postsList.forEach((data) => {
                     const isAdmin = window.isAdminLoggedIn;
@@ -579,6 +597,7 @@
 
                     let commentsHTML = "";
                     (data.comments || []).forEach((c) => {
+                        // Admin can delete ANY comment; author of the comment can also delete their own comment
                         const canDeleteComment = isAdmin || (currentUser && currentUser.name === c.name);
                         const commentJson = encodeURIComponent(JSON.stringify(c));
                         commentsHTML += `
@@ -590,6 +609,9 @@
                     });
 
                     const avatarChar = (data.uploaderName || 'U').charAt(0).toUpperCase();
+                    const likedUsers = data.likedUsers || [];
+                    const hasLiked = currentUser && likedUsers.includes(currentUser.name + "_" + currentUser.insta);
+                    const timeAgo = formatTimeAgo(data.createdAt);
 
                     container.innerHTML += `
                         <div class="media-card">
@@ -600,17 +622,20 @@
                                         ${data.uploaderName} 
                                         <span>${data.uploaderInsta || ''}</span>
                                     </div>
+                                    <span class="post-time">${timeAgo}</span>
                                 </div>
                                 ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">Delete</button>` : ''}
                             </div>
                             ${data.type === 'image' 
                                 ? `<img src="${data.url}" alt="${data.title}" class="protected-media" loading="lazy">` 
-                                : `<video src="${data.url}" class="protected-media" controls playsinline preload="auto" x-webkit-airplay="allow" controlsList="nodownload"></video>`}
+                                : `<video src="${data.url}" class="protected-media" controls controlsList="nodownload noplaybackrate" disablePictureInPicture preload="metadata"></video>`}
                             <div class="media-info">
                                 <h4>${data.title}</h4>
                             </div>
                             <div class="ig-actions">
-                                <button class="ig-action-btn" onclick="votePost('${data.id}', 'likes')">❤️ ${data.likes || 0}</button>
+                                <button class="ig-action-btn ${hasLiked ? 'liked' : ''}" onclick="toggleLike('${data.id}')">
+                                    ${hasLiked ? '❤️' : '🤍'} ${likedUsers.length}
+                                </button>
                             </div>
                             <div class="comments-section">
                                 <div class="comments-list">${commentsHTML || '<p style="font-size: 0.72rem; color: var(--text-muted);">No comments yet.</p>'}</div>
@@ -657,9 +682,30 @@
             }
         };
 
-        window.votePost = async function(id, type) {
-            await updateDoc(doc(db, "posts", id), { [type]: increment(1) });
-            loadGallery();
+        window.toggleLike = async function(postId) {
+            if (!currentUser) {
+                alert("Please log in to like posts!");
+                openModal('loginModal');
+                return;
+            }
+
+            const userKey = currentUser.name + "_" + currentUser.insta;
+            const postRef = doc(db, "posts", postId);
+            
+            // Fetch latest post doc to ensure accurate toggle state
+            const postSnap = await getDocs(query(collection(db, "posts"), where("__name__", "==", postId)));
+            if (!postSnap.empty) {
+                const postData = postSnap.docs[0].data();
+                const likedUsers = postData.likedUsers || [];
+                const hasLiked = likedUsers.includes(userKey);
+
+                if (hasLiked) {
+                    await updateDoc(postRef, { likedUsers: arrayRemove(userKey) });
+                } else {
+                    await updateDoc(postRef, { likedUsers: arrayUnion(userKey) });
+                }
+                loadGallery();
+            }
         };
 
         window.loadPendingQueue = async function() {
