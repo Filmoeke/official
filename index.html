@@ -147,10 +147,10 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Choose File from Device *</label>
+                    <label>Choose File (Supports HD Photos & Videos) *</label>
                     <input type="file" id="mediaFile" accept="image/*,video/*" required>
                 </div>
-                <button type="submit" id="submitBtn" class="btn-action" style="width: 100%; margin-top: 8px;">Send for Approval</button>
+                <button type="submit" id="submitBtn" class="btn-action" style="width: 100%; margin-top: 8px;">Upload & Send for Approval</button>
             </form>
         </div>
     </div>
@@ -169,15 +169,19 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Film O Eke | Photography & Videography by Sajid Sk</p>
+        <p>&copy; 2026 Film O Eke | Photography & Videography</p>
     </footer>
 
-    <!-- FIREBASE MODULE SYSTEM -->
+    <!-- FIREBASE & CLOUDINARY INTEGRATION -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // EXACT KEYS FROM YOUR FIREBASE PROJECT
+        // Cloudinary Configuration
+        const CLOUDINARY_CLOUD_NAME = "pbyypohy";
+        const CLOUDINARY_UPLOAD_PRESET = "filmoeke_preset";
+
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyA1ILve-4DPE-SxMgVwcPBrRXpIp_5gNzE",
             authDomain: "filmoeke.firebaseapp.com",
@@ -191,61 +195,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Helper: Convert file to Base64 and compress image if needed
-        const processFile = (file) => new Promise((resolve, reject) => {
-            if (file.type.startsWith('image/')) {
-                const img = new Image();
-                const reader = new FileReader();
-
-                reader.onload = (e) => {
-                    img.src = e.target.result;
-                };
-
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-
-                    // Resize image dimensions if too large (max width/height: 1280px)
-                    const maxDim = 1280;
-                    if (width > maxDim || height > maxDim) {
-                        if (width > height) {
-                            height = Math.round((height * maxDim) / width);
-                            width = maxDim;
-                        } else {
-                            width = Math.round((width * maxDim) / height);
-                            height = maxDim;
-                        }
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    // Compress to JPEG with 0.7 quality to stay under 1 MB
-                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                    resolve(compressedBase64);
-                };
-
-                img.onerror = (error) => reject(error);
-                reader.onerror = (error) => reject(error);
-                reader.readAsDataURL(file);
-            } else {
-                // For non-image files
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = (error) => reject(error);
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Upload Form Submission Handler
+        // Upload Form Handler using Cloudinary (Direct Free Media Upload)
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
-            btn.textContent = "Compressing & Uploading...";
 
             const uploader = document.getElementById('uploaderName').value.trim();
             const title = document.getElementById('mediaTitle').value.trim();
@@ -255,41 +209,67 @@
             if (!fileInput.files || fileInput.files.length === 0) {
                 alert("Please choose a file to upload.");
                 btn.disabled = false;
-                btn.textContent = "Send for Approval";
+                btn.textContent = "Upload & Send for Approval";
                 return;
             }
 
-            try {
-                const processedBase64 = await processFile(fileInput.files[0]);
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
-                if (processedBase64.length > 1000000) {
-                    alert("File is still too large after compression. Please choose a smaller file.");
-                    btn.disabled = false;
-                    btn.textContent = "Send for Approval";
-                    return;
+            const xhr = new XMLHttpRequest();
+            const resourceType = type === 'video' ? 'video' : 'image';
+            const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
+
+            xhr.open('POST', endpoint, true);
+
+            // Live progress tracker for file uploads
+            xhr.upload.onprogress = (event) => {
+                if (event.lengthComputable) {
+                    const percentComplete = Math.round((event.loaded / event.total) * 100);
+                    btn.textContent = `Uploading Media... ${percentComplete}%`;
                 }
+            };
 
-                await addDoc(collection(db, "posts"), {
-                    uploader: uploader,
-                    title: title,
-                    type: type,
-                    url: processedBase64,
-                    approved: false,
-                    createdAt: new Date()
-                });
+            xhr.onload = async () => {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    const mediaUrl = response.secure_url;
 
-                alert("Your post has been submitted successfully! It will appear on the gallery once approved!");
-                document.getElementById('uploadForm').reset();
-                closeModal('uploadModal');
-            } catch (err) {
-                alert("Submission failed: " + err.message);
-            } finally {
+                    try {
+                        await addDoc(collection(db, "posts"), {
+                            uploader: uploader,
+                            title: title,
+                            type: type,
+                            url: mediaUrl,
+                            approved: false,
+                            createdAt: new Date()
+                        });
+
+                        alert("Your post has been submitted successfully! It will appear on the gallery once approved!");
+                        document.getElementById('uploadForm').reset();
+                        closeModal('uploadModal');
+                    } catch (err) {
+                        alert("Database error: " + err.message);
+                    }
+                } else {
+                    alert("Upload failed! Please verify Cloudinary configuration.");
+                }
                 btn.disabled = false;
-                btn.textContent = "Send for Approval";
-            }
+                btn.textContent = "Upload & Send for Approval";
+            };
+
+            xhr.onerror = () => {
+                alert("Network error during file upload.");
+                btn.disabled = false;
+                btn.textContent = "Upload & Send for Approval";
+            };
+
+            xhr.send(formData);
         });
 
-        // Load Approved Gallery Items to Public
+        // Load Approved Gallery Items
         async function loadGallery() {
             const container = document.getElementById('publicGallery');
             try {
@@ -379,7 +359,6 @@
             }
         }
 
-        // Initial render on page load
         loadGallery();
     </script>
 
