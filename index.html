@@ -27,39 +27,70 @@
             background: var(--bg-surface);
             border-bottom: 1px solid var(--border-color); 
         }
+        
+        /* Animated Gradient Brand Name */
         header h1 {
-            font-size: 2.6rem; font-weight: 800; letter-spacing: -1px; display: inline-block;
-            color: var(--text-main); text-transform: uppercase;
+            font-size: 2.4rem; font-weight: 800; letter-spacing: -1px; display: inline-block;
+            background: linear-gradient(270deg, #0284c7, #8b5cf6, #ec4899, #0284c7);
+            background-size: 300% 300%;
+            -webkit-background-clip: text; background-clip: text; color: transparent; text-transform: uppercase;
+            animation: gradientAnimation 6s ease infinite;
         }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 6px; }
 
-        /* Navigation Bar */
+        /* Navigation Bar - Responsive Fix for Mobile Wrap */
         nav { 
             background: var(--bg-surface); backdrop-filter: blur(16px);
-            padding: 12px 32px; display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color);
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            flex-wrap: wrap; gap: 10px;
         }
-        .nav-left { display: flex; align-items: center; gap: 12px; }
+        .nav-left { display: flex; align-items: center; }
         .brand-link { 
-            color: var(--text-main); text-decoration: none; font-size: 0.9rem; font-weight: 700; 
-            padding: 6px 14px; border-radius: 20px; background: #f1f5f9; 
-            border: 1px solid var(--border-color); transition: all 0.3s ease;
+            color: var(--text-main); text-decoration: none; font-size: 0.85rem; font-weight: 700; 
+            padding: 6px 12px; border-radius: 20px; background: #f1f5f9; 
+            border: 1px solid var(--border-color); white-space: nowrap; transition: all 0.3s ease;
         }
         .brand-link:hover { background: rgba(2, 132, 199, 0.1); border-color: var(--primary-cyan); color: var(--primary-cyan); }
 
-        .nav-right { display: flex; gap: 10px; align-items: center; position: relative; }
+        .nav-right { display: flex; gap: 8px; align-items: center; position: relative; }
 
         /* Buttons */
         .btn-base { 
-            padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; 
-            border: none; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; 
+            border: none; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
         }
         .btn-action { background: var(--primary-cyan); color: #ffffff; }
         .btn-action:hover { background: var(--primary-cyan-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); }
 
-        .btn-admin { background: #f1f5f9; color: var(--text-main); border: 1px solid var(--border-color); }
-        .btn-admin:hover { background: #e2e8f0; color: #000; }
+        /* Profile Button Trigger */
+        .profile-btn-trigger {
+            background: #f1f5f9; border: 1px solid var(--border-color);
+            border-radius: 30px; padding: 4px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px;
+            color: var(--text-main); font-size: 0.8rem; font-weight: 600; transition: all 0.3s ease;
+        }
+        .profile-btn-trigger:hover { background: #e2e8f0; border-color: #cbd5e1; }
+        .profile-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-cyan); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; }
+
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: absolute; top: 46px; right: 0; width: 220px;
+            background: #ffffff; border: 1px solid var(--border-color); border-radius: 12px;
+            padding: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: none; flex-direction: column; gap: 8px; z-index: 101;
+        }
+        .profile-dropdown.active { display: flex; }
+        .profile-info-header { border-bottom: 1px solid var(--border-color); padding-bottom: 6px; margin-bottom: 2px; }
+        .profile-info-header strong { font-size: 0.85rem; color: var(--text-main); display: block; }
+        .profile-info-header span { font-size: 0.72rem; color: var(--text-muted); word-break: break-all; }
+        .dropdown-item { width: 100%; text-align: left; background: none; border: none; padding: 8px 10px; font-size: 0.82rem; font-weight: 600; color: var(--text-main); cursor: pointer; border-radius: 6px; display: flex; align-items: center; gap: 8px; }
+        .dropdown-item:hover { background: #f1f5f9; color: var(--primary-cyan); }
 
         /* Main Grid */
         .container { max-width: 1240px; margin: 35px auto; padding: 0 20px; }
@@ -67,36 +98,39 @@
         .section-title::before { content: ''; width: 4px; height: 20px; background: var(--primary-cyan); border-radius: 2px; }
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 
-        /* Card Styles */
+        /* Instagram-Style Post Cards */
         .media-card { 
             background: var(--surface-card); border-radius: 14px; overflow: hidden; 
-            border: 1px solid var(--border-color); transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; position: relative;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color); transition: all 0.3s ease; display: flex; flex-direction: column; position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); margin-bottom: 10px;
         }
-        .media-card:hover { transform: translateY(-4px); border-color: #cbd5e1; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08); }
-        .media-card img, .media-card video { width: 100%; height: 230px; object-fit: cover; display: block; }
+        .post-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #f1f5f9; }
+        .post-user-info { display: flex; align-items: center; gap: 8px; }
+        .post-user-avatar { width: 28px; height: 28px; border-radius: 50%; background: #0284c7; color: #fff; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .post-username { font-size: 0.82rem; font-weight: 700; color: var(--text-main); }
         
-        .media-info { padding: 14px 16px; flex-grow: 1; }
-        .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-        .media-info h4 { color: var(--text-main); font-size: 1rem; font-weight: 700; }
-        .media-info p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+        .media-card img, .media-card video { width: 100%; height: 280px; object-fit: cover; display: block; }
+        
+        .media-info { padding: 10px 14px; }
+        .media-info h4 { color: var(--text-main); font-size: 0.9rem; font-weight: 600; }
 
-        .btn-delete-card { position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.85rem; z-index: 5; }
+        .btn-delete-card { background: none; border: none; color: var(--accent-pink); cursor: pointer; font-size: 0.8rem; font-weight: 600; }
 
-        .vote-actions { display: flex; gap: 8px; padding: 10px 16px; border-top: 1px solid var(--border-color); background: #f8fafc; }
-        .btn-vote { flex: 1; background: #ffffff; border: 1px solid var(--border-color); color: var(--text-main); padding: 7px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; }
-        .btn-vote:hover { background: #f1f5f9; }
+        /* Instagram Style Action Bar (Like, Comment counts) */
+        .ig-actions { display: flex; align-items: center; gap: 16px; padding: 8px 14px; font-size: 1.2rem; }
+        .ig-action-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+        .ig-action-btn:hover { color: var(--primary-cyan); }
 
-        .comments-section { border-top: 1px solid var(--border-color); background: #ffffff; padding: 12px 16px; }
-        .comments-list { overflow-y: auto; max-height: 110px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px; }
-        .comment-item { background: #f8fafc; padding: 6px 10px; border-radius: 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); }
-        .comment-text strong { color: var(--primary-cyan); margin-right: 4px; }
-        .btn-delete-comment { background: none; border: none; color: var(--accent-pink); cursor: pointer; font-size: 0.75rem; }
+        .comments-section { border-top: 1px solid var(--border-color); background: #ffffff; padding: 10px 14px; }
+        .comments-list { overflow-y: auto; max-height: 100px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 4px; }
+        .comment-item { font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; }
+        .comment-text strong { color: var(--text-main); font-weight: 700; margin-right: 6px; }
+        .comment-text span { color: var(--text-muted); }
+        .btn-delete-comment { background: none; border: none; color: var(--accent-pink); cursor: pointer; font-size: 0.7rem; }
 
-        .comment-form { display: flex; gap: 6px; }
-        .comment-form input { flex: 1; padding: 7px 10px; font-size: 0.8rem; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); outline: none; }
-        .comment-form input:focus { border-color: var(--primary-cyan); }
-        .comment-form button { background: var(--primary-cyan); color: #ffffff; font-weight: 700; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .comment-form { display: flex; gap: 6px; margin-top: 4px; border-top: 1px solid #f1f5f9; padding-top: 8px; }
+        .comment-form input { flex: 1; padding: 6px 10px; font-size: 0.78rem; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); outline: none; }
+        .comment-form button { background: none; color: var(--primary-cyan); font-weight: 700; border: none; cursor: pointer; font-size: 0.78rem; }
 
         /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000; padding: 20px; }
@@ -114,6 +148,9 @@
         .password-container input { width: 100%; padding-right: 40px; }
         .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; }
         .toggle-password:hover { color: var(--primary-cyan); }
+
+        .auth-switch { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; cursor: pointer; }
+        .auth-switch span { color: var(--primary-cyan); font-weight: 600; }
 
         .admin-item { display: flex; gap: 12px; align-items: center; background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border-color); }
         .admin-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
@@ -133,14 +170,33 @@
 
     <nav>
         <div class="nav-left">
-            <div class="social-links">
-                <a href="#" class="brand-link">📷 Film O Eke</a>
-            </div>
+            <a href="#" class="brand-link">📷 Film O Eke</a>
         </div>
 
         <div class="nav-right">
-            <button class="btn-base btn-action" onclick="openModal('uploadModal')">Submit Post</button>
-            <button class="btn-base btn-admin" onclick="triggerAdminPanel()">Owner Portal</button>
+            <button class="btn-base btn-action" onclick="openUploadModal()">Submit Post</button>
+
+            <button class="profile-btn-trigger" id="profileBtn" onclick="toggleProfileDropdown()">
+                <div class="profile-avatar" id="navAvatar">?</div>
+                <span id="navProfileLabel">Profile</span>
+            </button>
+
+            <div class="profile-dropdown" id="profileDropdown">
+                <div id="profileLoggedOut">
+                    <button class="dropdown-item" onclick="openAuthModal('login')">👤 User Login</button>
+                    <button class="dropdown-item" onclick="openAuthModal('register')">✨ Create Account</button>
+                    <div style="border-top: 1px solid var(--border-color); margin: 4px 0;"></div>
+                    <button class="dropdown-item" onclick="openModal('adminLoginModal')">🛡️ Owner Portal</button>
+                </div>
+                <div id="profileLoggedIn" style="display: none;">
+                    <div class="profile-info-header">
+                        <strong id="userDisplayName">User Name</strong>
+                        <span id="userEmail">user@example.com</span>
+                    </div>
+                    <button class="dropdown-item" id="btnAdminDashboard" style="display: none; color: var(--primary-cyan);" onclick="openModal('adminModal'); loadPendingQueue();">📊 Owner Dashboard</button>
+                    <button class="dropdown-item" style="color: var(--accent-pink);" id="btnLogout">🚪 Sign Out</button>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -154,12 +210,8 @@
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 12px;">Submit Media</h3>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 12px;">Submit Media Post</h3>
             <form id="uploadForm">
-                <div class="form-group">
-                    <label>Your Name *</label>
-                    <input type="text" id="uploaderNameInput" placeholder="Enter your name" required>
-                </div>
                 <div class="form-group">
                     <label>Title / Caption *</label>
                     <input type="text" id="mediaTitle" placeholder="e.g., Cinematic Sunset Shot" required>
@@ -180,11 +232,40 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="loginModal">
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-card">
+            <button class="close-btn" onclick="closeModal('authModal')">&times;</button>
+            <h3 id="authModalTitle" style="color: var(--primary-cyan); margin-bottom: 12px;">User Login</h3>
+            <form id="authForm">
+                <div class="form-group" id="nameFieldGroup" style="display: none;">
+                    <label>Full Name *</label>
+                    <input type="text" id="authName" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="authEmail" placeholder="youremail@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password *</label>
+                    <div class="password-container">
+                        <input type="password" id="authPassword" placeholder="••••••••" required minlength="6">
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('authPassword', this)">👁️</button>
+                    </div>
+                </div>
+                <p id="authError" style="color: var(--accent-pink); font-size: 0.8rem; display: none; margin-bottom: 10px;"></p>
+                <button type="submit" id="authSubmitBtn" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 11px;">Login</button>
+            </form>
+            <div class="auth-switch" id="authSwitchText" onclick="toggleAuthMode()">
+                Don't have an account? <span>Register here</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="adminLoginModal">
         <div class="modal-card" style="max-width: 360px;">
-            <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 12px; text-align: center;">Owner Portal</h3>
-            <form id="loginForm">
+            <button class="close-btn" onclick="closeModal('adminLoginModal')">&times;</button>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 12px; text-align: center;">Owner Portal Login</h3>
+            <form id="adminLoginForm">
                 <div class="form-group">
                     <label>User ID</label>
                     <input type="text" id="loginUserId" required autocomplete="off">
@@ -197,7 +278,7 @@
                     </div>
                 </div>
                 <p id="loginError" style="color: var(--accent-pink); font-size: 0.8rem; display: none; margin-bottom: 10px; text-align: center;">Invalid Credentials!</p>
-                <button type="submit" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 10px;">Login</button>
+                <button type="submit" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 10px;">Login as Owner</button>
             </form>
         </div>
     </div>
@@ -218,6 +299,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const CLOUDINARY_CLOUD_NAME = "pbyypohy";
@@ -234,15 +316,128 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Submit Post Handler
+        let currentUser = null;
+        let isRegisterMode = false;
+        window.isOwnerLoggedIn = false;
+
+        // Open Auth Modal helper ('login' or 'register')
+        window.openAuthModal = function(mode) {
+            isRegisterMode = (mode === 'register');
+            const title = document.getElementById('authModalTitle');
+            const nameGroup = document.getElementById('nameFieldGroup');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const switchText = document.getElementById('authSwitchText');
+            document.getElementById('authError').style.display = 'none';
+            document.getElementById('authForm').reset();
+
+            if (isRegisterMode) {
+                title.innerText = "Create Account";
+                nameGroup.style.display = 'block';
+                document.getElementById('authName').required = true;
+                submitBtn.innerText = "Register";
+                switchText.innerHTML = "Already have an account? <span>Login here</span>";
+            } else {
+                title.innerText = "User Login";
+                nameGroup.style.display = 'none';
+                document.getElementById('authName').required = false;
+                submitBtn.innerText = "Login";
+                switchText.innerHTML = "Don't have an account? <span>Register here</span>";
+            }
+            openModal('authModal');
+            document.getElementById('profileDropdown').classList.remove('active');
+        };
+
+        window.toggleAuthMode = function() {
+            openAuthModal(isRegisterMode ? 'login' : 'register');
+        };
+
+        // Handle User Authentication Submissions
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+            const name = document.getElementById('authName').value.trim();
+            const errorBox = document.getElementById('authError');
+            const submitBtn = document.getElementById('authSubmitBtn');
+
+            errorBox.style.display = 'none';
+            submitBtn.disabled = true;
+
+            try {
+                if (isRegisterMode) {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    await updateProfile(userCredential.user, { displayName: name });
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+                closeModal('authModal');
+            } catch (err) {
+                errorBox.style.display = 'block';
+                errorBox.innerText = err.message;
+            }
+            submitBtn.disabled = false;
+        });
+
+        // Firebase Auth State Listener
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            const profileLoggedOut = document.getElementById('profileLoggedOut');
+            const profileLoggedIn = document.getElementById('profileLoggedIn');
+            const navAvatar = document.getElementById('navAvatar');
+            const navProfileLabel = document.getElementById('navProfileLabel');
+            const btnAdminDashboard = document.getElementById('btnAdminDashboard');
+
+            if (user) {
+                profileLoggedOut.style.display = 'none';
+                profileLoggedIn.style.display = 'block';
+
+                const name = user.displayName || user.email.split('@')[0];
+                document.getElementById('userDisplayName').innerText = name;
+                document.getElementById('userEmail').innerText = user.email || '';
+                
+                navProfileLabel.innerText = name.split(' ')[0];
+                navAvatar.innerText = name.charAt(0).toUpperCase();
+
+                if (window.isOwnerLoggedIn) {
+                    btnAdminDashboard.style.display = 'flex';
+                }
+
+                document.getElementById('btnLogout').onclick = () => {
+                    signOut(auth);
+                    window.isOwnerLoggedIn = false;
+                    btnAdminDashboard.style.display = 'none';
+                    document.getElementById('profileDropdown').classList.remove('active');
+                };
+            } else {
+                profileLoggedOut.style.display = 'block';
+                profileLoggedIn.style.display = 'none';
+                navProfileLabel.innerText = 'Profile';
+                navAvatar.innerText = '?';
+                btnAdminDashboard.style.display = 'none';
+            }
+            loadGallery();
+        });
+
+        window.openUploadModal = function() {
+            if (!currentUser) {
+                alert("Please log in or create an account to submit content!");
+                openAuthModal('login');
+                return;
+            }
+            openModal('uploadModal');
+        };
+
+        // Submit Post Handler (Uses logged-in user profile details)
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!currentUser) return alert("Please log in first.");
+
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
 
-            const uploaderName = document.getElementById('uploaderNameInput').value.trim();
             const title = document.getElementById('mediaTitle').value.trim();
             const type = document.getElementById('mediaType').value;
             const fileInput = document.getElementById('mediaFile');
@@ -261,7 +456,8 @@
                 if (xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
                     await addDoc(collection(db, "posts"), {
-                        uploaderName: uploaderName,
+                        uploaderUid: currentUser.uid,
+                        uploaderName: currentUser.displayName || currentUser.email.split('@')[0],
                         title: title,
                         type: type,
                         url: response.secure_url,
@@ -282,7 +478,7 @@
             xhr.send(formData);
         });
 
-        // Load Gallery
+        // Load Instagram-Style Gallery
         async function loadGallery() {
             const container = document.getElementById('publicGallery');
             try {
@@ -304,41 +500,49 @@
 
                 postsList.forEach((data) => {
                     const isOwner = window.isOwnerLoggedIn;
+                    const isAuthor = currentUser && currentUser.uid === data.uploaderUid;
+                    const canDeletePost = isOwner || isAuthor;
 
                     let commentsHTML = "";
                     (data.comments || []).forEach((c) => {
+                        const canDeleteComment = isOwner || (currentUser && currentUser.uid === c.uid);
                         const commentJson = encodeURIComponent(JSON.stringify(c));
                         commentsHTML += `
                             <div class="comment-item">
                                 <div class="comment-text">
-                                    <strong>${c.name}:</strong> <span>${c.text}</span>
+                                    <strong>${c.name}</strong> <span>${c.text}</span>
                                 </div>
-                                ${isOwner ? `<button class="btn-delete-comment" onclick="deleteComment('${data.id}', '${commentJson}')">✕</button>` : ''}
+                                ${canDeleteComment ? `<button class="btn-delete-comment" onclick="deleteComment('${data.id}', '${commentJson}')">✕</button>` : ''}
                             </div>
                         `;
                     });
 
+                    const avatarChar = (data.uploaderName || 'U').charAt(0).toUpperCase();
+
                     container.innerHTML += `
                         <div class="media-card">
-                            ${isOwner ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">✕</button>` : ''}
+                            <div class="post-header">
+                                <div class="post-user-info">
+                                    <div class="post-user-avatar">${avatarChar}</div>
+                                    <span class="post-username">${data.uploaderName}</span>
+                                </div>
+                                ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">Delete</button>` : ''}
+                            </div>
                             ${data.type === 'image' 
                                 ? `<img src="${data.url}" alt="${data.title}" loading="lazy">` 
                                 : `<video src="${data.url}" controls></video>`}
                             <div class="media-info">
-                                <div class="title-row">
-                                    <h4>${data.title}</h4>
-                                </div>
-                                <p>By ${data.uploaderName}</p>
+                                <h4>${data.title}</h4>
                             </div>
-                            <div class="vote-actions">
-                                <button class="btn-vote" onclick="votePost('${data.id}', 'likes')">👍 ${data.likes || 0}</button>
-                                <button class="btn-vote" onclick="votePost('${data.id}', 'dislikes')">👎 ${data.dislikes || 0}</button>
+                            <div class="ig-actions">
+                                <button class="ig-action-btn" onclick="votePost('${data.id}', 'likes')">❤️ ${data.likes || 0}</button>
+                                <button class="ig-action-btn" onclick="votePost('${data.id}', 'dislikes')">👎 ${data.dislikes || 0}</button>
                             </div>
                             <div class="comments-section">
                                 <div class="comments-list">${commentsHTML || '<p style="font-size: 0.75rem; color: var(--text-muted);">No comments yet.</p>'}</div>
                                 <form class="comment-form" onsubmit="addComment(event, '${data.id}')">
-                                    <input type="text" placeholder="Add a comment..." required>
-                                    <button type="submit">Send</button>
+                                    <input type="text" placeholder="${currentUser ? 'Add a comment...' : 'Log in to comment'}" ${!currentUser ? 'disabled' : ''} required>
+                                    <button type="submit" ${!currentUser ? 'disabled' : ''}>Post</button>
                                 </form>
                             </div>
                         </div>
@@ -358,12 +562,15 @@
 
         window.addComment = async function(e, postId) {
             e.preventDefault();
+            if (!currentUser) {
+                alert("Please log in to comment.");
+                openAuthModal('login');
+                return;
+            }
             const input = e.target.querySelector('input');
-            const commenterName = prompt("Enter your name to comment:") || "Anonymous";
-            if (!commenterName.trim()) return;
-
             const commentObj = {
-                name: commenterName.trim(),
+                uid: currentUser.uid,
+                name: currentUser.displayName || currentUser.email.split('@')[0],
                 text: input.value.trim(),
                 id: Date.now().toString()
             };
@@ -426,7 +633,18 @@
     <script>
         const AUTH_USER_ID = "0000332211";
         const AUTH_PASS = "0091";
-        window.isOwnerLoggedIn = false;
+
+        function toggleProfileDropdown() {
+            document.getElementById('profileDropdown').classList.toggle('active');
+        }
+
+        window.addEventListener('click', function(e) {
+            const trigger = document.getElementById('profileBtn');
+            const dropdown = document.getElementById('profileDropdown');
+            if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
 
         // Toggle Show/Hide Password functionality
         window.togglePasswordVisibility = function(fieldId, btnElement) {
@@ -440,33 +658,39 @@
             }
         };
 
-        function triggerAdminPanel() {
-            if (window.isOwnerLoggedIn) {
-                openModal('adminModal');
-                if (window.loadPendingQueue) window.loadPendingQueue();
-            } else {
-                openModal('loginModal');
-            }
-        }
-
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // Owner Login Form handler
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const uId = document.getElementById('loginUserId').value.trim();
             const pass = document.getElementById('loginPassword').value.trim();
 
             if (uId === AUTH_USER_ID && pass === AUTH_PASS) {
                 window.isOwnerLoggedIn = true;
-                closeModal('loginModal');
+                closeModal('adminLoginModal');
+                document.getElementById('adminLoginForm').reset();
+                document.getElementById('loginError').style.display = 'none';
+                
+                // Show dashboard button if user is also signed in
+                const btnAdminDashboard = document.getElementById('btnAdminDashboard');
+                if (btnAdminDashboard && document.getElementById('profileLoggedIn').style.display === 'block') {
+                    btnAdminDashboard.style.display = 'flex';
+                }
+
                 openModal('adminModal');
                 if (window.loadPendingQueue) window.loadPendingQueue();
-                loadGallery(); // Refresh to show admin deletion controls
+                loadGallery();
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
         });
 
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function openModal(id) { 
+            document.getElementById(id).classList.add('active'); 
+            document.getElementById('profileDropdown').classList.remove('active');
+        }
+        function closeModal(id) { 
+            document.getElementById(id).classList.remove('active'); 
+        }
     </script>
 </body>
 </html>
