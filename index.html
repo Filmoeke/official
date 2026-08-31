@@ -66,25 +66,6 @@
         .btn-admin { background: rgba(129, 140, 248, 0.1); color: var(--accent-purple); border: 1px solid rgba(129, 140, 248, 0.3); }
         .btn-admin:hover { background: rgba(129, 140, 248, 0.2); color: #fff; }
 
-        /* Profile Trigger & Dropdown Menu */
-        .profile-btn-trigger {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glow);
-            border-radius: 30px; padding: 4px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;
-            color: #fff; font-size: 0.82rem; font-weight: 600; transition: all 0.3s ease;
-        }
-        .profile-btn-trigger:hover { background: rgba(56, 189, 248, 0.15); border-color: var(--primary-cyan); }
-        .profile-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-cyan); color: #030712; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; }
-
-        .profile-dropdown {
-            position: absolute; top: 48px; right: 0; width: 240px;
-            background: #0f172a; border: 1px solid var(--border-glow); border-radius: 12px;
-            padding: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: none; flex-direction: column; gap: 10px; z-index: 101;
-        }
-        .profile-dropdown.active { display: flex; }
-        .profile-info-header { border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 4px; }
-        .profile-info-header strong { font-size: 0.9rem; color: #fff; display: block; }
-        .profile-info-header span { font-size: 0.75rem; color: var(--text-muted); word-break: break-all; }
-
         /* Main Grid */
         .container { max-width: 1240px; margin: 35px auto; padding: 0 20px; }
         .section-title { color: #ffffff; font-size: 1.4rem; font-weight: 700; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
@@ -102,7 +83,6 @@
         .media-info { padding: 14px 16px; flex-grow: 1; }
         .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
         .media-info h4 { color: #ffffff; font-size: 1rem; font-weight: 700; }
-        .btn-edit-title { background: none; border: none; color: var(--primary-cyan); cursor: pointer; font-size: 0.75rem; }
         .media-info p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 
         .btn-delete-card { position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.85); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.85rem; z-index: 5; }
@@ -136,9 +116,6 @@
         .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; }
         .toggle-password:hover { color: var(--primary-cyan); }
 
-        .auth-switch { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; cursor: pointer; }
-        .auth-switch span { color: var(--primary-cyan); font-weight: 600; }
-
         .admin-item { display: flex; gap: 12px; align-items: center; background: rgba(3, 7, 18, 0.6); padding: 10px; border-radius: 8px; margin-bottom: 10px; }
         .admin-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
         .admin-actions { display: flex; gap: 6px; margin-left: auto; }
@@ -163,36 +140,13 @@
     <nav>
         <div class="nav-left">
             <div class="social-links">
-                <a href="https://instagram.com/Filmoeke" target="_blank">📷 @Film_O_Eke</a>
-                <a href="https://instagram.com/Imxsajid" target="_blank">👤 Instagram</a>
-                <a href="https://facebook.com/isajid19" target="_blank">🌐 Facebook</a>
+                <a href="https://instagram.com/Filmoeke" target="_blank">📷 Film O Eke</a>
             </div>
         </div>
 
         <div class="nav-right">
-            <button class="btn-base btn-action" onclick="openUploadModal()">Submit Post</button>
+            <button class="btn-base btn-action" onclick="openModal('uploadModal')">Submit Post</button>
             <button class="btn-base btn-admin" onclick="triggerAdminPanel()">Owner Portal</button>
-
-            <!-- Profile Widget (Top-Right) -->
-            <button class="profile-btn-trigger" id="profileBtn" onclick="toggleProfileDropdown()">
-                <div class="profile-avatar" id="navAvatar">?</div>
-                <span id="navProfileLabel">Profile</span>
-            </button>
-
-            <!-- Profile Dropdown -->
-            <div class="profile-dropdown" id="profileDropdown">
-                <div id="profileLoggedOut">
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">Sign in to upload posts and add comments.</p>
-                    <button class="btn-base btn-action" style="width: 100%; justify-content: center;" onclick="openModal('authModal')">Login / Register</button>
-                </div>
-                <div id="profileLoggedIn" style="display: none;">
-                    <div class="profile-info-header">
-                        <strong id="userDisplayName">User Name</strong>
-                        <span id="userEmail">user@example.com</span>
-                    </div>
-                    <button class="btn-base" style="width: 100%; justify-content: center; background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3);" id="btnLogout">Sign Out</button>
-                </div>
-            </div>
         </div>
     </nav>
 
@@ -203,12 +157,15 @@
         </div>
     </div>
 
-    <!-- SUBMIT MEDIA MODAL -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
             <h3 style="color: var(--primary-cyan); margin-bottom: 12px;">Submit Media</h3>
             <form id="uploadForm">
+                <div class="form-group">
+                    <label>Your Name *</label>
+                    <input type="text" id="uploaderNameInput" placeholder="Enter your name" required>
+                </div>
                 <div class="form-group">
                     <label>Title / Caption *</label>
                     <input type="text" id="mediaTitle" placeholder="e.g., Cinematic Sunset Shot" required>
@@ -229,37 +186,6 @@
         </div>
     </div>
 
-    <!-- LOGIN / REGISTER MODAL (Name, Email, Password with Show/Hide) -->
-    <div class="modal-overlay" id="authModal">
-        <div class="modal-card">
-            <button class="close-btn" onclick="closeModal('authModal')">&times;</button>
-            <h3 id="authModalTitle" style="color: var(--primary-cyan); margin-bottom: 12px;">Login to Film O Eke</h3>
-            <form id="authForm">
-                <div class="form-group" id="nameFieldGroup" style="display: none;">
-                    <label>Full Name *</label>
-                    <input type="text" id="authName" placeholder="Enter your full name">
-                </div>
-                <div class="form-group">
-                    <label>Email Address *</label>
-                    <input type="email" id="authEmail" placeholder="youremail@gmail.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password *</label>
-                    <div class="password-container">
-                        <input type="password" id="authPassword" placeholder="••••••••" required minlength="6">
-                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('authPassword', this)">👁️</button>
-                    </div>
-                </div>
-                <p id="authError" style="color: var(--accent-pink); font-size: 0.8rem; display: none; margin-bottom: 10px;"></p>
-                <button type="submit" id="authSubmitBtn" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 11px;">Login</button>
-            </form>
-            <div class="auth-switch" id="authSwitchText" onclick="toggleAuthMode()">
-                Don't have an account? <span>Register here</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- OWNER LOGIN MODAL (with Show/Hide) -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-card" style="max-width: 360px;">
             <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
@@ -282,7 +208,6 @@
         </div>
     </div>
 
-    <!-- OWNER DASHBOARD MODAL -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-card" style="max-width: 600px;">
             <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
@@ -297,10 +222,8 @@
         <p>&copy; 2026 Film O Eke | Photography & Videography</p>
     </footer>
 
-    <!-- FIREBASE & APPLICATION LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const CLOUDINARY_CLOUD_NAME = "pbyypohy";
@@ -317,106 +240,15 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
-
-        let currentUser = null;
-        let isRegisterMode = false;
-
-        // Toggle between Login and Register views inside Auth Modal
-        window.toggleAuthMode = function() {
-            isRegisterMode = !isRegisterMode;
-            const title = document.getElementById('authModalTitle');
-            const nameGroup = document.getElementById('nameFieldGroup');
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const switchText = document.getElementById('authSwitchText');
-            document.getElementById('authError').style.display = 'none';
-
-            if (isRegisterMode) {
-                title.innerText = "Create Account";
-                nameGroup.style.display = 'block';
-                document.getElementById('authName').required = true;
-                submitBtn.innerText = "Register";
-                switchText.innerHTML = "Already have an account? <span>Login here</span>";
-            } else {
-                title.innerText = "Login to Film O Eke";
-                nameGroup.style.display = 'none';
-                document.getElementById('authName').required = false;
-                submitBtn.innerText = "Login";
-                switchText.innerHTML = "Don't have an account? <span>Register here</span>";
-            }
-        };
-
-        // Handle Form Submission for Login / Registration
-        document.getElementById('authForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value.trim();
-            const name = document.getElementById('authName').value.trim();
-            const errorBox = document.getElementById('authError');
-            const submitBtn = document.getElementById('authSubmitBtn');
-
-            errorBox.style.display = 'none';
-            submitBtn.disabled = true;
-
-            try {
-                if (isRegisterMode) {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    await updateProfile(userCredential.user, { displayName: name });
-                } else {
-                    await signInWithEmailAndPassword(auth, email, password);
-                }
-                closeModal('authModal');
-                document.getElementById('authForm').reset();
-            } catch (err) {
-                errorBox.style.display = 'block';
-                errorBox.innerText = err.message;
-            }
-            submitBtn.disabled = false;
-        });
-
-        // Auth state listener
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-            const profileLoggedOut = document.getElementById('profileLoggedOut');
-            const profileLoggedIn = document.getElementById('profileLoggedIn');
-            const navAvatar = document.getElementById('navAvatar');
-            const navProfileLabel = document.getElementById('navProfileLabel');
-
-            if (user) {
-                profileLoggedOut.style.display = 'none';
-                profileLoggedIn.style.display = 'block';
-
-                const name = user.displayName || user.email.split('@')[0];
-                document.getElementById('userDisplayName').innerText = name;
-                document.getElementById('userEmail').innerText = user.email || '';
-                
-                navProfileLabel.innerText = name.split(' ')[0];
-                navAvatar.innerText = name.charAt(0).toUpperCase();
-
-                document.getElementById('btnLogout').onclick = () => signOut(auth);
-            } else {
-                profileLoggedOut.style.display = 'block';
-                profileLoggedIn.style.display = 'none';
-                navProfileLabel.innerText = 'Profile';
-                navAvatar.innerText = '?';
-            }
-            loadGallery();
-        });
-
-        window.openUploadModal = function() {
-            if (!currentUser) return alert("Please log in to submit content!");
-            openModal('uploadModal');
-        };
 
         // Submit Post Handler
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!currentUser) return alert("Please log in first.");
-
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
 
+            const uploaderName = document.getElementById('uploaderNameInput').value.trim();
             const title = document.getElementById('mediaTitle').value.trim();
             const type = document.getElementById('mediaType').value;
             const fileInput = document.getElementById('mediaFile');
@@ -435,8 +267,7 @@
                 if (xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
                     await addDoc(collection(db, "posts"), {
-                        uploaderUid: currentUser.uid,
-                        uploaderName: currentUser.displayName || currentUser.email.split('@')[0],
+                        uploaderName: uploaderName,
                         title: title,
                         type: type,
                         url: response.secure_url,
@@ -479,33 +310,29 @@
 
                 postsList.forEach((data) => {
                     const isOwner = window.isOwnerLoggedIn;
-                    const isAuthor = currentUser && currentUser.uid === data.uploaderUid;
-                    const canDeletePost = isOwner || isAuthor;
 
                     let commentsHTML = "";
                     (data.comments || []).forEach((c) => {
-                        const canDeleteComment = isOwner || (currentUser && currentUser.uid === c.uid);
                         const commentJson = encodeURIComponent(JSON.stringify(c));
                         commentsHTML += `
                             <div class="comment-item">
                                 <div class="comment-text">
                                     <strong>${c.name}:</strong> <span>${c.text}</span>
                                 </div>
-                                ${canDeleteComment ? `<button class="btn-delete-comment" onclick="deleteComment('${data.id}', '${commentJson}')">✕</button>` : ''}
+                                ${isOwner ? `<button class="btn-delete-comment" onclick="deleteComment('${data.id}', '${commentJson}')">✕</button>` : ''}
                             </div>
                         `;
                     });
 
                     container.innerHTML += `
                         <div class="media-card">
-                            ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">✕</button>` : ''}
+                            ${isOwner ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">✕</button>` : ''}
                             ${data.type === 'image' 
                                 ? `<img src="${data.url}" alt="${data.title}" loading="lazy">` 
                                 : `<video src="${data.url}" controls></video>`}
                             <div class="media-info">
                                 <div class="title-row">
                                     <h4>${data.title}</h4>
-                                    ${isAuthor ? `<button class="btn-edit-title" onclick="editTitle('${data.id}', '${data.title}')">✏️ Edit</button>` : ''}
                                 </div>
                                 <p>By ${data.uploaderName}</p>
                             </div>
@@ -516,8 +343,8 @@
                             <div class="comments-section">
                                 <div class="comments-list">${commentsHTML || '<p style="font-size: 0.75rem; color: var(--text-muted);">No comments yet.</p>'}</div>
                                 <form class="comment-form" onsubmit="addComment(event, '${data.id}')">
-                                    <input type="text" placeholder="${currentUser ? 'Add a comment...' : 'Sign in to comment'}" ${!currentUser ? 'disabled' : ''} required>
-                                    <button type="submit" ${!currentUser ? 'disabled' : ''}>Send</button>
+                                    <input type="text" placeholder="Add a comment..." required>
+                                    <button type="submit">Send</button>
                                 </form>
                             </div>
                         </div>
@@ -535,21 +362,14 @@
             }
         };
 
-        window.editTitle = async function(id, oldTitle) {
-            const newTitle = prompt("Enter new caption:", oldTitle);
-            if (newTitle && newTitle.trim()) {
-                await updateDoc(doc(db, "posts", id), { title: newTitle.trim() });
-                loadGallery();
-            }
-        };
-
         window.addComment = async function(e, postId) {
             e.preventDefault();
-            if (!currentUser) return alert("Sign in to comment.");
             const input = e.target.querySelector('input');
+            const commenterName = prompt("Enter your name to comment:") || "Anonymous";
+            if (!commenterName.trim()) return;
+
             const commentObj = {
-                uid: currentUser.uid,
-                name: currentUser.displayName || currentUser.email.split('@')[0],
+                name: commenterName.trim(),
                 text: input.value.trim(),
                 id: Date.now().toString()
             };
@@ -609,23 +429,10 @@
         loadGallery();
     </script>
 
-    <!-- UI TOGGLES, PASSWORD VISIBILITY & OWNER AUTH -->
     <script>
         const AUTH_USER_ID = "0000332211";
         const AUTH_PASS = "0091";
         window.isOwnerLoggedIn = false;
-
-        function toggleProfileDropdown() {
-            document.getElementById('profileDropdown').classList.toggle('active');
-        }
-
-        window.addEventListener('click', function(e) {
-            const trigger = document.getElementById('profileBtn');
-            const dropdown = document.getElementById('profileDropdown');
-            if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.remove('active');
-            }
-        });
 
         // Toggle Show/Hide Password functionality
         window.togglePasswordVisibility = function(fieldId, btnElement) {
@@ -658,6 +465,7 @@
                 closeModal('loginModal');
                 openModal('adminModal');
                 if (window.loadPendingQueue) window.loadPendingQueue();
+                loadGallery(); // Refresh to show admin deletion controls
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
