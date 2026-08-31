@@ -116,7 +116,9 @@
         .post-user-avatar { width: 26px; height: 26px; border-radius: 50%; background: #0284c7; color: #fff; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
         .post-username { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
         .post-username span { display: block; font-size: 0.68rem; color: var(--primary-cyan); font-weight: 400; }
-        .post-time { font-size: 0.65rem; color: var(--text-muted); font-weight: 400; margin-left: 6px; }
+        
+        .post-header-right { display: flex; align-items: center; gap: 8px; }
+        .post-time { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
         
         .protected-media {
             width: 100%; height: 260px; object-fit: cover; display: block;
@@ -597,7 +599,6 @@
 
                     let commentsHTML = "";
                     (data.comments || []).forEach((c) => {
-                        // Admin can delete ANY comment; author of the comment can also delete their own comment
                         const canDeleteComment = isAdmin || (currentUser && currentUser.name === c.name);
                         const commentJson = encodeURIComponent(JSON.stringify(c));
                         commentsHTML += `
@@ -622,9 +623,11 @@
                                         ${data.uploaderName} 
                                         <span>${data.uploaderInsta || ''}</span>
                                     </div>
-                                    <span class="post-time">${timeAgo}</span>
                                 </div>
-                                ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">Delete</button>` : ''}
+                                <div class="post-header-right">
+                                    <span class="post-time">${timeAgo}</span>
+                                    ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">Delete</button>` : ''}
+                                </div>
                             </div>
                             ${data.type === 'image' 
                                 ? `<img src="${data.url}" alt="${data.title}" class="protected-media" loading="lazy">` 
@@ -692,7 +695,6 @@
             const userKey = currentUser.name + "_" + currentUser.insta;
             const postRef = doc(db, "posts", postId);
             
-            // Fetch latest post doc to ensure accurate toggle state
             const postSnap = await getDocs(query(collection(db, "posts"), where("__name__", "==", postId)));
             if (!postSnap.empty) {
                 const postData = postSnap.docs[0].data();
