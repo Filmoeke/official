@@ -162,20 +162,17 @@
 
     <nav>
         <div class="nav-left">
-            <div class="nav-left">
-    <a href="https://www.instagram.com/filmoeke" target="_blank" rel="noopener noreferrer" class="brand-link">📷 Film O Eke</a>
-</div>
+            <a href="https://www.instagram.com/filmoeke" target="_blank" rel="noopener noreferrer" class="brand-link">📷 Film O Eke</a>
+        </div>
 
         <div class="nav-right">
             <button class="btn-base btn-action" onclick="openUploadModal()">Submit Post</button>
 
-            <!-- Profile Widget (Top-Right) -->
             <button class="profile-btn-trigger" id="profileBtn" onclick="toggleProfileDropdown()">
                 <div class="profile-avatar" id="navAvatar">?</div>
                 <span id="navProfileLabel">Profile</span>
             </button>
 
-            <!-- Profile Dropdown Menu -->
             <div class="profile-dropdown" id="profileDropdown">
                 <div id="profileLoggedOut">
                     <button class="dropdown-item" onclick="openModal('loginModal')"> User Login</button>
@@ -201,7 +198,6 @@
         </div>
     </div>
 
-    <!-- SUBMIT MEDIA MODAL -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
@@ -227,7 +223,6 @@
         </div>
     </div>
 
-    <!-- USER LOGIN MODAL (Name & Instagram ID only) -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-card" style="max-width: 360px;">
             <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
@@ -246,7 +241,6 @@
         </div>
     </div>
 
-    <!-- OWNER LOGIN MODAL -->
     <div class="modal-overlay" id="adminLoginModal">
         <div class="modal-card" style="max-width: 360px;">
             <button class="close-btn" onclick="closeModal('adminLoginModal')">&times;</button>
@@ -266,7 +260,6 @@
         </div>
     </div>
 
-    <!-- OWNER CONTROL DASHBOARD MODAL -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-card" style="max-width: 600px;">
             <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
@@ -281,7 +274,6 @@
         <p>&copy; 2026 Film O Eke | Photography & Videography</p>
     </footer>
 
-    <!-- FIREBASE & APPLICATION LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -552,7 +544,7 @@
                     <div class="admin-item">
                         <img src="${data.url}" class="admin-preview">
                         <div>
-                            <strong style="color:var::var(--text-main);">${data.title}</strong>
+                            <strong style="color:var(--text-main);">${data.title}</strong>
                             <p style="font-size:0.8rem;color:var(--primary-cyan);">By: ${data.uploaderName} (${data.uploaderInsta})</p>
                         </div>
                         <div class="admin-actions">
@@ -578,7 +570,6 @@
         loadGallery();
     </script>
 
-    <!-- UI TOGGLES & OWNER AUTH -->
     <script>
         const AUTH_USER_ID = "0000332211";
         const AUTH_PASS = "0091";
