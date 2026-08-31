@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fast Media Uploader</title>
     <style>
-        body { font-family: system-ui, sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; }
-        .upload-box { border: 2px dashed #cbd5e1; padding: 30px; text-align: center; border-radius: 8px; background: #f8fafc; }
-        input[type="file"] { margin: 15px 0; }
-        button { background: #2563eb; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        body { font-family: system-ui, sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; background: #f1f5f9; }
+        .upload-box { border: 2px dashed #cbd5e1; padding: 30px; text-align: center; border-radius: 8px; background: #ffffff; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        input[type="file"] { margin: 15px 0; display: block; width: 100%; }
+        button { background: #2563eb; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 5px; cursor: pointer; width: 100%; }
         button:disabled { background: #94a3b8; cursor: not-allowed; }
         #progressBar { width: 100%; background: #e2e8f0; height: 10px; border-radius: 5px; margin-top: 15px; overflow: hidden; display: none; }
         #progressFill { width: 0%; height: 100%; background: #22c55e; transition: width 0.2s; }
@@ -18,10 +18,9 @@
 <body>
 
     <div class="upload-box">
-        <h2>Upload Media</h2>
-        <p>Select photos or videos (Original Quality)</p>
+        <h2>Fast Media Uploader</h2>
+        <p>Upload photos & videos at 100% original quality</p>
         <input type="file" id="mediaFile" accept="image/*,video/*">
-        <br>
         <button id="uploadBtn" onclick="startUpload()">Upload Now</button>
         
         <div id="progressBar">
@@ -30,6 +29,68 @@
         <p id="status"></p>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        async function startUpload() {
+            const fileInput = document.getElementById('mediaFile');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            const status = document.getElementById('status');
+
+            if (fileInput.files.length === 0) {
+                alert("Please select a photo or video first!");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append("media", file); // Raw file stream sent instantly without compression delays
+
+            uploadBtn.disabled = true;
+            progressBar.style.display = 'block';
+            status.innerText = "Preparing upload...";
+
+            try {
+                await uploadWithProgress(formData, (percent) => {
+                    progressFill.style.width = percent + '%';
+                    status.innerText = `Uploading... ${percent}%`;
+                });
+
+                status.innerText = "Upload complete! Saved at original quality.";
+                status.style.color = "#16a34a";
+            } catch (error) {
+                console.error(error);
+                status.innerText = "Upload failed. Please try again.";
+                status.style.color = "#dc2626";
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        }
+
+        function uploadWithProgress(formData, onProgress) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/api/upload', true);
+
+                xhr.upload.onprogress = (event) => {
+                    if (event.lengthComputable) {
+                        const percentComplete = Math.round((event.loaded / event.total) * 100);
+                        onProgress(percentComplete);
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        resolve(JSON.parse(xhr.responseText));
+                    } else {
+                        reject(new Error(`Server error: ${xhr.status}`));
+                    }
+                };
+
+                xhr.onerror = () => reject(new Error("Network connection lost."));
+                xhr.send(formData);
+            });
+        }
+    </script>
 </body>
 </html>
