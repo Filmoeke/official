@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Film O Eke | Studio Platform</title>
+    <title>Photography and Videography Showcase | Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -44,7 +44,7 @@
 
         header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 6px; }
 
-        /* Navigation Bar - Responsive Fix for Mobile Wrap */
+        /* Navigation Bar */
         nav { 
             background: var(--bg-surface); backdrop-filter: blur(16px);
             padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
@@ -107,7 +107,8 @@
         .post-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #f1f5f9; }
         .post-user-info { display: flex; align-items: center; gap: 8px; }
         .post-user-avatar { width: 28px; height: 28px; border-radius: 50%; background: #0284c7; color: #fff; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-        .post-username { font-size: 0.82rem; font-weight: 700; color: var(--text-main); }
+        .post-username { font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 4px; }
+        .post-username span { font-size: 0.72rem; color: var(--text-muted); font-weight: 400; }
         
         .media-card img, .media-card video { width: 100%; height: 280px; object-fit: cover; display: block; }
         
@@ -116,7 +117,7 @@
 
         .btn-delete-card { background: none; border: none; color: var(--accent-pink); cursor: pointer; font-size: 0.8rem; font-weight: 600; }
 
-        /* Instagram Style Action Bar (Like, Comment counts) */
+        /* Instagram Style Action Bar */
         .ig-actions { display: flex; align-items: center; gap: 16px; padding: 8px 14px; font-size: 1.2rem; }
         .ig-action-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
         .ig-action-btn:hover { color: var(--primary-cyan); }
@@ -124,7 +125,7 @@
         .comments-section { border-top: 1px solid var(--border-color); background: #ffffff; padding: 10px 14px; }
         .comments-list { overflow-y: auto; max-height: 100px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 4px; }
         .comment-item { font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; }
-        .comment-text strong { color: var(--text-main); font-weight: 700; margin-right: 6px; }
+        .comment-text strong { color: var(--text-main); font-weight: 700; margin-right: 4px; }
         .comment-text span { color: var(--text-muted); }
         .btn-delete-comment { background: none; border: none; color: var(--accent-pink); cursor: pointer; font-size: 0.7rem; }
 
@@ -143,15 +144,6 @@
         .form-group input, .form-group select { width: 100%; padding: 10px 12px; border-radius: 8px; background: #f8fafc; border: 1px solid var(--border-color); color: var(--text-main); outline: none; }
         .form-group input:focus, .form-group select:focus { border-color: var(--primary-cyan); background: #ffffff; }
 
-        /* Password Wrapper for Show/Hide Icon */
-        .password-container { position: relative; width: 100%; }
-        .password-container input { width: 100%; padding-right: 40px; }
-        .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; }
-        .toggle-password:hover { color: var(--primary-cyan); }
-
-        .auth-switch { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; cursor: pointer; }
-        .auth-switch span { color: var(--primary-cyan); font-weight: 600; }
-
         .admin-item { display: flex; gap: 12px; align-items: center; background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border-color); }
         .admin-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
         .admin-actions { display: flex; gap: 6px; margin-left: auto; }
@@ -164,34 +156,35 @@
 <body>
 
     <header>
-        <h1>Film O Eke</h1>
-        <p>A Cinematic Photography & Videography Showcase</p>
+        <h1>Photography & Videography Showcase</h1>
+        <p>A Professional Visual Arts Gallery Platform</p>
     </header>
 
     <nav>
         <div class="nav-left">
-            <a href="#" class="brand-link">📷 Film O Eke</a>
+            <a href="#" class="brand-link">📷 Visual Showcase</a>
         </div>
 
         <div class="nav-right">
             <button class="btn-base btn-action" onclick="openUploadModal()">Submit Post</button>
 
+            <!-- Profile Widget (Top-Right) -->
             <button class="profile-btn-trigger" id="profileBtn" onclick="toggleProfileDropdown()">
                 <div class="profile-avatar" id="navAvatar">?</div>
                 <span id="navProfileLabel">Profile</span>
             </button>
 
+            <!-- Profile Dropdown Menu -->
             <div class="profile-dropdown" id="profileDropdown">
                 <div id="profileLoggedOut">
-                    <button class="dropdown-item" onclick="openAuthModal('login')"> User Login</button>
-                    <button class="dropdown-item" onclick="openAuthModal('register')"> Create Account</button>
+                    <button class="dropdown-item" onclick="openModal('loginModal')">👤 User Login</button>
                     <div style="border-top: 1px solid var(--border-color); margin: 4px 0;"></div>
-                    <button class="dropdown-item" onclick="openModal('adminLoginModal')"> Admin </button>
+                    <button class="dropdown-item" onclick="openModal('adminLoginModal')">🛡️ Owner Portal</button>
                 </div>
                 <div id="profileLoggedIn" style="display: none;">
                     <div class="profile-info-header">
                         <strong id="userDisplayName">User Name</strong>
-                        <span id="userEmail">user@example.com</span>
+                        <span id="userInstaId">@instagram_id</span>
                     </div>
                     <button class="dropdown-item" id="btnAdminDashboard" style="display: none; color: var(--primary-cyan);" onclick="openModal('adminModal'); loadPendingQueue();">📊 Owner Dashboard</button>
                     <button class="dropdown-item" style="color: var(--accent-pink);" id="btnLogout">🚪 Sign Out</button>
@@ -207,6 +200,7 @@
         </div>
     </div>
 
+    <!-- SUBMIT MEDIA MODAL -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
@@ -232,35 +226,26 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="authModal">
-        <div class="modal-card">
-            <button class="close-btn" onclick="closeModal('authModal')">&times;</button>
-            <h3 id="authModalTitle" style="color: var(--primary-cyan); margin-bottom: 12px;">User Login</h3>
-            <form id="authForm">
-                <div class="form-group" id="nameFieldGroup" style="display: none;">
-                    <label>Full Name *</label>
-                    <input type="text" id="authName" placeholder="Enter your full name">
+    <!-- USER LOGIN MODAL (Name & Instagram ID only) -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-card" style="max-width: 360px;">
+            <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 12px; text-align: center;">User Login</h3>
+            <form id="userLoginForm">
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" id="loginName" placeholder="Your Name" required autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label>Email Address *</label>
-                    <input type="email" id="authEmail" placeholder="youremail@gmail.com" required>
+                    <label>Instagram ID *</label>
+                    <input type="text" id="loginInsta" placeholder="@your_instagram_id" required autocomplete="off">
                 </div>
-                <div class="form-group">
-                    <label>Password *</label>
-                    <div class="password-container">
-                        <input type="password" id="authPassword" placeholder="••••••••" required minlength="6">
-                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('authPassword', this)">👁️</button>
-                    </div>
-                </div>
-                <p id="authError" style="color: var(--accent-pink); font-size: 0.8rem; display: none; margin-bottom: 10px;"></p>
-                <button type="submit" id="authSubmitBtn" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 11px;">Login</button>
+                <button type="submit" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 10px;">Login</button>
             </form>
-            <div class="auth-switch" id="authSwitchText" onclick="toggleAuthMode()">
-                Don't have an account? <span>Register here</span>
-            </div>
         </div>
     </div>
 
+    <!-- OWNER LOGIN MODAL -->
     <div class="modal-overlay" id="adminLoginModal">
         <div class="modal-card" style="max-width: 360px;">
             <button class="close-btn" onclick="closeModal('adminLoginModal')">&times;</button>
@@ -272,17 +257,15 @@
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <div class="password-container">
-                        <input type="password" id="loginPassword" required>
-                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('loginPassword', this)">👁️</button>
-                    </div>
+                    <input type="password" id="loginPassword" required>
                 </div>
-                <p id="loginError" style="color: var(--accent-pink); font-size: 0.8rem; display: none; margin-bottom: 10px; text-align: center;">Invalid Credentials!</p>
+                <p id="adminLoginError" style="color: var(--accent-pink); font-size: 0.8rem; display: none; margin-bottom: 10px; text-align: center;">Invalid Credentials!</p>
                 <button type="submit" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 10px;">Login as Owner</button>
             </form>
         </div>
     </div>
 
+    <!-- OWNER CONTROL DASHBOARD MODAL -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-card" style="max-width: 600px;">
             <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
@@ -294,12 +277,12 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Film O Eke | Photography & Videography</p>
+        <p>&copy; 2026 Photography & Videography Showcase Platform</p>
     </footer>
 
+    <!-- FIREBASE & APPLICATION LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const CLOUDINARY_CLOUD_NAME = "pbyypohy";
@@ -316,101 +299,40 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
 
         let currentUser = null;
-        let isRegisterMode = false;
         window.isOwnerLoggedIn = false;
 
-        // Open Auth Modal helper ('login' or 'register')
-        window.openAuthModal = function(mode) {
-            isRegisterMode = (mode === 'register');
-            const title = document.getElementById('authModalTitle');
-            const nameGroup = document.getElementById('nameFieldGroup');
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const switchText = document.getElementById('authSwitchText');
-            document.getElementById('authError').style.display = 'none';
-            document.getElementById('authForm').reset();
-
-            if (isRegisterMode) {
-                title.innerText = "Create Account";
-                nameGroup.style.display = 'block';
-                document.getElementById('authName').required = true;
-                submitBtn.innerText = "Register";
-                switchText.innerHTML = "Already have an account? <span>Login here</span>";
-            } else {
-                title.innerText = "User Login";
-                nameGroup.style.display = 'none';
-                document.getElementById('authName').required = false;
-                submitBtn.innerText = "Login";
-                switchText.innerHTML = "Don't have an account? <span>Register here</span>";
+        // Local Storage Session Check on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('showcase_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUIState();
             }
-            openModal('authModal');
-            document.getElementById('profileDropdown').classList.remove('active');
-        };
-
-        window.toggleAuthMode = function() {
-            openAuthModal(isRegisterMode ? 'login' : 'register');
-        };
-
-        // Handle User Authentication Submissions
-        document.getElementById('authForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value.trim();
-            const name = document.getElementById('authName').value.trim();
-            const errorBox = document.getElementById('authError');
-            const submitBtn = document.getElementById('authSubmitBtn');
-
-            errorBox.style.display = 'none';
-            submitBtn.disabled = true;
-
-            try {
-                if (isRegisterMode) {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    await updateProfile(userCredential.user, { displayName: name });
-                } else {
-                    await signInWithEmailAndPassword(auth, email, password);
-                }
-                closeModal('authModal');
-            } catch (err) {
-                errorBox.style.display = 'block';
-                errorBox.innerText = err.message;
-            }
-            submitBtn.disabled = false;
         });
 
-        // Firebase Auth State Listener
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
+        function updateUIState() {
             const profileLoggedOut = document.getElementById('profileLoggedOut');
             const profileLoggedIn = document.getElementById('profileLoggedIn');
             const navAvatar = document.getElementById('navAvatar');
             const navProfileLabel = document.getElementById('navProfileLabel');
             const btnAdminDashboard = document.getElementById('btnAdminDashboard');
 
-            if (user) {
+            if (currentUser) {
                 profileLoggedOut.style.display = 'none';
                 profileLoggedIn.style.display = 'block';
 
-                const name = user.displayName || user.email.split('@')[0];
-                document.getElementById('userDisplayName').innerText = name;
-                document.getElementById('userEmail').innerText = user.email || '';
+                document.getElementById('userDisplayName').innerText = currentUser.name;
+                document.getElementById('userInstaId').innerText = currentUser.insta;
                 
-                navProfileLabel.innerText = name.split(' ')[0];
-                navAvatar.innerText = name.charAt(0).toUpperCase();
+                navProfileLabel.innerText = currentUser.name.split(' ')[0];
+                navAvatar.innerText = currentUser.name.charAt(0).toUpperCase();
 
                 if (window.isOwnerLoggedIn) {
                     btnAdminDashboard.style.display = 'flex';
                 }
-
-                document.getElementById('btnLogout').onclick = () => {
-                    signOut(auth);
-                    window.isOwnerLoggedIn = false;
-                    btnAdminDashboard.style.display = 'none';
-                    document.getElementById('profileDropdown').classList.remove('active');
-                };
             } else {
                 profileLoggedOut.style.display = 'block';
                 profileLoggedIn.style.display = 'none';
@@ -419,18 +341,40 @@
                 btnAdminDashboard.style.display = 'none';
             }
             loadGallery();
+        }
+
+        // Handle Custom User Login (Name & Instagram ID)
+        document.getElementById('userLoginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('loginName').value.trim();
+            const insta = document.getElementById('loginInsta').value.trim();
+
+            currentUser = { name, insta: insta.startsWith('@') ? insta : '@' + insta };
+            localStorage.setItem('showcase_user', JSON.stringify(currentUser));
+            
+            closeModal('loginModal');
+            document.getElementById('userLoginForm').reset();
+            updateUIState();
         });
+
+        document.getElementById('btnLogout').onclick = () => {
+            currentUser = null;
+            localStorage.removeItem('showcase_user');
+            window.isOwnerLoggedIn = false;
+            updateUIState();
+            document.getElementById('profileDropdown').classList.remove('active');
+        };
 
         window.openUploadModal = function() {
             if (!currentUser) {
-                alert("Please log in or create an account to submit content!");
-                openAuthModal('login');
+                alert("Please log in with your Name and Instagram ID to submit content!");
+                openModal('loginModal');
                 return;
             }
             openModal('uploadModal');
         };
 
-        // Submit Post Handler (Uses logged-in user profile details)
+        // Submit Post Handler
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return alert("Please log in first.");
@@ -456,8 +400,8 @@
                 if (xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
                     await addDoc(collection(db, "posts"), {
-                        uploaderUid: currentUser.uid,
-                        uploaderName: currentUser.displayName || currentUser.email.split('@')[0],
+                        uploaderName: currentUser.name,
+                        uploaderInsta: currentUser.insta,
                         title: title,
                         type: type,
                         url: response.secure_url,
@@ -478,7 +422,7 @@
             xhr.send(formData);
         });
 
-        // Load Instagram-Style Gallery
+        // Load Gallery
         async function loadGallery() {
             const container = document.getElementById('publicGallery');
             try {
@@ -500,12 +444,12 @@
 
                 postsList.forEach((data) => {
                     const isOwner = window.isOwnerLoggedIn;
-                    const isAuthor = currentUser && currentUser.uid === data.uploaderUid;
+                    const isAuthor = currentUser && currentUser.name === data.uploaderName && currentUser.insta === data.uploaderInsta;
                     const canDeletePost = isOwner || isAuthor;
 
                     let commentsHTML = "";
                     (data.comments || []).forEach((c) => {
-                        const canDeleteComment = isOwner || (currentUser && currentUser.uid === c.uid);
+                        const canDeleteComment = isOwner || (currentUser && currentUser.name === c.name);
                         const commentJson = encodeURIComponent(JSON.stringify(c));
                         commentsHTML += `
                             <div class="comment-item">
@@ -524,7 +468,10 @@
                             <div class="post-header">
                                 <div class="post-user-info">
                                     <div class="post-user-avatar">${avatarChar}</div>
-                                    <span class="post-username">${data.uploaderName}</span>
+                                    <div class="post-username">
+                                        ${data.uploaderName} 
+                                        <span style="display: block; font-size: 0.7rem; color: var(--primary-cyan);">${data.uploaderInsta || ''}</span>
+                                    </div>
                                 </div>
                                 ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">Delete</button>` : ''}
                             </div>
@@ -564,13 +511,13 @@
             e.preventDefault();
             if (!currentUser) {
                 alert("Please log in to comment.");
-                openAuthModal('login');
+                openModal('loginModal');
                 return;
             }
             const input = e.target.querySelector('input');
             const commentObj = {
-                uid: currentUser.uid,
-                name: currentUser.displayName || currentUser.email.split('@')[0],
+                name: currentUser.name,
+                insta: currentUser.insta,
                 text: input.value.trim(),
                 id: Date.now().toString()
             };
@@ -605,7 +552,7 @@
                         <img src="${data.url}" class="admin-preview">
                         <div>
                             <strong style="color:var(--text-main);">${data.title}</strong>
-                            <p style="font-size:0.8rem;color:var(--primary-cyan);">By: ${data.uploaderName}</p>
+                            <p style="font-size:0.8rem;color:var(--primary-cyan);">By: ${data.uploaderName} (${data.uploaderInsta})</p>
                         </div>
                         <div class="admin-actions">
                             <button class="btn-approve" onclick="approvePost('${id}')">Approve</button>
@@ -630,6 +577,7 @@
         loadGallery();
     </script>
 
+    <!-- UI TOGGLES & OWNER AUTH -->
     <script>
         const AUTH_USER_ID = "0000332211";
         const AUTH_PASS = "0091";
@@ -646,18 +594,6 @@
             }
         });
 
-        // Toggle Show/Hide Password functionality
-        window.togglePasswordVisibility = function(fieldId, btnElement) {
-            const passwordInput = document.getElementById(fieldId);
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                btnElement.textContent = '🔒';
-            } else {
-                passwordInput.type = 'password';
-                btnElement.textContent = '👁️';
-            }
-        };
-
         // Owner Login Form handler
         document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -668,11 +604,10 @@
                 window.isOwnerLoggedIn = true;
                 closeModal('adminLoginModal');
                 document.getElementById('adminLoginForm').reset();
-                document.getElementById('loginError').style.display = 'none';
+                document.getElementById('adminLoginError').style.display = 'none';
                 
-                // Show dashboard button if user is also signed in
                 const btnAdminDashboard = document.getElementById('btnAdminDashboard');
-                if (btnAdminDashboard && document.getElementById('profileLoggedIn').style.display === 'block') {
+                if (btnAdminDashboard && currentUser) {
                     btnAdminDashboard.style.display = 'flex';
                 }
 
@@ -680,7 +615,7 @@
                 if (window.loadPendingQueue) window.loadPendingQueue();
                 loadGallery();
             } else {
-                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('adminLoginError').style.display = 'block';
             }
         });
 
