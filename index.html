@@ -66,7 +66,7 @@
         .btn-admin { background: rgba(129, 140, 248, 0.1); color: var(--accent-purple); border: 1px solid rgba(129, 140, 248, 0.3); }
         .btn-admin:hover { background: rgba(129, 140, 248, 0.2); color: #fff; }
 
-        /* Top-Right Profile Trigger & Menu */
+        /* Profile Trigger & Dropdown Menu */
         .profile-btn-trigger {
             background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glow);
             border-radius: 30px; padding: 4px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;
@@ -76,9 +76,9 @@
         .profile-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-cyan); color: #030712; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; }
 
         .profile-dropdown {
-            position: absolute; top: 48px; right: 0; width: 260px;
+            position: absolute; top: 48px; right: 0; width: 240px;
             background: #0f172a; border: 1px solid var(--border-glow); border-radius: 12px;
-            padding: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: none; flex-direction: column; gap: 10px; z-index: 101;
+            padding: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: none; flex-direction: column; gap: 10px; z-index: 101;
         }
         .profile-dropdown.active { display: flex; }
         .profile-info-header { border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 4px; }
@@ -123,12 +123,15 @@
         /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000; padding: 20px; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-card { background: #0f172a; width: 100%; max-width: 440px; border-radius: 16px; padding: 25px; border: 1px solid var(--border-glow); position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-card { background: #0f172a; width: 100%; max-width: 420px; border-radius: 16px; padding: 25px; border: 1px solid var(--border-glow); position: relative; max-height: 90vh; overflow-y: auto; }
         .close-btn { position: absolute; top: 16px; right: 18px; font-size: 1.4rem; background: none; border: none; color: var(--text-muted); cursor: pointer; }
 
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 600; color: #ffffff; }
         .form-group input, .form-group select { width: 100%; padding: 10px 12px; border-radius: 8px; background: rgba(3, 7, 18, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); color: #ffffff; outline: none; }
+
+        .auth-switch { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; cursor: pointer; }
+        .auth-switch span { color: var(--primary-cyan); font-weight: 600; }
 
         .admin-item { display: flex; gap: 12px; align-items: center; background: rgba(3, 7, 18, 0.6); padding: 10px; border-radius: 8px; margin-bottom: 10px; }
         .admin-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
@@ -164,16 +167,17 @@
             <button class="btn-base btn-action" onclick="openUploadModal()">Submit Post</button>
             <button class="btn-base btn-admin" onclick="triggerAdminPanel()">Owner Portal</button>
 
+            <!-- Profile Widget (Top-Right) -->
             <button class="profile-btn-trigger" id="profileBtn" onclick="toggleProfileDropdown()">
                 <div class="profile-avatar" id="navAvatar">?</div>
                 <span id="navProfileLabel">Profile</span>
             </button>
 
+            <!-- Profile Dropdown -->
             <div class="profile-dropdown" id="profileDropdown">
                 <div id="profileLoggedOut">
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">Sign in to upload posts and add comments.</p>
-                    <button class="btn-base btn-action" style="width: 100%; justify-content: center; margin-bottom: 6px;" onclick="openModal('emailAuthModal')">Login with Email Link / OTP</button>
-                    <button class="btn-base" style="width: 100%; justify-content: center; background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3);" id="btnGoogleLogin">Sign in with Google</button>
+                    <button class="btn-base btn-action" style="width: 100%; justify-content: center;" onclick="openModal('authModal')">Login / Register</button>
                 </div>
                 <div id="profileLoggedIn" style="display: none;">
                     <div class="profile-info-header">
@@ -193,6 +197,7 @@
         </div>
     </div>
 
+    <!-- SUBMIT MEDIA MODAL -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
@@ -218,26 +223,34 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="emailAuthModal">
+    <!-- LOGIN / REGISTER MODAL (Name, Email, Password) -->
+    <div class="modal-overlay" id="authModal">
         <div class="modal-card">
-            <button class="close-btn" onclick="closeModal('emailAuthModal')">&times;</button>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 8px;">Gmail OTP / Magic Link Login</h3>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Enter your Gmail. We will send a secure sign-in link directly to your inbox from Film O Eke.</p>
-            <form id="emailAuthForm">
-                <div class="form-group">
-                    <label>Full Name (Optional)</label>
-                    <input type="text" id="otpUserName" placeholder="Enter your full name">
+            <button class="close-btn" onclick="closeModal('authModal')">&times;</button>
+            <h3 id="authModalTitle" style="color: var(--primary-cyan); margin-bottom: 12px;">Login to Film O Eke</h3>
+            <form id="authForm">
+                <div class="form-group" id="nameFieldGroup" style="display: none;">
+                    <label>Full Name *</label>
+                    <input type="text" id="authName" placeholder="Enter your full name">
                 </div>
                 <div class="form-group">
-                    <label>Gmail Address *</label>
-                    <input type="email" id="otpEmail" placeholder="youremail@gmail.com" required>
+                    <label>Email Address *</label>
+                    <input type="email" id="authEmail" placeholder="youremail@gmail.com" required>
                 </div>
-                <p id="otpStatus" style="font-size: 0.8rem; display: none; margin-bottom: 10px;"></p>
-                <button type="submit" id="btnSendOtp" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 11px;">Send Verification Link</button>
+                <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" id="authPassword" placeholder="••••••••" required minlength="6">
+                </div>
+                <p id="authError" style="color: var(--accent-pink); font-size: 0.8rem; display: none; margin-bottom: 10px;"></p>
+                <button type="submit" id="authSubmitBtn" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 11px;">Login</button>
             </form>
+            <div class="auth-switch" id="authSwitchText" onclick="toggleAuthMode()">
+                Don't have an account? <span>Register here</span>
+            </div>
         </div>
     </div>
 
+    <!-- OWNER LOGIN MODAL -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-card" style="max-width: 360px;">
             <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
@@ -257,6 +270,7 @@
         </div>
     </div>
 
+    <!-- OWNER DASHBOARD MODAL -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-card" style="max-width: 600px;">
             <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
@@ -271,9 +285,10 @@
         <p>&copy; 2026 Film O Eke | Photography & Videography</p>
     </footer>
 
+    <!-- FIREBASE & APPLICATION LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const CLOUDINARY_CLOUD_NAME = "pbyypohy";
@@ -292,30 +307,61 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const provider = new GoogleAuthProvider();
 
         let currentUser = null;
+        let isRegisterMode = false;
 
-        // Auto-complete email link sign-in process if redirected from inbox link
-        if (isSignInWithEmailLink(auth, window.location.href)) {
-            let email = window.localStorage.getItem('emailForSignIn');
-            if (!email) {
-                email = window.prompt('Please confirm your Gmail address to finish logging in:');
+        // Toggle between Login and Register views inside Auth Modal
+        window.toggleAuthMode = function() {
+            isRegisterMode = !isRegisterMode;
+            const title = document.getElementById('authModalTitle');
+            const nameGroup = document.getElementById('nameFieldGroup');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const switchText = document.getElementById('authSwitchText');
+            document.getElementById('authError').style.display = 'none';
+
+            if (isRegisterMode) {
+                title.innerText = "Create Account";
+                nameGroup.style.display = 'block';
+                document.getElementById('authName').required = true;
+                submitBtn.innerText = "Register";
+                switchText.innerHTML = "Already have an account? <span>Login here</span>";
+            } else {
+                title.innerText = "Login to Film O Eke";
+                nameGroup.style.display = 'none';
+                document.getElementById('authName').required = false;
+                submitBtn.innerText = "Login";
+                switchText.innerHTML = "Don't have an account? <span>Register here</span>";
             }
-            if (email) {
-                signInWithEmailLink(auth, email, window.location.href)
-                    .then((result) => {
-                        window.localStorage.removeItem('emailForSignIn');
-                        const pendingName = window.localStorage.getItem('nameForSignIn');
-                        if (pendingName && result.user) {
-                            updateProfile(result.user, { displayName: pendingName });
-                            window.localStorage.removeItem('nameForSignIn');
-                        }
-                        alert('Logged in successfully!');
-                    })
-                    .catch((err) => alert('Sign-in failed: ' + err.message));
+        };
+
+        // Handle Form Submission for Login / Registration
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+            const name = document.getElementById('authName').value.trim();
+            const errorBox = document.getElementById('authError');
+            const submitBtn = document.getElementById('authSubmitBtn');
+
+            errorBox.style.display = 'none';
+            submitBtn.disabled = true;
+
+            try {
+                if (isRegisterMode) {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    await updateProfile(userCredential.user, { displayName: name });
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+                closeModal('authModal');
+                document.getElementById('authForm').reset();
+            } catch (err) {
+                errorBox.style.display = 'block';
+                errorBox.innerText = err.message;
             }
-        }
+            submitBtn.disabled = false;
+        });
 
         // Auth state listener
         onAuthStateChanged(auth, (user) => {
@@ -342,51 +388,8 @@
                 profileLoggedIn.style.display = 'none';
                 navProfileLabel.innerText = 'Profile';
                 navAvatar.innerText = '?';
-
-                document.getElementById('btnGoogleLogin').onclick = handleGoogleLogin;
             }
             loadGallery();
-        });
-
-        // Google Sign In
-        async function handleGoogleLogin() {
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (err) {
-                alert("Google Sign In Error: " + err.message);
-            }
-        }
-
-        // Send Email Link Sign In (Magic Link / Passwordless OTP)
-        document.getElementById('emailAuthForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('otpEmail').value.trim();
-            const userName = document.getElementById('otpUserName').value.trim();
-            const statusText = document.getElementById('otpStatus');
-            const btn = document.getElementById('btnSendOtp');
-
-            btn.disabled = true;
-            statusText.style.display = 'block';
-            statusText.style.color = '#38bdf8';
-            statusText.innerText = 'Sending email link...';
-
-            const actionCodeSettings = {
-                url: window.location.href,
-                handleCodeInApp: true,
-            };
-
-            try {
-                await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-                window.localStorage.setItem('emailForSignIn', email);
-                if (userName) window.localStorage.setItem('nameForSignIn', userName);
-                
-                statusText.style.color = '#10b981';
-                statusText.innerText = '✅ Link sent! Check your Gmail inbox and click the sign-in link.';
-            } catch (err) {
-                statusText.style.color = '#f43f5e';
-                statusText.innerText = 'Error: ' + err.message;
-            }
-            btn.disabled = false;
         });
 
         window.openUploadModal = function() {
@@ -594,6 +597,7 @@
         loadGallery();
     </script>
 
+    <!-- UI TOGGLES & OWNER AUTH -->
     <script>
         const AUTH_USER_ID = "0000332211";
         const AUTH_PASS = "0091";
@@ -603,7 +607,6 @@
             document.getElementById('profileDropdown').classList.toggle('active');
         }
 
-        // Close profile dropdown when clicking outside
         window.addEventListener('click', function(e) {
             const trigger = document.getElementById('profileBtn');
             const dropdown = document.getElementById('profileDropdown');
