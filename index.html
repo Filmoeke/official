@@ -188,6 +188,7 @@
             </button>
 
             <div class="profile-dropdown" id="profileDropdown">
+                <!-- Dropdown items will dynamically adapt based on login state -->
                 <div id="profileLoggedOut">
                     <button class="dropdown-item" onclick="openModal('loginModal')">User Login</button>
                     <div style="border-top: 1px solid var(--border-color); margin: 4px 0;"></div>
@@ -198,7 +199,6 @@
                         <strong id="userDisplayName">User Name</strong>
                         <span id="userInstaId">@instagram_id</span>
                     </div>
-                    <!-- Status section for user's specific posts -->
                     <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-top: 6px;">Your Post Statuses:</div>
                     <div class="my-posts-status-container" id="myPostsStatusList">
                         <span style="font-size: 0.72rem; color: var(--text-muted);">No submissions yet</span>
@@ -217,6 +217,7 @@
         </div>
     </div>
 
+    <!-- Modals -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
@@ -238,7 +239,6 @@
                     <input type="file" id="mediaFile" accept="image/*,video/*" required>
                 </div>
 
-                <!-- Upload Progress Percentage Indicator -->
                 <div class="upload-progress-container" id="uploadProgressContainer">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-main);">Uploading file...</span>
@@ -326,14 +326,14 @@
         const db = getFirestore(app);
 
         let currentUser = null;
-        window.isOwnerLoggedIn = false;
+        window.isOwnerLoggedIn = localStorage.getItem('filmoeke_owner') === 'true';
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('filmoeke_user');
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
-                updateUIState();
             }
+            updateUIState();
         });
 
         function updateUIState() {
@@ -343,20 +343,30 @@
             const navProfileLabel = document.getElementById('navProfileLabel');
             const btnAdminDashboard = document.getElementById('btnAdminDashboard');
 
-            if (currentUser) {
+            // If Owner is logged in, grant UI view capabilities even if user profile isn't active
+            if (currentUser || window.isOwnerLoggedIn) {
                 profileLoggedOut.style.display = 'none';
                 profileLoggedIn.style.display = 'block';
 
-                document.getElementById('userDisplayName').innerText = currentUser.name;
-                document.getElementById('userInstaId').innerText = currentUser.insta;
-                
-                navProfileLabel.innerText = currentUser.name.split(' ')[0];
-                navAvatar.innerText = currentUser.name.charAt(0).toUpperCase();
+                if (currentUser) {
+                    document.getElementById('userDisplayName').innerText = currentUser.name;
+                    document.getElementById('userInstaId').innerText = currentUser.insta;
+                    navProfileLabel.innerText = currentUser.name.split(' ')[0];
+                    navAvatar.innerText = currentUser.name.charAt(0).toUpperCase();
+                    loadUserPostStatuses();
+                } else {
+                    document.getElementById('userDisplayName').innerText = "Owner Admin";
+                    document.getElementById('userInstaId').innerText = "@admin_portal";
+                    navProfileLabel.innerText = "Owner";
+                    navAvatar.innerText = "A";
+                    document.getElementById('myPostsStatusList').innerHTML = `<span style="font-size: 0.72rem; color: var(--text-muted);">Logged in as Admin</span>`;
+                }
 
                 if (window.isOwnerLoggedIn) {
                     btnAdminDashboard.style.display = 'flex';
+                } else {
+                    btnAdminDashboard.style.display = 'none';
                 }
-                loadUserPostStatuses();
             } else {
                 profileLoggedOut.style.display = 'block';
                 profileLoggedIn.style.display = 'none';
@@ -383,6 +393,7 @@
         document.getElementById('btnLogout').onclick = () => {
             currentUser = null;
             localStorage.removeItem('filmoeke_user');
+            localStorage.removeItem('filmoeke_owner');
             window.isOwnerLoggedIn = false;
             updateUIState();
             document.getElementById('profileDropdown').classList.remove('active');
@@ -399,7 +410,6 @@
             openModal('uploadModal');
         };
 
-        // Submit Post Handler with Upload Percentage Progress Bar
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return alert("Please log in first.");
@@ -427,7 +437,6 @@
             const xhr = new XMLHttpRequest();
             xhr.open('POST', endpoint, true);
 
-            // Track upload percentage progress
             xhr.upload.onprogress = function(event) {
                 if (event.lengthComputable) {
                     const percentComplete = Math.round((event.loaded / event.total) * 100);
@@ -470,7 +479,6 @@
             xhr.send(formData);
         });
 
-        // Fetch & display user's individual post statuses (Pending vs Approved) in the profile drop-down
         async function loadUserPostStatuses() {
             if (!currentUser) return;
             const statusContainer = document.getElementById('myPostsStatusList');
@@ -501,7 +509,6 @@
             }
         }
 
-        // Load Gallery
         async function loadGallery() {
             const container = document.getElementById('publicGallery');
             try {
@@ -681,14 +688,19 @@
 
             if (uId === AUTH_USER_ID && pass === AUTH_PASS) {
                 window.isOwnerLoggedIn = true;
+                localStorage.setItem('filmoeke_owner', 'true');
                 closeModal('adminLoginModal');
                 document.getElementById('adminLoginForm').reset();
                 document.getElementById('adminLoginError').style.display = 'none';
                 
+                // Instantly update UI and show Owner Dashboard option
+                const profileLoggedOut = document.getElementById('profileLoggedOut');
+                const profileLoggedIn = document.getElementById('profileLoggedIn');
                 const btnAdminDashboard = document.getElementById('btnAdminDashboard');
-                if (btnAdminDashboard && currentUser) {
-                    btnAdminDashboard.style.display = 'flex';
-                }
+
+                profileLoggedOut.style.display = 'none';
+                profileLoggedIn.style.display = 'block';
+                if (btnAdminDashboard) btnAdminDashboard.style.display = 'flex';
 
                 openModal('adminModal');
                 if (window.loadPendingQueue) window.loadPendingQueue();
