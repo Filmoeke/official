@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Film O Eke | Cinematic Studio</title>
+    <title>Film O Eke | Studio Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-base: #030712;
-            --surface-card: rgba(17, 24, 39, 0.7);
-            --surface-hover: rgba(31, 41, 55, 0.8);
-            --border-glow: rgba(56, 189, 248, 0.25);
+            --surface-card: rgba(15, 23, 42, 0.75);
+            --border-glow: rgba(56, 189, 248, 0.2);
             --primary-cyan: #38bdf8;
             --accent-purple: #818cf8;
             --accent-pink: #f43f5e;
@@ -21,173 +20,123 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
 
-        /* Background Glow FX */
-        .bg-glow-container {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1; pointer-events: none; overflow: hidden;
-        }
-        .glow-orb-1 {
-            position: absolute; top: -10%; left: 30%; width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 70%);
-            filter: blur(80px);
-        }
-        .glow-orb-2 {
-            position: absolute; bottom: -10%; right: 10%; width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(129, 140, 248, 0.1) 0%, transparent 70%);
-            filter: blur(100px);
-        }
+        /* Background FX */
+        .bg-glow-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
+        .glow-orb-1 { position: absolute; top: -10%; left: 30%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 70%); filter: blur(80px); }
+        .glow-orb-2 { position: absolute; bottom: -10%; right: 10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(129, 140, 248, 0.1) 0%, transparent 70%); filter: blur(100px); }
 
         /* Header */
         header { 
-            text-align: center; padding: 45px 20px 25px; 
-            background: radial-gradient(ellipse at top, rgba(17, 24, 39, 0.8) 0%, var(--bg-base) 100%);
+            text-align: center; padding: 40px 20px 20px; 
+            background: radial-gradient(ellipse at top, rgba(15, 23, 42, 0.8) 0%, var(--bg-base) 100%);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
         }
         header h1 {
-            font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; display: inline-block;
+            font-size: 2.6rem; font-weight: 800; letter-spacing: -1px; display: inline-block;
             background: linear-gradient(135deg, #ffffff 0%, var(--primary-cyan) 50%, var(--accent-purple) 100%);
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-            text-transform: uppercase; text-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+            -webkit-background-clip: text; background-clip: text; color: transparent; text-transform: uppercase;
         }
-        header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 8px; font-weight: 400; letter-spacing: 0.5px; }
+        header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 6px; }
 
-        /* Navigation */
+        /* Navigation Bar */
         nav { 
-            background: rgba(11, 17, 32, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            padding: 14px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px;
+            background: rgba(11, 17, 32, 0.85); backdrop-filter: blur(16px);
+            padding: 12px 28px; display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-glow);
         }
-        .social-links { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .nav-left { display: flex; align-items: center; gap: 12px; }
+        .social-links { display: flex; gap: 8px; align-items: center; }
         .social-links a { 
-            color: var(--text-main); text-decoration: none; font-size: 0.82rem; font-weight: 600; 
-            padding: 6px 14px; border-radius: 30px; background: rgba(255, 255, 255, 0.03); 
-            border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; align-items: center; gap: 6px;
+            color: var(--text-main); text-decoration: none; font-size: 0.8rem; font-weight: 600; 
+            padding: 6px 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.04); 
+            border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.3s ease;
         }
-        .social-links a:hover { 
-            background: rgba(56, 189, 248, 0.15); border-color: var(--primary-cyan); color: #fff;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); transform: translateY(-1px);
-        }
+        .social-links a:hover { background: rgba(56, 189, 248, 0.15); border-color: var(--primary-cyan); color: #fff; }
 
-        .nav-buttons { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        
-        /* Futuristic Buttons */
+        .nav-right { display: flex; gap: 10px; align-items: center; position: relative; }
+
+        /* Buttons */
         .btn-base { 
-            padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; 
+            padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; 
             border: none; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px;
         }
-        .btn-action { 
-            background: linear-gradient(135deg, var(--primary-cyan), #0284c7); color: #030712;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
-        }
-        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(56, 189, 248, 0.5); }
+        .btn-action { background: linear-gradient(135deg, var(--primary-cyan), #0284c7); color: #030712; }
+        .btn-action:hover { transform: translateY(-1px); box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
 
-        .btn-google { 
-            background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-        .btn-google:hover { background: rgba(239, 68, 68, 0.25); border-color: #ef4444; color: #fff; }
+        .btn-admin { background: rgba(129, 140, 248, 0.1); color: var(--accent-purple); border: 1px solid rgba(129, 140, 248, 0.3); }
+        .btn-admin:hover { background: rgba(129, 140, 248, 0.2); color: #fff; }
 
-        .btn-admin { 
-            background: rgba(129, 140, 248, 0.1); color: var(--accent-purple); border: 1px solid rgba(129, 140, 248, 0.3);
+        /* Top-Right Profile Trigger & Menu */
+        .profile-btn-trigger {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glow);
+            border-radius: 30px; padding: 4px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            color: #fff; font-size: 0.82rem; font-weight: 600; transition: all 0.3s ease;
         }
-        .btn-admin:hover { background: rgba(129, 140, 248, 0.2); border-color: var(--accent-purple); color: #fff; }
+        .profile-btn-trigger:hover { background: rgba(56, 189, 248, 0.15); border-color: var(--primary-cyan); }
+        .profile-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-cyan); color: #030712; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; }
 
-        .user-profile { 
-            display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.05); 
-            padding: 4px 12px; border-radius: 30px; border: 1px solid var(--border-glow);
+        .profile-dropdown {
+            position: absolute; top: 48px; right: 0; width: 260px;
+            background: #0f172a; border: 1px solid var(--border-glow); border-radius: 12px;
+            padding: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: none; flex-direction: column; gap: 10px; z-index: 101;
         }
-        .user-profile img { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--primary-cyan); }
-        .user-profile span { font-size: 0.82rem; font-weight: 600; color: #fff; }
+        .profile-dropdown.active { display: flex; }
+        .profile-info-header { border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 4px; }
+        .profile-info-header strong { font-size: 0.9rem; color: #fff; display: block; }
+        .profile-info-header span { font-size: 0.75rem; color: var(--text-muted); word-break: break-all; }
 
-        /* Container & Grid */
+        /* Main Grid */
         .container { max-width: 1240px; margin: 35px auto; padding: 0 20px; }
-        .section-title { 
-            color: #ffffff; font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; 
-            display: flex; align-items: center; gap: 10px;
-        }
-        .section-title::before { content: ''; width: 4px; height: 22px; background: var(--primary-cyan); border-radius: 2px; box-shadow: 0 0 10px var(--primary-cyan); }
+        .section-title { color: #ffffff; font-size: 1.4rem; font-weight: 700; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 20px; background: var(--primary-cyan); border-radius: 2px; }
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 
-        /* Media Cards */
+        /* Card Styles */
         .media-card { 
             background: var(--surface-card); backdrop-filter: blur(12px); border-radius: 14px; overflow: hidden; 
-            border: 1px solid rgba(255, 255, 255, 0.06); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            display: flex; flex-direction: column; justify-content: space-between; position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.06); transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; position: relative;
         }
-        .media-card:hover { transform: translateY(-6px); border-color: var(--border-glow); box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5); }
-        .media-card img, .media-card video { width: 100%; height: 230px; object-fit: cover; display: block; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .media-card:hover { transform: translateY(-4px); border-color: var(--border-glow); }
+        .media-card img, .media-card video { width: 100%; height: 230px; object-fit: cover; display: block; }
         
         .media-info { padding: 14px 16px; flex-grow: 1; }
-        .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
-        .media-info h4 { color: #ffffff; font-size: 1.05rem; font-weight: 700; }
-        .btn-edit-title { background: none; border: none; color: var(--primary-cyan); cursor: pointer; font-size: 0.75rem; font-weight: 600; }
-        .media-info p { font-size: 0.82rem; color: var(--text-muted); }
-        .media-info p strong { color: var(--accent-purple); }
+        .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .media-info h4 { color: #ffffff; font-size: 1rem; font-weight: 700; }
+        .btn-edit-title { background: none; border: none; color: var(--primary-cyan); cursor: pointer; font-size: 0.75rem; }
+        .media-info p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 
-        .btn-delete-card { 
-            position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.85); 
-            border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; 
-            font-size: 0.85rem; z-index: 5; backdrop-filter: blur(4px); transition: transform 0.2s;
-        }
-        .btn-delete-card:hover { transform: scale(1.1); background: #ef4444; }
+        .btn-delete-card { position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.85); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.85rem; z-index: 5; }
 
         .vote-actions { display: flex; gap: 8px; padding: 10px 16px; border-top: 1px solid rgba(255, 255, 255, 0.04); background: rgba(3, 7, 18, 0.4); }
-        .btn-vote { 
-            flex: 1; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); 
-            color: var(--text-main); padding: 7px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; 
-            display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; transition: all 0.2s;
-        }
-        .btn-vote:hover { background: rgba(56, 189, 248, 0.1); border-color: var(--primary-cyan); color: var(--primary-cyan); }
+        .btn-vote { flex: 1; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-main); padding: 7px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; }
 
-        /* Comments */
         .comments-section { border-top: 1px solid rgba(255, 255, 255, 0.04); background: rgba(15, 23, 42, 0.5); padding: 12px 16px; }
         .comments-list { overflow-y: auto; max-height: 110px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px; }
-        .comment-item { background: rgba(3, 7, 18, 0.6); padding: 7px 12px; border-radius: 8px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255, 255, 255, 0.03); }
+        .comment-item { background: rgba(3, 7, 18, 0.6); padding: 6px 10px; border-radius: 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; }
         .comment-text strong { color: var(--primary-cyan); margin-right: 4px; }
         .btn-delete-comment { background: none; border: none; color: var(--accent-pink); cursor: pointer; font-size: 0.75rem; }
 
         .comment-form { display: flex; gap: 6px; }
-        .comment-form input { 
-            flex: 1; padding: 8px 12px; font-size: 0.8rem; background: rgba(3, 7, 18, 0.8); 
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: #fff; outline: none; transition: border 0.2s;
-        }
-        .comment-form input:focus { border-color: var(--primary-cyan); }
-        .comment-form button { 
-            background: var(--primary-cyan); color: #030712; font-weight: 700; border: none; 
-            padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; 
-        }
+        .comment-form input { flex: 1; padding: 7px 10px; font-size: 0.8rem; background: rgba(3, 7, 18, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: #fff; outline: none; }
+        .comment-form button { background: var(--primary-cyan); color: #030712; font-weight: 700; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
 
         /* Modals */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px); 
-            display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; 
-            transition: opacity 0.3s ease; z-index: 1000; padding: 20px; 
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000; padding: 20px; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-card { 
-            background: #0f172a; width: 100%; max-width: 480px; border-radius: 16px; 
-            padding: 28px; border: 1px solid var(--border-glow); position: relative; max-height: 90vh; 
-            overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-        }
+        .modal-card { background: #0f172a; width: 100%; max-width: 440px; border-radius: 16px; padding: 25px; border: 1px solid var(--border-glow); position: relative; max-height: 90vh; overflow-y: auto; }
         .close-btn { position: absolute; top: 16px; right: 18px; font-size: 1.4rem; background: none; border: none; color: var(--text-muted); cursor: pointer; }
-        .close-btn:hover { color: #fff; }
 
-        .form-group { margin-bottom: 16px; }
+        .form-group { margin-bottom: 14px; }
         .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 600; color: #ffffff; }
-        .form-group input, .form-group select { 
-            width: 100%; padding: 11px 14px; border-radius: 8px; background: rgba(3, 7, 18, 0.8); 
-            border: 1px solid rgba(255, 255, 255, 0.1); color: #ffffff; outline: none; transition: border 0.2s;
-        }
-        .form-group input:focus, .form-group select:focus { border-color: var(--primary-cyan); }
+        .form-group input, .form-group select { width: 100%; padding: 10px 12px; border-radius: 8px; background: rgba(3, 7, 18, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); color: #ffffff; outline: none; }
 
-        .admin-item { display: flex; gap: 12px; align-items: center; background: rgba(3, 7, 18, 0.6); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .admin-preview { width: 55px; height: 55px; object-fit: cover; border-radius: 6px; }
-        .admin-actions { display: flex; gap: 8px; margin-left: auto; }
-        .btn-approve { background: #10b981; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        .btn-reject { background: #ef4444; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .admin-item { display: flex; gap: 12px; align-items: center; background: rgba(3, 7, 18, 0.6); padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+        .admin-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
+        .admin-actions { display: flex; gap: 6px; margin-left: auto; }
+        .btn-approve { background: #10b981; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .btn-reject { background: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
 
-        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 60px; font-size: 0.82rem; color: var(--text-muted); }
+        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 50px; font-size: 0.8rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
@@ -199,44 +148,59 @@
 
     <header>
         <h1>Film O Eke</h1>
-        <p>A Next-Gen Visual Showcase in Photography & Videography</p>
+        <p>A Cinematic Photography & Videography Showcase</p>
     </header>
 
     <nav>
-        <div class="social-links">
-            <a href="https://instagram.com/Filmoeke" target="_blank">📷 @Film_O_Eke</a>
-            <a href="https://instagram.com/Imxsajid" target="_blank">👤 Instagram</a>
-            <a href="https://facebook.com/isajid19" target="_blank">🌐 Facebook</a>
-        </div>
-        <div class="nav-buttons">
-            <div id="authContainer">
-                <button class="btn-base btn-google" id="btnGoogleLogin">Sign in with Google</button>
+        <div class="nav-left">
+            <div class="social-links">
+                <a href="https://instagram.com/Filmoeke" target="_blank">📷 @Film_O_Eke</a>
+                <a href="https://instagram.com/Imxsajid" target="_blank">👤 Instagram</a>
+                <a href="https://facebook.com/isajid19" target="_blank">🌐 Facebook</a>
             </div>
+        </div>
+
+        <div class="nav-right">
             <button class="btn-base btn-action" onclick="openUploadModal()">Submit Post</button>
             <button class="btn-base btn-admin" onclick="triggerAdminPanel()">Owner Portal</button>
+
+            <button class="profile-btn-trigger" id="profileBtn" onclick="toggleProfileDropdown()">
+                <div class="profile-avatar" id="navAvatar">?</div>
+                <span id="navProfileLabel">Profile</span>
+            </button>
+
+            <div class="profile-dropdown" id="profileDropdown">
+                <div id="profileLoggedOut">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">Sign in to upload posts and add comments.</p>
+                    <button class="btn-base btn-action" style="width: 100%; justify-content: center; margin-bottom: 6px;" onclick="openModal('emailAuthModal')">Login with Email Link / OTP</button>
+                    <button class="btn-base" style="width: 100%; justify-content: center; background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3);" id="btnGoogleLogin">Sign in with Google</button>
+                </div>
+                <div id="profileLoggedIn" style="display: none;">
+                    <div class="profile-info-header">
+                        <strong id="userDisplayName">User Name</strong>
+                        <span id="userEmail">user@example.com</span>
+                    </div>
+                    <button class="btn-base" style="width: 100%; justify-content: center; background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3);" id="btnLogout">Sign Out</button>
+                </div>
+            </div>
         </div>
     </nav>
 
     <div class="container">
         <h2 class="section-title">Approved Showcase Gallery</h2>
         <div class="gallery-grid" id="publicGallery">
-            <p style="color: var(--text-muted);">Loading gallery items...</p>
+            <p style="color: var(--text-muted);">Loading gallery...</p>
         </div>
     </div>
 
-    <!-- SUBMIT MEDIA MODAL -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 12px; font-weight: 700;">Submit Media Content</h3>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 12px;">Submit Media</h3>
             <form id="uploadForm">
                 <div class="form-group">
-                    <label>Full Name / Creator Name *</label>
-                    <input type="text" id="uploaderCustomName" placeholder="Enter your full name" required>
-                </div>
-                <div class="form-group">
                     <label>Title / Caption *</label>
-                    <input type="text" id="mediaTitle" placeholder="e.g., Cyberpunk Street Photography" required>
+                    <input type="text" id="mediaTitle" placeholder="e.g., Cinematic Sunset Shot" required>
                 </div>
                 <div class="form-group">
                     <label>Media Format *</label>
@@ -249,16 +213,35 @@
                     <label>Choose File *</label>
                     <input type="file" id="mediaFile" accept="image/*,video/*" required>
                 </div>
-                <button type="submit" id="submitBtn" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;">Upload & Request Approval</button>
+                <button type="submit" id="submitBtn" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 11px;">Upload & Submit</button>
             </form>
         </div>
     </div>
 
-    <!-- OWNER LOGIN MODAL -->
+    <div class="modal-overlay" id="emailAuthModal">
+        <div class="modal-card">
+            <button class="close-btn" onclick="closeModal('emailAuthModal')">&times;</button>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 8px;">Gmail OTP / Magic Link Login</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Enter your Gmail. We will send a secure sign-in link directly to your inbox from Film O Eke.</p>
+            <form id="emailAuthForm">
+                <div class="form-group">
+                    <label>Full Name (Optional)</label>
+                    <input type="text" id="otpUserName" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label>Gmail Address *</label>
+                    <input type="email" id="otpEmail" placeholder="youremail@gmail.com" required>
+                </div>
+                <p id="otpStatus" style="font-size: 0.8rem; display: none; margin-bottom: 10px;"></p>
+                <button type="submit" id="btnSendOtp" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 11px;">Send Verification Link</button>
+            </form>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="loginModal">
-        <div class="modal-card" style="max-width: 380px;">
+        <div class="modal-card" style="max-width: 360px;">
             <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 14px; text-align: center; font-weight: 700;">Owner Authentication</h3>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 12px; text-align: center;">Owner Portal</h3>
             <form id="loginForm">
                 <div class="form-group">
                     <label>User ID</label>
@@ -268,31 +251,29 @@
                     <label>Password</label>
                     <input type="password" id="loginPassword" required>
                 </div>
-                <p id="loginError" style="color: var(--accent-pink); font-size: 0.8rem; display: none; margin-bottom: 12px; text-align: center;">Invalid Credentials!</p>
-                <button type="submit" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 11px;">Access Control Panel</button>
+                <p id="loginError" style="color: var(--accent-pink); font-size: 0.8rem; display: none; margin-bottom: 10px; text-align: center;">Invalid Credentials!</p>
+                <button type="submit" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 10px;">Login</button>
             </form>
         </div>
     </div>
 
-    <!-- OWNER CONTROL PANEL MODAL -->
     <div class="modal-overlay" id="adminModal">
-        <div class="modal-card" style="max-width: 620px;">
+        <div class="modal-card" style="max-width: 600px;">
             <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 18px; font-weight: 700;">Owner Control Dashboard</h3>
-            <div id="pendingQueue" style="max-height: 400px; overflow-y: auto;">
+            <h3 style="color: var(--primary-cyan); margin-bottom: 16px;">Owner Control Dashboard</h3>
+            <div id="pendingQueue" style="max-height: 380px; overflow-y: auto;">
                 <p style="color: var(--text-muted);">Loading approval queue...</p>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 Film O Eke | Next-Gen Visual Arts Platform</p>
+        <p>&copy; 2026 Film O Eke | Photography & Videography</p>
     </footer>
 
-    <!-- FIREBASE & CORE LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const CLOUDINARY_CLOUD_NAME = "pbyypohy";
@@ -315,55 +296,112 @@
 
         let currentUser = null;
 
-        // Auth state watcher
+        // Auto-complete email link sign-in process if redirected from inbox link
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = window.localStorage.getItem('emailForSignIn');
+            if (!email) {
+                email = window.prompt('Please confirm your Gmail address to finish logging in:');
+            }
+            if (email) {
+                signInWithEmailLink(auth, email, window.location.href)
+                    .then((result) => {
+                        window.localStorage.removeItem('emailForSignIn');
+                        const pendingName = window.localStorage.getItem('nameForSignIn');
+                        if (pendingName && result.user) {
+                            updateProfile(result.user, { displayName: pendingName });
+                            window.localStorage.removeItem('nameForSignIn');
+                        }
+                        alert('Logged in successfully!');
+                    })
+                    .catch((err) => alert('Sign-in failed: ' + err.message));
+            }
+        }
+
+        // Auth state listener
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
-            const authContainer = document.getElementById('authContainer');
+            const profileLoggedOut = document.getElementById('profileLoggedOut');
+            const profileLoggedIn = document.getElementById('profileLoggedIn');
+            const navAvatar = document.getElementById('navAvatar');
+            const navProfileLabel = document.getElementById('navProfileLabel');
+
             if (user) {
-                authContainer.innerHTML = `
-                    <div class="user-profile">
-                        <img src="${user.photoURL || 'https://via.placeholder.com/26'}" alt="User">
-                        <span>${user.displayName ? user.displayName.split(' ')[0] : 'User'}</span>
-                        <button id="btnLogoutGoogle" style="background:none;border:none;color:var(--accent-pink);cursor:pointer;font-weight:700;margin-left:4px;">✕</button>
-                    </div>
-                `;
-                document.getElementById('btnLogoutGoogle').addEventListener('click', () => signOut(auth));
+                profileLoggedOut.style.display = 'none';
+                profileLoggedIn.style.display = 'block';
+
+                const name = user.displayName || user.email.split('@')[0];
+                document.getElementById('userDisplayName').innerText = name;
+                document.getElementById('userEmail').innerText = user.email || '';
                 
-                // Auto fill creator name if available
-                const nameInput = document.getElementById('uploaderCustomName');
-                if (nameInput && !nameInput.value) {
-                    nameInput.value = user.displayName || '';
-                }
+                navProfileLabel.innerText = name.split(' ')[0];
+                navAvatar.innerText = name.charAt(0).toUpperCase();
+
+                document.getElementById('btnLogout').onclick = () => signOut(auth);
             } else {
-                authContainer.innerHTML = `<button class="btn-base btn-google" id="btnGoogleLogin">Sign in with Google</button>`;
-                document.getElementById('btnGoogleLogin').addEventListener('click', handleGoogleLogin);
+                profileLoggedOut.style.display = 'block';
+                profileLoggedIn.style.display = 'none';
+                navProfileLabel.innerText = 'Profile';
+                navAvatar.innerText = '?';
+
+                document.getElementById('btnGoogleLogin').onclick = handleGoogleLogin;
             }
             loadGallery();
         });
 
+        // Google Sign In
         async function handleGoogleLogin() {
             try {
                 await signInWithPopup(auth, provider);
             } catch (err) {
-                console.error("Google Login Error:", err);
-                alert("Sign In Error: " + err.message);
+                alert("Google Sign In Error: " + err.message);
             }
         }
 
+        // Send Email Link Sign In (Magic Link / Passwordless OTP)
+        document.getElementById('emailAuthForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('otpEmail').value.trim();
+            const userName = document.getElementById('otpUserName').value.trim();
+            const statusText = document.getElementById('otpStatus');
+            const btn = document.getElementById('btnSendOtp');
+
+            btn.disabled = true;
+            statusText.style.display = 'block';
+            statusText.style.color = '#38bdf8';
+            statusText.innerText = 'Sending email link...';
+
+            const actionCodeSettings = {
+                url: window.location.href,
+                handleCodeInApp: true,
+            };
+
+            try {
+                await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+                window.localStorage.setItem('emailForSignIn', email);
+                if (userName) window.localStorage.setItem('nameForSignIn', userName);
+                
+                statusText.style.color = '#10b981';
+                statusText.innerText = '✅ Link sent! Check your Gmail inbox and click the sign-in link.';
+            } catch (err) {
+                statusText.style.color = '#f43f5e';
+                statusText.innerText = 'Error: ' + err.message;
+            }
+            btn.disabled = false;
+        });
+
         window.openUploadModal = function() {
-            if (!currentUser) return alert("Please sign in with Google to submit posts!");
+            if (!currentUser) return alert("Please log in to submit content!");
             openModal('uploadModal');
         };
 
-        // Media Upload Form Handler
+        // Submit Post Handler
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!currentUser) return alert("Please sign in first.");
+            if (!currentUser) return alert("Please log in first.");
 
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
 
-            const customName = document.getElementById('uploaderCustomName').value.trim();
             const title = document.getElementById('mediaTitle').value.trim();
             const type = document.getElementById('mediaType').value;
             const fileInput = document.getElementById('mediaFile');
@@ -383,7 +421,7 @@
                     const response = JSON.parse(xhr.responseText);
                     await addDoc(collection(db, "posts"), {
                         uploaderUid: currentUser.uid,
-                        uploaderName: customName || currentUser.displayName || "Anonymous",
+                        uploaderName: currentUser.displayName || currentUser.email.split('@')[0],
                         title: title,
                         type: type,
                         url: response.secure_url,
@@ -393,11 +431,11 @@
                         comments: [],
                         createdAt: new Date()
                     });
-                    alert("Post submitted successfully! Awaiting owner approval.");
+                    alert("Post submitted for owner approval!");
                     document.getElementById('uploadForm').reset();
                     closeModal('uploadModal');
                 } else {
-                    alert("Media upload failed. Please try again.");
+                    alert("Media upload failed.");
                 }
                 btn.disabled = false;
             };
@@ -413,7 +451,7 @@
                 container.innerHTML = "";
 
                 if (querySnapshot.empty) {
-                    container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No approved posts in gallery.</p>`;
+                    container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No approved posts found.</p>`;
                     return;
                 }
 
@@ -454,7 +492,7 @@
                                     <h4>${data.title}</h4>
                                     ${isAuthor ? `<button class="btn-edit-title" onclick="editTitle('${data.id}', '${data.title}')">✏️ Edit</button>` : ''}
                                 </div>
-                                <p>By <strong>${data.uploaderName}</strong></p>
+                                <p>By ${data.uploaderName}</p>
                             </div>
                             <div class="vote-actions">
                                 <button class="btn-vote" onclick="votePost('${data.id}', 'likes')">👍 ${data.likes || 0}</button>
@@ -496,7 +534,7 @@
             const input = e.target.querySelector('input');
             const commentObj = {
                 uid: currentUser.uid,
-                name: currentUser.displayName || "User",
+                name: currentUser.displayName || currentUser.email.split('@')[0],
                 text: input.value.trim(),
                 id: Date.now().toString()
             };
@@ -534,8 +572,8 @@
                             <p style="font-size:0.8rem;color:var(--primary-cyan);">By: ${data.uploaderName}</p>
                         </div>
                         <div class="admin-actions">
-                            <button class="btn-approve" onclick="approvePost('${id}') font-weight: 600;">Approve</button>
-                            <button class="btn-reject" onclick="rejectPost('${id}') font-weight: 600;">Reject</button>
+                            <button class="btn-approve" onclick="approvePost('${id}')">Approve</button>
+                            <button class="btn-reject" onclick="rejectPost('${id}')">Reject</button>
                         </div>
                     </div>
                 `;
@@ -556,11 +594,23 @@
         loadGallery();
     </script>
 
-    <!-- OWNER AUTH CONTROL -->
     <script>
         const AUTH_USER_ID = "0000332211";
         const AUTH_PASS = "0091";
         window.isOwnerLoggedIn = false;
+
+        function toggleProfileDropdown() {
+            document.getElementById('profileDropdown').classList.toggle('active');
+        }
+
+        // Close profile dropdown when clicking outside
+        window.addEventListener('click', function(e) {
+            const trigger = document.getElementById('profileBtn');
+            const dropdown = document.getElementById('profileDropdown');
+            if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
 
         function triggerAdminPanel() {
             if (window.isOwnerLoggedIn) {
