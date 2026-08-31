@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Film O Eke | Photography & Videography Journey</title>
+    <title>Film O Eke | Photography & Videography</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: #0b0c10; color: #c5c6c7; line-height: 1.6; overflow-x: hidden; }
@@ -35,8 +35,7 @@
         .social-links a:hover { background: #66fcf1; color: #0b0c10; box-shadow: 0 0 10px rgba(102, 252, 241, 0.4); }
 
         .nav-buttons { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .btn-action { background: linear-gradient(135deg, #ff6600, #ff8533); color: #fff; font-weight: bold; padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.85rem; transition: transform 0.2s; }
-        .btn-action:hover { transform: translateY(-2px); }
+        .btn-action { background: linear-gradient(135deg, #ff6600, #ff8533); color: #fff; font-weight: bold; padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.85rem; }
         .btn-google { background: #ea4335; color: #fff; font-weight: bold; padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.85rem; }
         .btn-admin { background: transparent; color: #66fcf1; border: 1px solid #45a29e; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
 
@@ -108,7 +107,7 @@
         </div>
         <div class="nav-buttons">
             <div id="authContainer">
-                <button class="btn-google" onclick="loginWithGoogle()">Sign in with Google</button>
+                <button class="btn-google" id="btnGoogleLogin">Sign in with Google</button>
             </div>
             <button class="btn-action" onclick="openUploadModal()">Submit Post</button>
             <button class="btn-admin" onclick="triggerAdminPanel()">Owner Portal</button>
@@ -129,7 +128,7 @@
             <form id="uploadForm">
                 <div class="form-group">
                     <label>Title / Caption *</label>
-                    <input type="text" id="mediaTitle" placeholder="e.g., Mountain Sunrise" required>
+                    <input type="text" id="mediaTitle" placeholder="e.g., Sunset over the hills" required>
                 </div>
                 <div class="form-group">
                     <label>Media Type *</label>
@@ -205,7 +204,7 @@
 
         let currentUser = null;
 
-        // Authentication State Listener
+        // Auth state watcher
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             const authContainer = document.getElementById('authContainer');
@@ -213,29 +212,33 @@
                 authContainer.innerHTML = `
                     <div class="user-profile">
                         <img src="${user.photoURL || 'https://via.placeholder.com/24'}" alt="User">
-                        <span>${user.displayName.split(' ')[0]}</span>
-                        <button onclick="logoutGoogle()" style="background:none;border:none;color:#dc3545;cursor:pointer;font-weight:bold;margin-left:5px;">✕</button>
+                        <span>${user.displayName ? user.displayName.split(' ')[0] : 'User'}</span>
+                        <button id="btnLogoutGoogle" style="background:none;border:none;color:#dc3545;cursor:pointer;font-weight:bold;margin-left:5px;">✕</button>
                     </div>
                 `;
+                document.getElementById('btnLogoutGoogle').addEventListener('click', () => signOut(auth));
             } else {
-                authContainer.innerHTML = `<button class="btn-google" onclick="loginWithGoogle()">Sign in with Google</button>`;
+                authContainer.innerHTML = `<button class="btn-google" id="btnGoogleLogin">Sign in with Google</button>`;
+                document.getElementById('btnGoogleLogin').addEventListener('click', handleGoogleLogin);
             }
             loadGallery();
         });
 
-        window.loginWithGoogle = async function() {
-            try { await signInWithPopup(auth, provider); } 
-            catch (err) { alert("Login failed: " + err.message); }
-        };
-
-        window.logoutGoogle = function() { signOut(auth); };
+        async function handleGoogleLogin() {
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (err) {
+                console.error("Google Login Error:", err);
+                alert("Sign In Error: " + err.message);
+            }
+        }
 
         window.openUploadModal = function() {
-            if (!currentUser) return alert("Please sign in with Google to post content!");
+            if (!currentUser) return alert("Please sign in with Google to post!");
             openModal('uploadModal');
         };
 
-        // Post Upload Handler
+        // Post upload handler
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return alert("Please sign in first.");
@@ -262,8 +265,7 @@
                     const response = JSON.parse(xhr.responseText);
                     await addDoc(collection(db, "posts"), {
                         uploaderUid: currentUser.uid,
-                        uploaderName: currentUser.displayName,
-                        uploaderEmail: currentUser.email,
+                        uploaderName: currentUser.displayName || "Anonymous",
                         title: title,
                         type: type,
                         url: response.secure_url,
@@ -351,7 +353,7 @@
                     `;
                 });
             } catch (err) {
-                container.innerHTML = `<p style="color:#dc3545;">Error: ${err.message}</p>`;
+                container.innerHTML = `<p style="color:#dc3545;">Error loading gallery: ${err.message}</p>`;
             }
         }
 
@@ -376,7 +378,7 @@
             const input = e.target.querySelector('input');
             const commentObj = {
                 uid: currentUser.uid,
-                name: currentUser.displayName,
+                name: currentUser.displayName || "User",
                 text: input.value.trim(),
                 id: Date.now().toString()
             };
