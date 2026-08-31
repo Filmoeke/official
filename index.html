@@ -117,7 +117,6 @@
         .post-username { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
         .post-username span { display: block; font-size: 0.68rem; color: var(--primary-cyan); font-weight: 400; }
         
-        /* Hardware acceleration rendering rules to prevent video lag or stutter */
         .protected-media {
             width: 100%; height: 260px; object-fit: cover; display: block; background: #000;
             transform: translateZ(0);
@@ -409,7 +408,6 @@
             openModal('uploadModal');
         };
 
-        // High-Speed Direct-Pipe Upload Handler for 30-50MB+ Files
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return alert("Please log in first.");
@@ -424,7 +422,6 @@
             const fileInput = document.getElementById('mediaFile');
             let file = fileInput.files[0];
 
-            // Raised size limit to 150MB to easily accommodate heavy video files
             const maxSize = type === 'video' ? 150 * 1024 * 1024 : 20 * 1024 * 1024;
             if (file.size > maxSize) {
                 alert(`File is too large. Max allowed size is ${type === 'video' ? '150MB' : '20MB'}.`);
@@ -581,6 +578,7 @@
 
                     let commentsHTML = "";
                     (data.comments || []).forEach((c) => {
+                        // Admins can delete any comment; authors can delete their own comments
                         const canDeleteComment = isAdmin || (currentUser && currentUser.name === c.name);
                         const commentJson = encodeURIComponent(JSON.stringify(c));
                         commentsHTML += `
@@ -593,7 +591,6 @@
 
                     const avatarChar = (data.uploaderName || 'U').charAt(0).toUpperCase();
 
-                    // Optimized video delivery tags with hardware acceleration attributes & auto preloading
                     container.innerHTML += `
                         <div class="media-card">
                             <div class="post-header">
