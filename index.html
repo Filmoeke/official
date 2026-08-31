@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photography and Videography Showcase | Platform</title>
+    <title>Film O Eke | Studio Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -156,13 +156,13 @@
 <body>
 
     <header>
-        <h1>Photography & Videography Showcase</h1>
-        <p>A Professional Visual Arts Gallery Platform</p>
+        <h1>Film O Eke</h1>
+        <p>An Immersive Lens & Motion Gallery</p>
     </header>
 
     <nav>
         <div class="nav-left">
-            <a href="#" class="brand-link">📷 Visual Showcase</a>
+            <a href="#" class="brand-link">📷 Film O Eke</a>
         </div>
 
         <div class="nav-right">
@@ -177,9 +177,9 @@
             <!-- Profile Dropdown Menu -->
             <div class="profile-dropdown" id="profileDropdown">
                 <div id="profileLoggedOut">
-                    <button class="dropdown-item" onclick="openModal('loginModal')">👤 User Login</button>
+                    <button class="dropdown-item" onclick="openModal('loginModal')"> User Login</button>
                     <div style="border-top: 1px solid var(--border-color); margin: 4px 0;"></div>
-                    <button class="dropdown-item" onclick="openModal('adminLoginModal')">🛡️ Owner Portal</button>
+                    <button class="dropdown-item" onclick="openModal('adminLoginModal')"> Admin </button>
                 </div>
                 <div id="profileLoggedIn" style="display: none;">
                     <div class="profile-info-header">
@@ -277,7 +277,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Photography & Videography Showcase Platform</p>
+        <p>&copy; 2026 Film O Eke | Photography & Videography</p>
     </footer>
 
     <!-- FIREBASE & APPLICATION LOGIC -->
@@ -306,7 +306,7 @@
 
         // Local Storage Session Check on Load
         window.addEventListener('DOMContentLoaded', () => {
-            const savedUser = localStorage.getItem('showcase_user');
+            const savedUser = localStorage.getItem('filmoeke_user');
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
                 updateUIState();
@@ -350,7 +350,7 @@
             const insta = document.getElementById('loginInsta').value.trim();
 
             currentUser = { name, insta: insta.startsWith('@') ? insta : '@' + insta };
-            localStorage.setItem('showcase_user', JSON.stringify(currentUser));
+            localStorage.setItem('filmoeke_user', JSON.stringify(currentUser));
             
             closeModal('loginModal');
             document.getElementById('userLoginForm').reset();
@@ -359,7 +359,7 @@
 
         document.getElementById('btnLogout').onclick = () => {
             currentUser = null;
-            localStorage.removeItem('showcase_user');
+            localStorage.removeItem('filmoeke_user');
             window.isOwnerLoggedIn = false;
             updateUIState();
             document.getElementById('profileDropdown').classList.remove('active');
@@ -551,7 +551,7 @@
                     <div class="admin-item">
                         <img src="${data.url}" class="admin-preview">
                         <div>
-                            <strong style="color:var(--text-main);">${data.title}</strong>
+                            <strong style="color:var::var(--text-main);">${data.title}</strong>
                             <p style="font-size:0.8rem;color:var(--primary-cyan);">By: ${data.uploaderName} (${data.uploaderInsta})</p>
                         </div>
                         <div class="admin-actions">
