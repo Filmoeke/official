@@ -16,7 +16,7 @@
             z-index: -1; pointer-events: none;
         }
 
-        /* Animated Glowing Title */
+        /* Header Styling */
         header { text-align: center; padding: 35px 15px 20px; background: linear-gradient(180deg, #1f2833 0%, #0b0c10 100%); border-bottom: 1px solid rgba(102, 252, 241, 0.1); }
         header h1 {
             font-size: 2.2rem; letter-spacing: 2px; display: inline-block;
@@ -27,7 +27,7 @@
         @keyframes cinemaShine { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
         header p { color: #c5c6c7; font-size: 0.95rem; margin-top: 6px; font-weight: 300; }
 
-        /* Responsive Mobile Navigation Bar */
+        /* Navigation Bar */
         nav { 
             background: rgba(31, 40, 51, 0.95); 
             backdrop-filter: blur(10px); 
@@ -67,12 +67,15 @@
         .section-title { color: #ffffff; font-size: 1.4rem; margin-bottom: 20px; border-left: 4px solid #ff6600; padding-left: 10px; }
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
 
-        .media-card { background: #1f2833; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; }
+        .media-card { background: #1f2833; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
         .media-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(102, 252, 241, 0.15); }
         .media-card img, .media-card video { width: 100%; height: 220px; object-fit: cover; display: block; }
-        .media-info { padding: 12px 15px; flex-grow: 1; }
-        .media-info h4 { color: #ffffff; font-size: 1rem; margin-bottom: 2px; }
+        .media-info { padding: 12px 15px; flex-grow: 1; position: relative; }
+        .media-info h4 { color: #ffffff; font-size: 1rem; margin-bottom: 2px; padding-right: 25px; }
         .media-info p { font-size: 0.8rem; color: #66fcf1; }
+
+        .btn-delete-card { position: absolute; top: 12px; right: 12px; background: rgba(220, 53, 69, 0.15); border: 1px solid rgba(220, 53, 69, 0.4); color: #dc3545; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .btn-delete-card:hover { background: #dc3545; color: #fff; }
 
         /* Like & Dislike Controls */
         .vote-actions { display: flex; gap: 8px; padding: 10px 15px 14px; border-top: 1px solid rgba(255, 255, 255, 0.05); background: rgba(11, 12, 16, 0.4); }
@@ -151,6 +154,10 @@
                     <input type="text" id="mediaTitle" placeholder="e.g., Sunset over the hills" required>
                 </div>
                 <div class="form-group">
+                    <label>Create a Deletion PIN * (4 Digits to delete your post later)</label>
+                    <input type="password" id="deletePin" maxlength="6" placeholder="e.g., 1234" required>
+                </div>
+                <div class="form-group">
                     <label>Media Type *</label>
                     <select id="mediaType">
                         <option value="image">Photo</option>
@@ -211,13 +218,11 @@
     <!-- FIREBASE & CLOUDINARY INTEGRATION -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, increment, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Cloudinary Credentials
         const CLOUDINARY_CLOUD_NAME = "pbyypohy";
         const CLOUDINARY_UPLOAD_PRESET = "filmoeke_preset";
 
-        // Firebase Credentials
         const firebaseConfig = {
             apiKey: "AIzaSyA1ILve-4DPE-SxMgVwcPBrRXpIp_5gNzE",
             authDomain: "filmoeke.firebaseapp.com",
@@ -231,7 +236,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Upload Form Submission Handler
+        // Submit Media with Deletion PIN
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -239,6 +244,7 @@
 
             const uploader = document.getElementById('uploaderName').value.trim();
             const title = document.getElementById('mediaTitle').value.trim();
+            const deletePin = document.getElementById('deletePin').value.trim();
             const type = document.getElementById('mediaType').value;
             const fileInput = document.getElementById('mediaFile');
 
@@ -276,6 +282,7 @@
                         await addDoc(collection(db, "posts"), {
                             uploader: uploader,
                             title: title,
+                            deletePin: deletePin,
                             type: type,
                             url: mediaUrl,
                             approved: false,
@@ -284,7 +291,7 @@
                             createdAt: new Date()
                         });
 
-                        alert("Your post has been submitted successfully! It will appear on the gallery once approved!");
+                        alert("Post submitted! Remember your Deletion PIN to delete this post later.");
                         document.getElementById('uploadForm').reset();
                         closeModal('uploadModal');
                     } catch (err) {
@@ -306,7 +313,7 @@
             xhr.send(formData);
         });
 
-        // Load Approved Gallery Items to Public (Sorted by Most Likes)
+        // Render Public Gallery
         async function loadGallery() {
             const container = document.getElementById('publicGallery');
             try {
@@ -319,7 +326,6 @@
                     return;
                 }
 
-                // Collect posts into array to sort client-side by likes
                 const postsList = [];
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
@@ -334,12 +340,12 @@
                     });
                 });
 
-                // Sort posts in descending order based on likes count
                 postsList.sort((a, b) => b.likes - a.likes);
 
                 postsList.forEach((data) => {
                     container.innerHTML += `
                         <div class="media-card">
+                            <button class="btn-delete-card" onclick="promptDeletePost('${data.id}')" title="Delete Post">✕</button>
                             ${data.type === 'image' 
                                 ? `<img src="${data.url}" alt="${data.title}" loading="lazy">` 
                                 : `<video src="${data.url}" controls></video>`}
@@ -363,20 +369,47 @@
             }
         }
 
-        // Vote (Like/Dislike) Function
+        // Delete Handler (Owner Bypass or PIN Verification)
+        window.promptDeletePost = async function(id) {
+            if (window.isOwnerLoggedIn) {
+                if (confirm("Owner Override: Are you sure you want to permanently delete this post?")) {
+                    await deleteDoc(doc(db, "posts", id));
+                    alert("Post deleted successfully!");
+                    loadGallery();
+                }
+                return;
+            }
+
+            const inputKey = prompt("Enter your 4-digit Deletion PIN or Owner Credentials to delete this post:");
+            if (!inputKey) return;
+
+            try {
+                const postSnap = await getDoc(doc(db, "posts", id));
+                if (postSnap.exists()) {
+                    const postData = postSnap.data();
+                    if (inputKey === postData.deletePin || inputKey === "0091") {
+                        await deleteDoc(doc(db, "posts", id));
+                        alert("Post deleted successfully!");
+                        loadGallery();
+                    } else {
+                        alert("Incorrect PIN or Password! Only the owner or the original author can delete this post.");
+                    }
+                }
+            } catch (err) {
+                alert("Error deleting post: " + err.message);
+            }
+        }
+
         window.votePost = async function(id, type) {
             try {
                 const postRef = doc(db, "posts", id);
-                await updateDoc(postRef, {
-                    [type]: increment(1)
-                });
+                await updateDoc(postRef, { [type]: increment(1) });
                 loadGallery();
             } catch (err) {
                 alert("Error updating vote: " + err.message);
             }
         }
 
-        // Load Pending Submissions for Owner Panel
         window.loadPendingQueue = async function() {
             const container = document.getElementById('pendingQueue');
             try {
@@ -413,12 +446,8 @@
             }
         }
 
-        // Approve Post Handler
         window.approvePost = async function(id) {
-            if (!window.isOwnerLoggedIn) {
-                alert("Unauthorized operation!");
-                return;
-            }
+            if (!window.isOwnerLoggedIn) return alert("Unauthorized operation!");
             try {
                 await updateDoc(doc(db, "posts", id), { approved: true });
                 window.loadPendingQueue();
@@ -428,12 +457,8 @@
             }
         }
 
-        // Reject/Delete Post Handler
         window.rejectPost = async function(id) {
-            if (!window.isOwnerLoggedIn) {
-                alert("Unauthorized operation!");
-                return;
-            }
+            if (!window.isOwnerLoggedIn) return alert("Unauthorized operation!");
             try {
                 await deleteDoc(doc(db, "posts", id));
                 window.loadPendingQueue();
@@ -483,13 +508,8 @@
             alert("Logged out successfully.");
         }
 
-        function openModal(id) {
-            document.getElementById(id).classList.add('active');
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     </script>
 </body>
 </html>
