@@ -460,17 +460,17 @@
             const fileInput = document.getElementById('mediaFile');
             let file = fileInput.files[0];
 
-            // Reduced video size ceiling to 20MB for optimized uploads
-            const maxSize = type === 'video' ? 20 * 1024 * 1024 : 10 * 1024 * 1024;
+            // Maximum video size set to 50MB per your request
+            const maxSize = type === 'video' ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
             if (file.size > maxSize) {
-                alert(`File is too large. Max size allowed is ${type === 'video' ? '20MB (please use a trimmed/compressed clip)' : '10MB'}.`);
+                alert(`File is too large. Max size allowed is ${type === 'video' ? '50MB' : '10MB'}.`);
                 return;
             }
 
             btn.disabled = true;
             progressContainer.style.display = 'block';
 
-            // Aggressively compress images over 500KB prior to upload
+            // Aggressively compress images over 500KB prior to upload to ensure fast performance
             if (type === 'image' && file.size > 500 * 1024) {
                 file = await compressImage(file);
             }
@@ -567,7 +567,6 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
 
-                        // Compression target quality 0.75 for speedy throughput
                         canvas.toBlob((blob) => {
                             resolve(new File([blob], file.name, {
                                 type: 'image/jpeg',
