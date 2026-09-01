@@ -319,7 +319,7 @@
 
                 <div class="upload-progress-container" id="uploadProgressContainer">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 0.75rem; font-weight: 600;">Uploading file...</span>
+                        <span id="uploadStatusLabel" style="font-size: 0.75rem; font-weight: 600;">Uploading file... (0%)</span>
                         <span id="progressPercentText" style="font-size: 0.75rem; font-weight: 600; color: var(--primary-cyan);">0%</span>
                     </div>
                     <div class="progress-bar-wrapper">
@@ -414,11 +414,11 @@
             }
             updateUIState();
 
-            // Hide cinematic intro screen after 1.8 seconds
+            // Hide cinematic intro screen after 2.8 seconds (extended by 1 more second)
             setTimeout(() => {
                 const intro = document.getElementById('introOverlay');
                 if (intro) intro.classList.add('fade-out');
-            }, 1800);
+            }, 2800);
         });
 
         function updateUIState() {
@@ -491,6 +491,8 @@
             }
             document.getElementById('uploadProgressContainer').style.display = 'none';
             document.getElementById('progressBarFill').style.width = '0%';
+            document.getElementById('uploadStatusLabel').innerText = "Uploading file... (0%)";
+            document.getElementById('progressPercentText').innerText = "0%";
             document.getElementById('mediaType').value = 'image';
             handleMediaTypeChange();
             openModal('uploadModal');
@@ -543,6 +545,7 @@
             const btn = document.getElementById('submitBtn');
             const progressContainer = document.getElementById('uploadProgressContainer');
             const progressBarFill = document.getElementById('progressBarFill');
+            const uploadStatusLabel = document.getElementById('uploadStatusLabel');
             const progressPercentText = document.getElementById('progressPercentText');
 
             const fileInput = document.getElementById('mediaFile');
@@ -556,6 +559,7 @@
 
             btn.disabled = true;
             progressContainer.style.display = 'block';
+            uploadStatusLabel.innerText = "Uploading file... (0%)";
             progressPercentText.innerText = "0%";
 
             if (type === 'image' && file.size > 400 * 1024) {
@@ -576,6 +580,7 @@
                 if (event.lengthComputable) {
                     const percentComplete = Math.round((event.loaded / event.total) * 100);
                     progressBarFill.style.width = percentComplete + '%';
+                    uploadStatusLabel.innerText = `Uploading file... (${percentComplete}%)`;
                     progressPercentText.innerText = percentComplete + '%';
                 }
             };
