@@ -134,11 +134,12 @@
         .protected-media:hover { opacity: 0.95; }
 
         .media-info { padding: 12px; }
-        /* Facebook-style caption view layout */
         .media-info h4 { 
             color: var(--text-main); font-size: 0.85rem; font-weight: 400; 
             white-space: pre-wrap; word-break: break-word; line-height: 1.5;
         }
+        .text-only-body { padding: 16px 12px; min-height: 100px; }
+        .text-only-body h4 { font-size: 0.95rem; font-weight: 500; }
 
         .card-footer-actions { display: flex; align-items: center; justify-content: space-between; padding: 0 12px 8px 12px; }
         .btn-delete-card { background: none; border: none; color: var(--accent-pink); cursor: pointer; font-size: 0.75rem; font-weight: 600; }
@@ -260,7 +261,7 @@
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 10px; font-size: 1.1rem;">Submit Media Post</h3>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 10px; font-size: 1.1rem;">Submit Post</h3>
             <form id="uploadForm">
                 <div class="form-group">
                     <label>Caption / Write-up *</label>
@@ -268,12 +269,13 @@
                 </div>
                 <div class="form-group">
                     <label>Media Format *</label>
-                    <select id="mediaType">
+                    <select id="mediaType" onchange="handleMediaTypeChange()">
                         <option value="image">Photo</option>
                         <option value="video">Video</option>
+                        <option value="text">Text (No Media)</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="fileGroupContainer">
                     <label>Choose File *</label>
                     <input type="file" id="mediaFile" accept="image/*,video/*" required>
                 </div>
@@ -446,20 +448,60 @@
             }
             document.getElementById('uploadProgressContainer').style.display = 'none';
             document.getElementById('progressBarFill').style.width = '0%';
+            document.getElementById('mediaType').value = 'image';
+            handleMediaTypeChange();
             openModal('uploadModal');
+        };
+
+        window.handleMediaTypeChange = function() {
+            const type = document.getElementById('mediaType').value;
+            const fileGroup = document.getElementById('fileGroupContainer');
+            const fileInput = document.getElementById('mediaFile');
+            if (type === 'text') {
+                fileGroup.style.display = 'none';
+                fileInput.removeAttribute('required');
+            } else {
+                fileGroup.style.display = 'block';
+                fileInput.setAttribute('required', 'true');
+            }
         };
 
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return alert("Please log in first.");
 
+            const title = document.getElementById('mediaTitle').value.trim();
+            const type = document.getElementById('mediaType').value;
+            
+            if (type === 'text') {
+                try {
+                    await addDoc(collection(db, "posts"), {
+                        uploaderName: currentUser.name,
+                        uploaderInsta: currentUser.insta,
+                        title: title,
+                        type: 'text',
+                        url: '',
+                        approved: false,
+                        pinned: false,
+                        likedUsers: [],
+                        comments: [],
+                        createdAt: serverTimestamp()
+                    });
+                    alert("Text post successfully submitted for admin approval!");
+                    document.getElementById('uploadForm').reset();
+                    closeModal('uploadModal');
+                    loadUserPostStatuses();
+                } catch (err) {
+                    alert("Database save failed.");
+                }
+                return;
+            }
+
             const btn = document.getElementById('submitBtn');
             const progressContainer = document.getElementById('uploadProgressContainer');
             const progressBarFill = document.getElementById('progressBarFill');
             const progressPercentText = document.getElementById('progressPercentText');
 
-            const title = document.getElementById('mediaTitle').value.trim();
-            const type = document.getElementById('mediaType').value;
             const fileInput = document.getElementById('mediaFile');
             let file = fileInput.files[0];
 
@@ -630,7 +672,6 @@
                     postsList.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
-                // Sort pins first, then by likes count
                 postsList.sort((a, b) => {
                     if (a.pinned === b.pinned) {
                         return (b.likedUsers?.length || 0) - (a.likedUsers?.length || 0);
@@ -661,6 +702,15 @@
                     const hasLiked = currentUser && likedUsers.includes(currentUser.name + "_" + currentUser.insta);
                     const timeAgo = formatTimeAgo(data.createdAt);
 
+                    let mediaContentHTML = '';
+                    if (data.type === 'image') {
+                        mediaContentHTML = `<img src="${data.url}" alt="Post image" class="protected-media" loading="lazy" onclick="openLightbox('${data.url}', 'image')"><div class="media-info"><h4>${data.title}</h4></div>`;
+                    } else if (data.type === 'video') {
+                        mediaContentHTML = `<video src="${data.url}" class="protected-media" controls controlsList="nodownload noplaybackrate" disablePictureInPicture preload="metadata" onclick="openLightbox('${data.url}', 'video')"></video><div class="media-info"><h4>${data.title}</h4></div>`;
+                    } else {
+                        mediaContentHTML = `<div class="text-only-body"><h4>${data.title}</h4></div>`;
+                    }
+
                     container.innerHTML += `
                         <div class="media-card ${isPinned ? 'pinned-card' : ''}">
                             ${isPinned ? `<div class="pin-badge-banner">📌 Pinned Post</div>` : ''}
@@ -676,12 +726,7 @@
                                     <span class="post-time">${timeAgo}</span>
                                 </div>
                             </div>
-                            ${data.type === 'image' 
-                                ? `<img src="${data.url}" alt="Post image" class="protected-media" loading="lazy" onclick="openLightbox('${data.url}', 'image')">` 
-                                : `<video src="${data.url}" class="protected-media" controls controlsList="nodownload noplaybackrate" disablePictureInPicture preload="metadata" onclick="openLightbox('${data.url}', 'video')"></video>`}
-                            <div class="media-info">
-                                <h4>${data.title}</h4>
-                            </div>
+                            ${mediaContentHTML}
                             <div class="card-footer-actions">
                                 ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">Delete</button>` : '<span></span>'}
                                 ${isAdmin ? `<button class="btn-pin-card" onclick="togglePinPost('${data.id}', ${!isPinned})">${isPinned ? '📌 Unpin' : '📍 Pin Post'}</button>` : ''}
@@ -794,11 +839,12 @@
             querySnapshot.forEach((documentSnap) => {
                 const data = documentSnap.data();
                 const id = documentSnap.id;
+                const previewImg = data.type === 'text' ? 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=100' : (data.type === 'video' ? 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=100' : data.url);
                 container.innerHTML += `
                     <div class="admin-item">
-                        <img src="${data.type === 'video' ? 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=100' : data.url}" class="admin-preview">
+                        <img src="${previewImg}" class="admin-preview">
                         <div>
-                            <strong style="color:var(--text-main); font-size:0.82rem;">${data.title}</strong>
+                            <strong style="color:var(--text-main); font-size:0.82rem;">${data.title.substring(0, 40)}...</strong>
                             <p style="font-size:0.75rem; color:var(--primary-cyan);">By: ${data.uploaderName} (${data.uploaderInsta})</p>
                         </div>
                         <div class="admin-actions">
