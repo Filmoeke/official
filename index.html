@@ -24,32 +24,47 @@
 
         header { 
             text-align: center; 
-            padding: 55px 20px 45px; 
+            padding: 70px 20px 60px; 
             position: relative;
             overflow: hidden;
             border-bottom: 1px solid var(--border-color); 
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.6);
         }
 
-        /* Blended Ambient Background Effect for Title */
+        /* Enhanced Blended Studio Glow Background Behind Heading */
         header::before {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 320px;
-            height: 140px;
-            background: linear-gradient(135deg, rgba(2, 132, 199, 0.18), rgba(139, 92, 246, 0.18), rgba(236, 72, 153, 0.18));
-            filter: blur(40px);
-            border-radius: 50%;
+            width: 420px;
+            height: 180px;
+            background: conic-gradient(from 180deg at 50% 50%, rgba(2, 132, 199, 0.22) 0deg, rgba(139, 92, 246, 0.22) 120deg, rgba(236, 72, 153, 0.22) 240deg, rgba(2, 132, 199, 0.22) 360deg);
+            filter: blur(55px);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
             z-index: 0;
-            animation: pulseBlob 8s ease infinite alternate;
+            animation: morphGlow 10s ease infinite alternate;
         }
 
-        @keyframes pulseBlob {
-            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
-            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        /* Secondary softer depth layer for true blended image feel */
+        header::after {
+            content: '';
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(2, 132, 199, 0.15) 100%);
+            filter: blur(30px);
+            z-index: 0;
+        }
+
+        @keyframes morphGlow {
+            0% { transform: translate(-50%, -50%) scale(0.85) rotate(0deg); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+            50% { transform: translate(-50%, -50%) scale(1.15) rotate(180deg); border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; }
+            100% { transform: translate(-50%, -50%) scale(1.0) rotate(360deg); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
         }
         
         header h1, header p {
@@ -58,19 +73,13 @@
         }
 
         header h1 {
-            font-size: 2.6rem; font-weight: 800; letter-spacing: -1.5px; display: inline-block;
-            background: linear-gradient(270deg, #0284c7, #8b5cf6, #ec4899, #0284c7);
-            background-size: 300% 300%;
+            font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; display: inline-block;
+            background: linear-gradient(135deg, #0f172a 20%, #0284c7 50%, #8b5cf6 80%);
             -webkit-background-clip: text; background-clip: text; color: transparent; text-transform: uppercase;
-            animation: gradientAnimation 6s ease infinite;
-        }
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            text-shadow: 0 10px 30px rgba(2, 132, 199, 0.15);
         }
 
-        header p { color: var(--text-muted); font-size: 0.88rem; margin-top: 6px; font-weight: 500; }
+        header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 8px; font-weight: 500; letter-spacing: 0.5px; }
 
         nav { 
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px);
@@ -259,11 +268,13 @@
         </div>
     </div>
 
+    <!-- Lightbox Modal for Fullscreen View -->
     <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
         <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
         <div id="lightboxContainer" onclick="event.stopPropagation()"></div>
     </div>
 
+    <!-- Modals -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
@@ -341,6 +352,7 @@
         <p>&copy; 2026 Film O Eke | Photography & Videography</p>
     </footer>
 
+    <!-- Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, arrayUnion, arrayRemove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -554,7 +566,6 @@
                     postsList.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
-                // Sort: Pinned posts first, then sorted by likes count
                 postsList.sort((a, b) => {
                     if (a.pinned !== b.pinned) {
                         return b.pinned ? 1 : -1;
@@ -742,6 +753,7 @@
         loadGallery();
     </script>
 
+    <!-- UI Core Handlers -->
     <script>
         const AUTH_USER_ID = "0000332211";
         const AUTH_PASS = "0091";
