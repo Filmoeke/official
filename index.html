@@ -90,14 +90,16 @@
 
         .nav-right { display: flex; gap: 8px; align-items: center; position: relative; }
 
+        .fab-container { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 999; }
         .fab-btn {
-            position: fixed; bottom: 25px; right: 25px; width: 52px; height: 52px;
+            width: 52px; height: 52px;
             border-radius: 50%; background: var(--primary-cyan); color: #ffffff;
             border: none; cursor: pointer; display: flex; align-items: center;
             justify-content: center; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
-            z-index: 999; transition: all 0.3s ease;
+            transition: all 0.3s ease;
         }
         .fab-btn:hover { background: var(--primary-cyan-hover); transform: scale(1.08); }
+        .fab-btn.secondary { background: #0f172a; box-shadow: 0 4px 15px rgba(15, 23, 42, 0.4); width: 44px; height: 44px; margin-left: 4px; }
 
         .btn-base { 
             padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; 
@@ -114,7 +116,7 @@
         .profile-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--primary-cyan); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.7rem; }
 
         .profile-dropdown {
-            position: absolute; top: 44px; right: 0; width: 250px;
+            position: absolute; top: 44px; right: 0; width: 260px;
             background: #ffffff; border: 1px solid var(--border-color); border-radius: 12px;
             padding: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: none; flex-direction: column; gap: 8px; z-index: 101;
         }
@@ -123,7 +125,7 @@
         .profile-info-header strong { font-size: 0.82rem; color: var(--text-main); display: block; }
         .profile-info-header span { font-size: 0.7rem; color: var(--text-muted); }
         
-        .my-posts-status-container { max-height: 120px; overflow-y: auto; margin: 4px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 6px 0; }
+        .my-posts-status-container { max-height: 100px; overflow-y: auto; margin: 4px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 6px 0; }
         .status-item { font-size: 0.75rem; display: flex; justify-content: space-between; align-items: center; padding: 3px 0; }
         .status-badge { font-size: 0.62rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
         .status-badge.pending { background: #fef3c7; color: #d97706; }
@@ -133,9 +135,19 @@
         .dropdown-item:hover { background: #f1f5f9; color: var(--primary-cyan); }
 
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-        .section-title { color: var(--text-main); font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .section-title { color: var(--text-main); font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 10px; margin-bottom: 0; }
         .section-title::before { content: ''; width: 4px; height: 18px; background: var(--primary-cyan); border-radius: 2px; }
         
+        /* Category Filter Pills */
+        .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+        .filter-pill {
+            background: var(--bg-surface); border: 1px solid var(--border-color);
+            padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+            color: var(--text-muted); cursor: pointer; transition: all 0.2s ease;
+        }
+        .filter-pill:hover, .filter-pill.active { background: var(--primary-cyan); color: #fff; border-color: var(--primary-cyan); }
+
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 
         .media-card { 
@@ -165,6 +177,7 @@
         .protected-media:hover { opacity: 0.95; }
 
         .media-info { padding: 12px; }
+        .media-category-tag { display: inline-block; font-size: 0.65rem; font-weight: 700; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; text-transform: uppercase; }
         .media-info h4 { 
             color: var(--text-main); font-size: 0.85rem; font-weight: 400; 
             white-space: pre-wrap; word-break: break-word; line-height: 1.5;
@@ -176,10 +189,12 @@
         .btn-delete-card { background: none; border: none; color: var(--accent-pink); cursor: pointer; font-size: 0.75rem; font-weight: 600; }
         .btn-pin-card { background: none; border: none; color: var(--accent-amber); cursor: pointer; font-size: 0.75rem; font-weight: 700; }
 
-        .ig-actions { display: flex; align-items: center; padding: 6px 12px; border-top: 1px solid #f1f5f9; }
+        .ig-actions { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; border-top: 1px solid #f1f5f9; }
+        .ig-action-left { display: flex; gap: 12px; align-items: center; }
         .ig-action-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 0.82rem; font-weight: 600; color: var(--text-main); }
         .ig-action-btn:hover { color: var(--primary-cyan); }
         .ig-action-btn.liked { color: var(--accent-pink); }
+        .ig-action-btn.bookmarked { color: var(--accent-amber); }
 
         .comments-section { border-top: 1px solid var(--border-color); background: #ffffff; padding: 8px 12px; }
         .comments-list { overflow-y: auto; max-height: 90px; margin-bottom: 6px; display: flex; flex-direction: column; gap: 4px; }
@@ -194,7 +209,7 @@
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 1000; padding: 20px; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-card { background: #ffffff; width: 100%; max-width: 400px; border-radius: 14px; padding: 20px; border: 1px solid var(--border-color); position: relative; box-shadow: 0 15px 25px rgba(0,0,0,0.1); }
+        .modal-card { background: #ffffff; width: 100%; max-width: 400px; border-radius: 14px; padding: 20px; border: 1px solid var(--border-color); position: relative; box-shadow: 0 15px 25px rgba(0,0,0,0.1); max-height: 90vh; overflow-y: auto; }
         .close-btn { position: absolute; top: 14px; right: 16px; font-size: 1.3rem; background: none; border: none; color: var(--text-muted); cursor: pointer; z-index: 10; }
 
         /* Fullscreen Lightbox Modal */
@@ -217,7 +232,7 @@
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 4px; font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 9px 10px; border-radius: 6px; background: #f8fafc; border: 1px solid var(--border-color); color: var(--text-main); outline: none; font-size: 0.82rem; }
-        .form-group textarea { resize: vertical; height: 100px; font-family: inherit; }
+        .form-group textarea { resize: vertical; height: 90px; font-family: inherit; }
 
         .upload-progress-container { display: none; margin-top: 10px; }
         .progress-bar-wrapper { width: 100%; background: #e2e8f0; border-radius: 4px; height: 8px; overflow: hidden; margin-top: 4px; }
@@ -267,6 +282,7 @@
                     <div class="my-posts-status-container" id="myPostsStatusList">
                         <span style="font-size: 0.7rem; color: var(--text-muted);">No submissions yet</span>
                     </div>
+                    <button class="dropdown-item" onclick="openModal('bookmarksModal')">🔖 Saved Bookmarks</button>
                     <button class="dropdown-item" id="btnAdminDashboard" style="display: none; color: var(--primary-cyan);" onclick="openModal('adminModal'); loadPendingQueue();">📊 Admin Dashboard</button>
                     <button class="dropdown-item" style="color: var(--accent-pink);" id="btnLogout">Sign Out</button>
                 </div>
@@ -274,35 +290,64 @@
         </div>
     </nav>
 
-    <button class="fab-btn" onclick="openUploadModal()" title="Submit Post">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-    </button>
+    <!-- Floating Action Buttons -->
+    <div class="fab-container">
+        <button class="fab-btn secondary" onclick="openModal('bookingModal')" title="Book a Session">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+        </button>
+        <button class="fab-btn" onclick="openUploadModal()" title="Submit Post">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
+    </div>
 
     <div class="container">
-        <h2 class="section-title">Approved Showcase Gallery</h2>
+        <div class="section-header-row">
+            <h2 class="section-title">Showcase Gallery</h2>
+            <div class="filter-pills" id="filterPillsContainer">
+                <button class="filter-pill active" onclick="setCategoryFilter('All', this)">All</button>
+                <button class="filter-pill" onclick="setCategoryFilter('Cinematic', this)">Cinematic</button>
+                <button class="filter-pill" onclick="setCategoryFilter('Portrait', this)">Portrait</button>
+                <button class="filter-pill" onclick="setCategoryFilter('Wedding', this)">Wedding</button>
+                <button class="filter-pill" onclick="setCategoryFilter('Commercial', this)">Commercial</button>
+            </div>
+        </div>
         <div class="gallery-grid" id="publicGallery">
             <p style="color: var(--text-muted);">Loading gallery...</p>
         </div>
     </div>
 
-    <!-- Lightbox Modal for Fullscreen View -->
+    <!-- Lightbox Modal -->
     <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
         <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
         <div id="lightboxContainer" onclick="event.stopPropagation()"></div>
     </div>
 
-    <!-- Modals -->
+    <!-- Upload Modal -->
     <div class="modal-overlay" id="uploadModal">
         <div class="modal-card">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
             <h3 style="color: var(--primary-cyan); margin-bottom: 10px; font-size: 1.1rem;">Submit Post</h3>
             <form id="uploadForm">
                 <div class="form-group">
+                    <label>Category *</label>
+                    <select id="mediaCategory">
+                        <option value="Cinematic">Cinematic</option>
+                        <option value="Portrait">Portrait</option>
+                        <option value="Wedding">Wedding</option>
+                        <option value="Commercial">Commercial</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Caption / Write-up *</label>
-                    <textarea id="mediaTitle" placeholder="What's on your mind? Share your story..." required></textarea>
+                    <textarea id="mediaTitle" placeholder="Share your story or EXIF specs..." required></textarea>
                 </div>
                 <div class="form-group">
                     <label>Media Format *</label>
@@ -332,6 +377,54 @@
         </div>
     </div>
 
+    <!-- Booking Session Modal -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal-card">
+            <button class="close-btn" onclick="closeModal('bookingModal')">&times;</button>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 10px; font-size: 1.1rem;">Book a Session</h3>
+            <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
+                <div class="form-group">
+                    <label>Your Name *</label>
+                    <input type="text" id="bookName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <label>Contact / Instagram *</label>
+                    <input type="text" id="bookContact" placeholder="Phone or @instagram" required>
+                </div>
+                <div class="form-group">
+                    <label>Package Type *</label>
+                    <select id="bookPackage">
+                        <option value="Portrait Shoot">Portrait Session</option>
+                        <option value="Cinematic Reel">Cinematic Reel / Video</option>
+                        <option value="Wedding Coverage">Wedding / Event Coverage</option>
+                        <option value="Commercial Project">Commercial / Product Shoot</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Date *</label>
+                    <input type="date" id="bookDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Project Details / Vision</label>
+                    <textarea id="bookNotes" placeholder="Tell us about your shoot concept..."></textarea>
+                </div>
+                <button type="submit" class="btn-base btn-action" style="width: 100%; justify-content: center; padding: 10px;">Send Booking Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Saved Bookmarks Drawer Modal -->
+    <div class="modal-overlay" id="bookmarksModal">
+        <div class="modal-card">
+            <button class="close-btn" onclick="closeModal('bookmarksModal')">&times;</button>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 12px; font-size: 1.1rem;">Saved Bookmarks</h3>
+            <div id="bookmarksListContainer" style="max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+                <p style="color: var(--text-muted); font-size: 0.8rem;">No saved bookmarks yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Login Modal -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-card" style="max-width: 340px;">
             <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
@@ -350,6 +443,7 @@
         </div>
     </div>
 
+    <!-- Admin Login Modal -->
     <div class="modal-overlay" id="adminLoginModal">
         <div class="modal-card" style="max-width: 340px;">
             <button class="close-btn" onclick="closeModal('adminLoginModal')">&times;</button>
@@ -369,6 +463,7 @@
         </div>
     </div>
 
+    <!-- Admin Dashboard Modal -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-card" style="max-width: 550px;">
             <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
@@ -406,6 +501,8 @@
 
         let currentUser = null;
         window.isAdminLoggedIn = localStorage.getItem('filmoeke_admin') === 'true';
+        let currentCategoryFilter = 'All';
+        let allLoadedPosts = [];
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('filmoeke_user');
@@ -414,7 +511,6 @@
             }
             updateUIState();
 
-            // Hide cinematic intro screen after 2.8 seconds (extended by 1 more second)
             setTimeout(() => {
                 const intro = document.getElementById('introOverlay');
                 if (intro) intro.classList.add('fade-out');
@@ -516,6 +612,7 @@
             if (!currentUser) return alert("Please log in first.");
 
             const title = document.getElementById('mediaTitle').value.trim();
+            const category = document.getElementById('mediaCategory').value;
             const type = document.getElementById('mediaType').value;
             
             if (type === 'text') {
@@ -524,11 +621,13 @@
                         uploaderName: currentUser.name,
                         uploaderInsta: currentUser.insta,
                         title: title,
+                        category: category,
                         type: 'text',
                         url: '',
                         approved: false,
                         pinned: false,
                         likedUsers: [],
+                        bookmarkedUsers: [],
                         comments: [],
                         createdAt: serverTimestamp()
                     });
@@ -593,11 +692,13 @@
                             uploaderName: currentUser.name,
                             uploaderInsta: currentUser.insta,
                             title: title,
+                            category: category,
                             type: type,
                             url: response.secure_url,
                             approved: false,
                             pinned: false,
                             likedUsers: [],
+                            bookmarkedUsers: [],
                             comments: [],
                             createdAt: serverTimestamp()
                         });
@@ -623,6 +724,16 @@
 
             xhr.send(formData);
         });
+
+        window.handleBookingSubmit = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('bookName').value;
+            const pkg = document.getElementById('bookPackage').value;
+            const date = document.getElementById('bookDate').value;
+            alert(`Thank you, ${name}! Your booking inquiry for the "${pkg}" on ${date} has been sent to Film O Eke studio.`);
+            document.getElementById('bookingForm').reset();
+            closeModal('bookingModal');
+        };
 
         function compressImage(file) {
             return new Promise((resolve) => {
@@ -674,7 +785,7 @@
                     const data = docSnap.data();
                     statusContainer.innerHTML += `
                         <div class="status-item">
-                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 130px;">${data.title}</span>
+                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px;">${data.title}</span>
                             <span class="status-badge ${data.approved ? 'approved' : 'pending'}">${data.approved ? 'Approved' : 'Pending'}</span>
                         </div>
                     `;
@@ -703,103 +814,157 @@
             return "Just now";
         }
 
+        window.setCategoryFilter = function(category, element) {
+            currentCategoryFilter = category;
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            element.classList.add('active');
+            renderFilteredGallery();
+        };
+
         async function loadGallery() {
             const container = document.getElementById('publicGallery');
             try {
                 const q = query(collection(db, "posts"), where("approved", "==", true));
                 const querySnapshot = await getDocs(q);
-                container.innerHTML = "";
+                allLoadedPosts = [];
 
-                if (querySnapshot.empty) {
-                    container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No approved posts found.</p>`;
-                    return;
-                }
-
-                const postsList = [];
                 querySnapshot.forEach((docSnap) => {
-                    postsList.push({ id: docSnap.id, ...docSnap.data() });
+                    allLoadedPosts.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
-                postsList.sort((a, b) => {
+                allLoadedPosts.sort((a, b) => {
                     if (a.pinned === b.pinned) {
                         return (b.likedUsers?.length || 0) - (a.likedUsers?.length || 0);
                     }
                     return a.pinned ? -1 : 1;
                 });
 
-                postsList.forEach((data) => {
-                    const isAdmin = window.isAdminLoggedIn;
-                    const isAuthor = currentUser && currentUser.name === data.uploaderName && currentUser.insta === data.uploaderInsta;
-                    const canDeletePost = isAdmin || isAuthor;
-                    const isPinned = data.pinned === true;
-
-                    let commentsHTML = "";
-                    (data.comments || []).forEach((c) => {
-                        const canDeleteComment = isAdmin || (currentUser && currentUser.name === c.name);
-                        const commentJson = encodeURIComponent(JSON.stringify(c));
-                        commentsHTML += `
-                            <div class="comment-item">
-                                <div class="comment-text"><strong>${c.name}</strong> <span>${c.text}</span></div>
-                                ${canDeleteComment ? `<button class="btn-delete-comment" onclick="deleteComment('${data.id}', '${commentJson}')">✕</button>` : ''}
-                            </div>
-                        `;
-                    });
-
-                    const avatarChar = (data.uploaderName || 'U').charAt(0).toUpperCase();
-                    const likedUsers = data.likedUsers || [];
-                    const hasLiked = currentUser && likedUsers.includes(currentUser.name + "_" + currentUser.insta);
-                    const timeAgo = formatTimeAgo(data.createdAt);
-
-                    let mediaContentHTML = '';
-                    if (data.type === 'image') {
-                        mediaContentHTML = `<img src="${data.url}" alt="Post image" class="protected-media" loading="lazy" onclick="openLightbox('${data.url}', 'image')"><div class="media-info"><h4>${data.title}</h4></div>`;
-                    } else if (data.type === 'video') {
-                        mediaContentHTML = `<video src="${data.url}" class="protected-media" controls controlsList="nodownload noplaybackrate" disablePictureInPicture preload="metadata" onclick="openLightbox('${data.url}', 'video')"></video><div class="media-info"><h4>${data.title}</h4></div>`;
-                    } else {
-                        mediaContentHTML = `<div class="text-only-body"><h4>${data.title}</h4></div>`;
-                    }
-
-                    container.innerHTML += `
-                        <div class="media-card ${isPinned ? 'pinned-card' : ''}">
-                            ${isPinned ? `<div class="pin-badge-banner">📌 Pinned Post</div>` : ''}
-                            <div class="post-header">
-                                <div class="post-user-info">
-                                    <div class="post-user-avatar">${avatarChar}</div>
-                                    <div class="post-username">
-                                        ${data.uploaderName} 
-                                        <span>${data.uploaderInsta || ''}</span>
-                                    </div>
-                                </div>
-                                <div class="post-header-right">
-                                    <span class="post-time">${timeAgo}</span>
-                                </div>
-                            </div>
-                            ${mediaContentHTML}
-                            <div class="card-footer-actions">
-                                ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">Delete</button>` : '<span></span>'}
-                                ${isAdmin ? `<button class="btn-pin-card" onclick="togglePinPost('${data.id}', ${!isPinned})">${isPinned ? '📌 Unpin' : '📍 Pin Post'}</button>` : ''}
-                            </div>
-                            <div class="ig-actions">
-                                <button class="ig-action-btn ${hasLiked ? 'liked' : ''}" onclick="toggleLike('${data.id}')">
-                                    ${hasLiked ? '❤️' : '🤍'} ${likedUsers.length}
-                                </button>
-                            </div>
-                            <div class="comments-section">
-                                <div class="comments-list">${commentsHTML || '<p style="font-size: 0.72rem; color: var(--text-muted);">No comments yet.</p>'}</div>
-                                <form class="comment-form" onsubmit="addComment(event, '${data.id}')">
-                                    <input type="text" placeholder="${currentUser ? 'Add a comment...' : 'Log in to comment'}" ${!currentUser ? 'disabled' : ''} required autocomplete="off">
-                                    <button type="submit" ${!currentUser ? 'disabled' : ''}>Post</button>
-                                </form>
-                            </div>
-                        </div>
-                    `;
-                });
+                renderFilteredGallery();
+                renderBookmarksList();
             } catch (err) {
                 container.innerHTML = `<p style="color:var(--accent-pink);">Error loading gallery.</p>`;
             }
         }
 
+        function renderFilteredGallery() {
+            const container = document.getElementById('publicGallery');
+            container.innerHTML = "";
+
+            const filteredPosts = allLoadedPosts.filter(post => {
+                if (currentCategoryFilter === 'All') return true;
+                return post.category === currentCategoryFilter;
+            });
+
+            if (filteredPosts.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No posts found in this category.</p>`;
+                return;
+            }
+
+            filteredPosts.forEach((data) => {
+                const isAdmin = window.isAdminLoggedIn;
+                const isAuthor = currentUser && currentUser.name === data.uploaderName && currentUser.insta === data.uploaderInsta;
+                const canDeletePost = isAdmin || isAuthor;
+                const isPinned = data.pinned === true;
+
+                let commentsHTML = "";
+                (data.comments || []).forEach((c) => {
+                    const canDeleteComment = isAdmin || (currentUser && currentUser.name === c.name);
+                    const commentJson = encodeURIComponent(JSON.stringify(c));
+                    commentsHTML += `
+                        <div class="comment-item">
+                            <div class="comment-text"><strong>${c.name}</strong> <span>${c.text}</span></div>
+                            ${canDeleteComment ? `<button class="btn-delete-comment" onclick="deleteComment('${data.id}', '${commentJson}')">✕</button>` : ''}
+                        </div>
+                    `;
+                });
+
+                const avatarChar = (data.uploaderName || 'U').charAt(0).toUpperCase();
+                const likedUsers = data.likedUsers || [];
+                const bookmarkedUsers = data.bookmarkedUsers || [];
+                const userKey = currentUser ? currentUser.name + "_" + currentUser.insta : "";
+                const hasLiked = currentUser && likedUsers.includes(userKey);
+                const hasBookmarked = currentUser && bookmarkedUsers.includes(userKey);
+                const timeAgo = formatTimeAgo(data.createdAt);
+                const categoryBadge = data.category ? `<span class="media-category-tag">${data.category}</span>` : '';
+
+                let mediaContentHTML = '';
+                if (data.type === 'image') {
+                    mediaContentHTML = `<img src="${data.url}" alt="Post image" class="protected-media" loading="lazy" onclick="openLightbox('${data.url}', 'image')"><div class="media-info">${categoryBadge}<h4>${data.title}</h4></div>`;
+                } else if (data.type === 'video') {
+                    mediaContentHTML = `<video src="${data.url}" class="protected-media" controls controlsList="nodownload noplaybackrate" disablePictureInPicture preload="metadata" onclick="openLightbox('${data.url}', 'video')"></video><div class="media-info">${categoryBadge}<h4>${data.title}</h4></div>`;
+                } else {
+                    mediaContentHTML = `<div class="text-only-body">${categoryBadge}<h4>${data.title}</h4></div>`;
+                }
+
+                container.innerHTML += `
+                    <div class="media-card ${isPinned ? 'pinned-card' : ''}">
+                        ${isPinned ? `<div class="pin-badge-banner">📌 Pinned Post</div>` : ''}
+                        <div class="post-header">
+                            <div class="post-user-info">
+                                <div class="post-user-avatar">${avatarChar}</div>
+                                <div class="post-username">
+                                    ${data.uploaderName} 
+                                    <span>${data.uploaderInsta || ''}</span>
+                                </div>
+                            </div>
+                            <div class="post-header-right">
+                                <span class="post-time">${timeAgo}</span>
+                            </div>
+                        </div>
+                        ${mediaContentHTML}
+                        <div class="card-footer-actions">
+                            ${canDeletePost ? `<button class="btn-delete-card" onclick="deletePost('${data.id}')">Delete</button>` : '<span></span>'}
+                            ${isAdmin ? `<button class="btn-pin-card" onclick="togglePinPost('${data.id}', ${!isPinned})">${isPinned ? '📌 Unpin' : '📍 Pin Post'}</button>` : ''}
+                        </div>
+                        <div class="ig-actions">
+                            <div class="ig-action-left">
+                                <button class="ig-action-btn ${hasLiked ? 'liked' : ''}" onclick="toggleLike('${data.id}')">
+                                    ${hasLiked ? '❤️' : '🤍'} ${likedUsers.length}
+                                </button>
+                            </div>
+                            <button class="ig-action-btn ${hasBookmarked ? 'bookmarked' : ''}" onclick="toggleBookmark('${data.id}')">
+                                ${hasBookmarked ? '🔖 Saved' : '📑 Save'}
+                            </button>
+                        </div>
+                        <div class="comments-section">
+                            <div class="comments-list">${commentsHTML || '<p style="font-size: 0.72rem; color: var(--text-muted);">No comments yet.</p>'}</div>
+                            <form class="comment-form" onsubmit="addComment(event, '${data.id}')">
+                                <input type="text" placeholder="${currentUser ? 'Add a comment...' : 'Log in to comment'}" ${!currentUser ? 'disabled' : ''} required autocomplete="off">
+                                <button type="submit" ${!currentUser ? 'disabled' : ''}>Post</button>
+                            </form>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderBookmarksList() {
+            const container = document.getElementById('bookmarksListContainer');
+            if (!currentUser) {
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 0.8rem;">Please log in to view bookmarks.</p>`;
+                return;
+            }
+            const userKey = currentUser.name + "_" + currentUser.insta;
+            const bookmarkedPosts = allLoadedPosts.filter(p => (p.bookmarkedUsers || []).includes(userKey));
+
+            if (bookmarkedPosts.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 0.8rem;">No saved bookmarks yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = "";
+            bookmarkedPosts.forEach(post => {
+                container.innerHTML += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+                        <span style="font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">${post.title}</span>
+                        <button class="btn-base" style="font-size: 0.7rem; padding: 4px 8px; background: #e2e8f0; color: var(--text-main);" onclick="openLightbox('${post.url}', '${post.type}')">View</button>
+                    </div>
+                `;
+            });
+        }
+
         window.openLightbox = function(url, type) {
+            if (!url) return;
             const overlay = document.getElementById('lightboxOverlay');
             const container = document.getElementById('lightboxContainer');
             if (type === 'image') {
@@ -862,17 +1027,40 @@
 
             const userKey = currentUser.name + "_" + currentUser.insta;
             const postRef = doc(db, "posts", postId);
+            const targetPost = allLoadedPosts.find(p => p.id === postId);
             
-            const postSnap = await getDocs(query(collection(db, "posts"), where("__name__", "==", postId)));
-            if (!postSnap.empty) {
-                const postData = postSnap.docs[0].data();
-                const likedUsers = postData.likedUsers || [];
+            if (targetPost) {
+                const likedUsers = targetPost.likedUsers || [];
                 const hasLiked = likedUsers.includes(userKey);
 
                 if (hasLiked) {
                     await updateDoc(postRef, { likedUsers: arrayRemove(userKey) });
                 } else {
                     await updateDoc(postRef, { likedUsers: arrayUnion(userKey) });
+                }
+                loadGallery();
+            }
+        };
+
+        window.toggleBookmark = async function(postId) {
+            if (!currentUser) {
+                alert("Please log in to bookmark posts!");
+                openModal('loginModal');
+                return;
+            }
+
+            const userKey = currentUser.name + "_" + currentUser.insta;
+            const postRef = doc(db, "posts", postId);
+            const targetPost = allLoadedPosts.find(p => p.id === postId);
+            
+            if (targetPost) {
+                const bookmarkedUsers = targetPost.bookmarkedUsers || [];
+                const hasBookmarked = bookmarkedUsers.includes(userKey);
+
+                if (hasBookmarked) {
+                    await updateDoc(postRef, { bookmarkedUsers: arrayRemove(userKey) });
+                } else {
+                    await updateDoc(postRef, { bookmarkedUsers: arrayUnion(userKey) });
                 }
                 loadGallery();
             }
@@ -892,8 +1080,8 @@
                     <div class="admin-item">
                         <img src="${previewImg}" class="admin-preview">
                         <div>
-                            <strong style="color:var(--text-main); font-size:0.82rem;">${data.title.substring(0, 40)}...</strong>
-                            <p style="font-size:0.75rem; color:var(--primary-cyan);">By: ${data.uploaderName} (${data.uploaderInsta})</p>
+                            <strong style="color:var(--text-main); font-size:0.82rem;">${data.title.substring(0, 35)}...</strong>
+                            <p style="font-size:0.72rem; color:var(--primary-cyan);">By: ${data.uploaderName} (${data.uploaderInsta})</p>
                         </div>
                         <div class="admin-actions">
                             <button class="btn-approve" onclick="approvePost('${id}')">Approve</button>
