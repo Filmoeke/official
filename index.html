@@ -22,6 +22,37 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-user-select: none; user-select: none; }
         body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
 
+        /* Cinematic Intro Animation Overlay */
+        #introOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0f172a; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        #introOverlay.fade-out { opacity: 0; visibility: hidden; }
+        
+        .intro-title {
+            font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; text-transform: uppercase;
+            background: linear-gradient(270deg, #0284c7, #8b5cf6, #ec4899, #0284c7);
+            background-size: 300% 300%;
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            animation: gradientAnimation 4s ease infinite, introZoomIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0; transform: scale(0.9);
+        }
+        .intro-subtitle {
+            color: #94a3b8; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase;
+            margin-top: 10px; opacity: 0; animation: introFadeUp 1s ease 0.4s forwards;
+        }
+
+        @keyframes introZoomIn {
+            0% { opacity: 0; transform: scale(0.85); filter: blur(8px); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+        @keyframes introFadeUp {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
         header { 
             text-align: center; 
             padding: 40px 20px 30px; 
@@ -203,6 +234,12 @@
 </head>
 <body oncontextmenu="return false;">
 
+    <!-- Cinematic Intro Screen -->
+    <div id="introOverlay">
+        <div class="intro-title">Film O Eke</div>
+        <div class="intro-subtitle">Studio Platform</div>
+    </div>
+
     <header>
         <h1>Film O Eke</h1>
         <p>An Immersive Lens & Motion Gallery</p>
@@ -376,6 +413,12 @@
                 currentUser = JSON.parse(savedUser);
             }
             updateUIState();
+
+            // Hide cinematic intro screen after 1.8 seconds
+            setTimeout(() => {
+                const intro = document.getElementById('introOverlay');
+                if (intro) intro.classList.add('fade-out');
+            }, 1800);
         });
 
         function updateUIState() {
