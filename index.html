@@ -20,7 +20,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-user-select: none; user-select: none; }
-        body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+        body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
 
         /* Cinematic Intro Animation Overlay */
         #introOverlay {
@@ -145,6 +145,11 @@
             background: var(--surface-card); border-radius: 12px; overflow: hidden; 
             border: 1px solid var(--border-color); display: flex; flex-direction: column; position: relative;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .media-card.highlight-card {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 15px rgba(2, 132, 199, 0.3);
         }
         .media-card.pinned-card { border: 2px solid var(--accent-amber); background: linear-gradient(to bottom, #fffbeb, #ffffff 40px); }
         
@@ -812,7 +817,7 @@
                 }
 
                 container.innerHTML += `
-                    <div class="media-card ${isPinned ? 'pinned-card' : ''}">
+                    <div class="media-card ${isPinned ? 'pinned-card' : ''}" id="post-${data.id}">
                         ${isPinned ? `<div class="pin-badge-banner">📌 Pinned Post</div>` : ''}
                         <div class="post-header">
                             <div class="post-user-info">
@@ -833,11 +838,11 @@
                         </div>
                         <div class="ig-actions">
                             <div class="ig-action-left">
-                                <button class="ig-action-btn ${hasLiked ? 'liked' : ''}" onclick="toggleLike('${data.id}')">
-                                    ${hasLiked ? '❤️' : '🤍'} ${likedUsers.length}
+                                <button class="ig-action-btn ${hasLiked ? 'liked' : ''}" id="like-btn-${data.id}" onclick="toggleLike('${data.id}')">
+                                    <span id="like-icon-${data.id}">${hasLiked ? '❤️' : '🤍'}</span> <span id="like-count-${data.id}">${likedUsers.length}</span>
                                 </button>
                             </div>
-                            <button class="fb-save-btn ${hasBookmarked ? 'bookmarked' : ''}" onclick="toggleBookmark('${data.id}')" title="${hasBookmarked ? 'Saved' : 'Save'}">
+                            <button class="fb-save-btn ${hasBookmarked ? 'bookmarked' : ''}" id="save-btn-${data.id}" onclick="toggleBookmark('${data.id}')" title="${hasBookmarked ? 'Saved' : 'Save'}">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="${hasBookmarked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                 </svg>
@@ -873,12 +878,24 @@
             bookmarkedPosts.forEach(post => {
                 container.innerHTML += `
                     <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
-                        <span style="font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">${post.title}</span>
-                        <button class="btn-base" style="font-size: 0.7rem; padding: 4px 8px; background: #e2e8f0; color: var(--text-main);" onclick="openLightbox('${post.url}', '${post.type}')">View</button>
+                        <span style="font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px;">${post.title}</span>
+                        <button class="btn-base btn-action" style="font-size: 0.7rem; padding: 4px 10px;" onclick="viewPostFullCard('${post.id}')">View Post</button>
                     </div>
                 `;
             });
         }
+
+        window.viewPostFullCard = function(postId) {
+            closeModal('bookmarksModal');
+            const targetElement = document.getElementById(`post-${postId}`);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                targetElement.classList.add('highlight-card');
+                setTimeout(() => {
+                    targetElement.classList.remove('highlight-card');
+                }, 2000);
+            }
+        };
 
         window.openLightbox = function(url, type) {
             if (!url) return;
@@ -935,6 +952,7 @@
             }
         };
 
+        // Optimistic UI Toggle Like (Instant Response)
         window.toggleLike = async function(postId) {
             if (!currentUser) {
                 alert("Please log in to like posts!");
@@ -947,18 +965,41 @@
             const targetPost = allLoadedPosts.find(p => p.id === postId);
             
             if (targetPost) {
-                const likedUsers = targetPost.likedUsers || [];
-                const hasLiked = likedUsers.includes(userKey);
+                if (!targetPost.likedUsers) targetPost.likedUsers = [];
+                const hasLiked = targetPost.likedUsers.includes(userKey);
 
+                // Immediate UI update before server confirmation
+                if (hasLiked) {
+                    targetPost.likedUsers = targetPost.likedUsers.filter(u => u !== userKey);
+                } else {
+                    targetPost.likedUsers.push(userKey);
+                }
+
+                // Instantly update DOM for this specific button
+                const btnElement = document.getElementById(`like-btn-${postId}`);
+                const iconElement = document.getElementById(`like-icon-${postId}`);
+                const countElement = document.getElementById(`like-count-${postId}`);
+                if (btnElement && iconElement && countElement) {
+                    if (targetPost.likedUsers.includes(userKey)) {
+                        btnElement.classList.add('liked');
+                        iconElement.innerText = '❤️';
+                    } else {
+                        btnElement.classList.remove('liked');
+                        iconElement.innerText = '🤍';
+                    }
+                    countElement.innerText = targetPost.likedUsers.length;
+                }
+
+                // Background Sync with Firebase
                 if (hasLiked) {
                     await updateDoc(postRef, { likedUsers: arrayRemove(userKey) });
                 } else {
                     await updateDoc(postRef, { likedUsers: arrayUnion(userKey) });
                 }
-                loadGallery();
             }
         };
 
+        // Optimistic UI Toggle Bookmark (Instant Response)
         window.toggleBookmark = async function(postId) {
             if (!currentUser) {
                 alert("Please log in to bookmark posts!");
@@ -971,15 +1012,38 @@
             const targetPost = allLoadedPosts.find(p => p.id === postId);
             
             if (targetPost) {
-                const bookmarkedUsers = targetPost.bookmarkedUsers || [];
-                const hasBookmarked = bookmarkedUsers.includes(userKey);
+                if (!targetPost.bookmarkedUsers) targetPost.bookmarkedUsers = [];
+                const hasBookmarked = targetPost.bookmarkedUsers.includes(userKey);
 
+                // Immediate UI update before server confirmation
+                if (hasBookmarked) {
+                    targetPost.bookmarkedUsers = targetPost.bookmarkedUsers.filter(u => u !== userKey);
+                } else {
+                    targetPost.bookmarkedUsers.push(userKey);
+                }
+
+                // Instantly update DOM for this specific bookmark button & drawer
+                const saveBtn = document.getElementById(`save-btn-${postId}`);
+                if (saveBtn) {
+                    const isNowBookmarked = targetPost.bookmarkedUsers.includes(userKey);
+                    if (isNowBookmarked) {
+                        saveBtn.classList.add('bookmarked');
+                        saveBtn.title = "Saved";
+                        saveBtn.querySelector('svg').setAttribute('fill', 'currentColor');
+                    } else {
+                        saveBtn.classList.remove('bookmarked');
+                        saveBtn.title = "Save";
+                        saveBtn.querySelector('svg').setAttribute('fill', 'none');
+                    }
+                }
+                renderBookmarksList();
+
+                // Background Sync with Firebase
                 if (hasBookmarked) {
                     await updateDoc(postRef, { bookmarkedUsers: arrayRemove(userKey) });
                 } else {
                     await updateDoc(postRef, { bookmarkedUsers: arrayUnion(userKey) });
                 }
-                loadGallery();
             }
         };
 
