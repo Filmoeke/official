@@ -135,9 +135,18 @@
         .dropdown-item:hover { background: #f1f5f9; color: var(--primary-cyan); }
 
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-        .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 15px; }
         .section-title { color: var(--text-main); font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 10px; margin-bottom: 0; }
         .section-title::before { content: ''; width: 4px; height: 18px; background: var(--primary-cyan); border-radius: 2px; }
+
+        /* Search & Filter Bar Styles */
+        .search-filter-wrapper { margin-bottom: 25px; display: flex; flex-direction: column; gap: 12px; }
+        .search-input-box { width: 100%; padding: 11px 16px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--text-main); font-size: 0.85rem; outline: none; transition: border-color 0.2s ease; }
+        .search-input-box:focus { border-color: var(--primary-cyan); box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); }
+        .filter-chips-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+        .filter-chip { background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-muted); padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; }
+        .filter-chip:hover { border-color: var(--primary-cyan); color: var(--primary-cyan); }
+        .filter-chip.active { background: var(--primary-cyan); border-color: var(--primary-cyan); color: #ffffff; }
 
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 
@@ -190,6 +199,8 @@
         .ig-action-btn:hover { color: var(--primary-cyan); }
         .ig-action-btn.liked { color: var(--accent-pink); }
         
+        .ig-action-right-group { display: flex; align-items: center; gap: 10px; }
+
         /* Professional Facebook-style Bookmark/Save Logo Button */
         .fb-save-btn {
             background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;
@@ -209,6 +220,8 @@
         .comment-form { display: flex; gap: 6px; border-top: 1px solid #f1f5f9; padding-top: 6px; }
         .comment-form input { flex: 1; padding: 5px 8px; font-size: 0.75rem; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); outline: none; }
         .comment-form button { background: none; color: var(--primary-cyan); font-weight: 700; border: none; cursor: pointer; font-size: 0.75rem; }
+
+        .load-more-container { text-align: center; margin-top: 30px; display: none; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 1000; padding: 20px; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
@@ -255,7 +268,7 @@
     <!-- Cinematic Intro Screen -->
     <div id="introOverlay">
         <div class="intro-title">Film O Eke</div>
-        <div class="intro-subtitle"></div>
+        <div class="intro-subtitle">The Studio Platform</div>
     </div>
 
     <header>
@@ -311,8 +324,25 @@
         <div class="section-header-row">
             <h2 class="section-title">Showcase Gallery</h2>
         </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="search-filter-wrapper">
+            <input type="text" id="searchInput" class="search-input-box" placeholder="Search by caption or uploader..." oninput="handleSearchOrFilter()">
+            <div class="filter-chips-row" id="filterChipsRow">
+                <button class="filter-chip active" onclick="setMediaTypeFilter('all', this)">All</button>
+                <button class="filter-chip" onclick="setMediaTypeFilter('image', this)">Photos</button>
+                <button class="filter-chip" onclick="setMediaTypeFilter('video', this)">Videos</button>
+                <button class="filter-chip" onclick="setMediaTypeFilter('text', this)">Text Stories</button>
+            </div>
+        </div>
+
         <div class="gallery-grid" id="publicGallery">
             <p style="color: var(--text-muted);">Loading gallery...</p>
+        </div>
+
+        <!-- Pagination Load More Container -->
+        <div class="load-more-container" id="loadMoreContainer">
+            <button class="btn-base btn-action" onclick="loadMorePosts()">Load More Posts</button>
         </div>
     </div>
 
@@ -449,6 +479,9 @@
         let currentUser = null;
         window.isAdminLoggedIn = localStorage.getItem('filmoeke_admin') === 'true';
         let allLoadedPosts = [];
+        let filteredPosts = [];
+        let postsToShowCount = 6;
+        let activeTypeFilter = 'all';
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('filmoeke_user');
@@ -765,23 +798,55 @@
                     return a.pinned ? -1 : 1;
                 });
 
-                renderGalleryList();
+                handleSearchOrFilter();
                 renderBookmarksList();
             } catch (err) {
                 container.innerHTML = `<p style="color:var(--accent-pink);">Error loading gallery.</p>`;
             }
         }
 
+        window.setMediaTypeFilter = function(type, btnElement) {
+            activeTypeFilter = type;
+            document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            postsToShowCount = 6;
+            handleSearchOrFilter();
+        };
+
+        window.handleSearchOrFilter = function() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            filteredPosts = allLoadedPosts.filter(post => {
+                const matchesType = activeTypeFilter === 'all' || post.type === activeTypeFilter;
+                const matchesSearch = !searchTerm || 
+                    (post.title && post.title.toLowerCase().includes(searchTerm)) || 
+                    (post.uploaderName && post.uploaderName.toLowerCase().includes(searchTerm)) ||
+                    (post.uploaderInsta && post.uploaderInsta.toLowerCase().includes(searchTerm));
+                return matchesType && matchesSearch;
+            });
+
+            renderGalleryList();
+        };
+
+        window.loadMorePosts = function() {
+            postsToShowCount += 6;
+            renderGalleryList();
+        };
+
         function renderGalleryList() {
             const container = document.getElementById('publicGallery');
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
             container.innerHTML = "";
 
-            if (allLoadedPosts.length === 0) {
-                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No posts available yet.</p>`;
+            if (filteredPosts.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 20px;">No posts found matching your query.</p>`;
+                loadMoreContainer.style.display = 'none';
                 return;
             }
 
-            allLoadedPosts.forEach((data) => {
+            const visiblePosts = filteredPosts.slice(0, postsToShowCount);
+
+            visiblePosts.forEach((data) => {
                 const isAdmin = window.isAdminLoggedIn;
                 const isAuthor = currentUser && currentUser.name === data.uploaderName && currentUser.insta === data.uploaderInsta;
                 const canDeletePost = isAdmin || isAuthor;
@@ -841,6 +906,9 @@
                                 <button class="ig-action-btn ${hasLiked ? 'liked' : ''}" id="like-btn-${data.id}" onclick="toggleLike('${data.id}')">
                                     <span id="like-icon-${data.id}">${hasLiked ? '❤️' : '🤍'}</span> <span id="like-count-${data.id}">${likedUsers.length}</span>
                                 </button>
+                                <button class="ig-action-btn" onclick="sharePost('${data.id}', '${encodeURIComponent(data.title || 'Film O Eke Post')}')" title="Share Post">
+                                    <span>🔗</span> Share
+                                </button>
                             </div>
                             <button class="fb-save-btn ${hasBookmarked ? 'bookmarked' : ''}" id="save-btn-${data.id}" onclick="toggleBookmark('${data.id}')" title="${hasBookmarked ? 'Saved' : 'Save'}">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="${hasBookmarked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -858,7 +926,24 @@
                     </div>
                 `;
             });
+
+            if (filteredPosts.length > postsToShowCount) {
+                loadMoreContainer.style.display = 'block';
+            } else {
+                loadMoreContainer.style.display = 'none';
+            }
         }
+
+        window.sharePost = function(postId, encodedTitle) {
+            const title = decodeURIComponent(encodedTitle);
+            const url = window.location.href.split('#')[0] + `#post-${postId}`;
+            if (navigator.share) {
+                navigator.share({ title: 'Film O Eke Studio', text: title, url: url }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(url);
+                alert("Direct post link copied to clipboard!");
+            }
+        };
 
         function renderBookmarksList() {
             const container = document.getElementById('bookmarksListContainer');
@@ -952,7 +1037,7 @@
             }
         };
 
-        // Optimistic UI Toggle Like (Instant Response)
+        // Optimistic UI Toggle Like
         window.toggleLike = async function(postId) {
             if (!currentUser) {
                 alert("Please log in to like posts!");
@@ -968,14 +1053,12 @@
                 if (!targetPost.likedUsers) targetPost.likedUsers = [];
                 const hasLiked = targetPost.likedUsers.includes(userKey);
 
-                // Immediate UI update before server confirmation
                 if (hasLiked) {
                     targetPost.likedUsers = targetPost.likedUsers.filter(u => u !== userKey);
                 } else {
                     targetPost.likedUsers.push(userKey);
                 }
 
-                // Instantly update DOM for this specific button
                 const btnElement = document.getElementById(`like-btn-${postId}`);
                 const iconElement = document.getElementById(`like-icon-${postId}`);
                 const countElement = document.getElementById(`like-count-${postId}`);
@@ -990,7 +1073,6 @@
                     countElement.innerText = targetPost.likedUsers.length;
                 }
 
-                // Background Sync with Firebase
                 if (hasLiked) {
                     await updateDoc(postRef, { likedUsers: arrayRemove(userKey) });
                 } else {
@@ -999,7 +1081,7 @@
             }
         };
 
-        // Optimistic UI Toggle Bookmark (Instant Response)
+        // Optimistic UI Toggle Bookmark
         window.toggleBookmark = async function(postId) {
             if (!currentUser) {
                 alert("Please log in to bookmark posts!");
@@ -1015,14 +1097,12 @@
                 if (!targetPost.bookmarkedUsers) targetPost.bookmarkedUsers = [];
                 const hasBookmarked = targetPost.bookmarkedUsers.includes(userKey);
 
-                // Immediate UI update before server confirmation
                 if (hasBookmarked) {
                     targetPost.bookmarkedUsers = targetPost.bookmarkedUsers.filter(u => u !== userKey);
                 } else {
                     targetPost.bookmarkedUsers.push(userKey);
                 }
 
-                // Instantly update DOM for this specific bookmark button & drawer
                 const saveBtn = document.getElementById(`save-btn-${postId}`);
                 if (saveBtn) {
                     const isNowBookmarked = targetPost.bookmarkedUsers.includes(userKey);
@@ -1038,7 +1118,6 @@
                 }
                 renderBookmarksList();
 
-                // Background Sync with Firebase
                 if (hasBookmarked) {
                     await updateDoc(postRef, { bookmarkedUsers: arrayRemove(userKey) });
                 } else {
