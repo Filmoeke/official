@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Film O Eke | Studio Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- EXIF Library for Automatic Camera Metadata Extraction -->
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
     <style>
         :root {
             --bg-base: #f8fafc;
@@ -190,7 +192,6 @@
         .ig-action-btn:hover { color: var(--primary-cyan); }
         .ig-action-btn.liked { color: var(--accent-pink); }
         
-        /* Professional Facebook-style Bookmark/Save Logo Button */
         .fb-save-btn {
             background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;
             color: var(--text-muted); transition: transform 0.2s ease, color 0.2s ease;
@@ -553,6 +554,36 @@
             }
         };
 
+        // Automatic EXIF Data Extractor Listener for Photo Uploads
+        document.getElementById('mediaFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const type = document.getElementById('mediaType').value;
+            if (!file || type !== 'image') return;
+
+            EXIF.getData(file, function() {
+                const make = EXIF.getTag(this, "Make") || "";
+                const model = EXIF.getTag(this, "Model") || "";
+                const iso = EXIF.getTag(this, "ISOSpeedRatings") || EXIF.getTag(this, "ISO") || "";
+                const fNumber = EXIF.getTag(this, "FNumber") ? `f/${EXIF.getTag(this, "FNumber")}` : "";
+                const exposureTime = EXIF.getTag(this, "ExposureTime");
+                const shutter = exposureTime ? (exposureTime < 1 ? `1/${Math.round(1/exposureTime)}s` : `${exposureTime}s`) : "";
+
+                let exifParts = [];
+                if (make || model) exifParts.push(`${make} ${model}`.trim());
+                if (fNumber) exifParts.push(fNumber);
+                if (shutter) exifParts.push(shutter);
+                if (iso) exifParts.push(`ISO ${iso}`);
+
+                if (exifParts.length > 0) {
+                    const exifString = `\n\n📷 Specs: ${exifParts.join(' • ')}`;
+                    const titleField = document.getElementById('mediaTitle');
+                    if (!titleField.value.includes(exifString)) {
+                        titleField.value += exifString;
+                    }
+                }
+            });
+        });
+
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return alert("Please log in first.");
@@ -839,7 +870,7 @@
                         <div class="ig-actions">
                             <div class="ig-action-left">
                                 <button class="ig-action-btn ${hasLiked ? 'liked' : ''}" id="like-btn-${data.id}" onclick="toggleLike('${data.id}')">
-                                    <span id="like-icon-${data.id}">${hasLiked ? '❤️' : '🤍'}</span> <span id="like-count-${data.id}">${likedUsers.length}</span>
+                                    <span id="like-icon-${data.id}">${hasLiked ? '❤️️' : '🤍'}</span> <span id="like-count-${data.id}">${likedUsers.length}</span>
                                 </button>
                             </div>
                             <button class="fb-save-btn ${hasBookmarked ? 'bookmarked' : ''}" id="save-btn-${data.id}" onclick="toggleBookmark('${data.id}')" title="${hasBookmarked ? 'Saved' : 'Save'}">
@@ -952,7 +983,6 @@
             }
         };
 
-        // Optimistic UI Toggle Like (Instant Response)
         window.toggleLike = async function(postId) {
             if (!currentUser) {
                 alert("Please log in to like posts!");
@@ -968,14 +998,12 @@
                 if (!targetPost.likedUsers) targetPost.likedUsers = [];
                 const hasLiked = targetPost.likedUsers.includes(userKey);
 
-                // Immediate UI update before server confirmation
                 if (hasLiked) {
                     targetPost.likedUsers = targetPost.likedUsers.filter(u => u !== userKey);
                 } else {
                     targetPost.likedUsers.push(userKey);
                 }
 
-                // Instantly update DOM for this specific button
                 const btnElement = document.getElementById(`like-btn-${postId}`);
                 const iconElement = document.getElementById(`like-icon-${postId}`);
                 const countElement = document.getElementById(`like-count-${postId}`);
@@ -990,7 +1018,6 @@
                     countElement.innerText = targetPost.likedUsers.length;
                 }
 
-                // Background Sync with Firebase
                 if (hasLiked) {
                     await updateDoc(postRef, { likedUsers: arrayRemove(userKey) });
                 } else {
@@ -999,7 +1026,6 @@
             }
         };
 
-        // Optimistic UI Toggle Bookmark (Instant Response)
         window.toggleBookmark = async function(postId) {
             if (!currentUser) {
                 alert("Please log in to bookmark posts!");
@@ -1015,14 +1041,12 @@
                 if (!targetPost.bookmarkedUsers) targetPost.bookmarkedUsers = [];
                 const hasBookmarked = targetPost.bookmarkedUsers.includes(userKey);
 
-                // Immediate UI update before server confirmation
                 if (hasBookmarked) {
                     targetPost.bookmarkedUsers = targetPost.bookmarkedUsers.filter(u => u !== userKey);
                 } else {
                     targetPost.bookmarkedUsers.push(userKey);
                 }
 
-                // Instantly update DOM for this specific bookmark button & drawer
                 const saveBtn = document.getElementById(`save-btn-${postId}`);
                 if (saveBtn) {
                     const isNowBookmarked = targetPost.bookmarkedUsers.includes(userKey);
@@ -1038,7 +1062,6 @@
                 }
                 renderBookmarksList();
 
-                // Background Sync with Firebase
                 if (hasBookmarked) {
                     await updateDoc(postRef, { bookmarkedUsers: arrayRemove(userKey) });
                 } else {
